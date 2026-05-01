@@ -40,3 +40,4 @@ docker-data/
 # Misc
 *.tgz
 .cache
+.pnpm-home/
