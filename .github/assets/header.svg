@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e0d12"/>
+      <stop offset="50%" stop-color="#16141a"/>
+      <stop offset="100%" stop-color="#0e0d12"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#818cf8" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#c084fc" stop-opacity="0.8"/>
+      <stop offset="80%" stop-color="#fbbf6d" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#fbbf6d" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f0ece2"/>
+      <stop offset="100%" stop-color="#9e988e"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="0.6" fill="#f0ece2" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  
+  <!-- Dot grid -->
+  <rect width="1200" height="300" fill="url(#grid)"/>
+
+  <!-- Accent line -->
+  <rect x="0" y="296" width="1200" height="4" fill="url(#accent)" opacity="0.5"/>
+
+  <!-- Corner frames -->
+  <g stroke="#818cf8" stroke-width="1" opacity="0.25" fill="none">
+    <polyline points="30,70 30,30 70,30"/>
+    <polyline points="1130,30 1170,30 1170,70"/>
+    <polyline points="1170,230 1170,270 1130,270"/>
+    <polyline points="70,270 30,270 30,230"/>
+  </g>
+
+  <!-- Decorative circles -->
+  <circle cx="180" cy="150" r="120" fill="none" stroke="#818cf8" stroke-width="0.5" opacity="0.08"/>
+  <circle cx="1020" cy="150" r="90" fill="none" stroke="#fbbf6d" stroke-width="0.5" opacity="0.06"/>
+  <circle cx="600" cy="150" r="200" fill="none" stroke="#c084fc" stroke-width="0.3" opacity="0.04"/>
+
+  <!-- Logo mark — three dots (vertical) -->
+  <g transform="translate(540, 85)">
+    <circle cx="0" cy="0" r="6" fill="#818cf8" opacity="0.9"/>
+    <circle cx="0" cy="22" r="6" fill="#c084fc" opacity="0.8"/>
+    <circle cx="0" cy="44" r="6" fill="#fbbf6d" opacity="0.7"/>
+  </g>
+
+  <!-- Title -->
+  <text x="560" y="118" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="44" font-weight="700" fill="url(#textGrad)" letter-spacing="-1.5">Tasklane</text>
+
+  <!-- Tagline -->
+  <text x="600" y="170" font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', monospace" font-size="13" fill="#9e988e" text-anchor="middle" letter-spacing="3" opacity="0.7">REAL-TIME COLLABORATIVE TASK MANAGEMENT</text>
+
+  <!-- Version pill -->
+  <g transform="translate(555, 195)">
+    <rect x="0" y="0" width="90" height="24" rx="12" fill="none" stroke="#818cf8" stroke-width="1" opacity="0.3"/>
+    <text x="45" y="16" font-family="'SF Mono', monospace" font-size="10" fill="#818cf8" text-anchor="middle" letter-spacing="1.5" opacity="0.7">v1.0.0</text>
+  </g>
+
+  <!-- Tech badges -->
+  <g transform="translate(372, 245)" font-family="'SF Mono', monospace" font-size="10" letter-spacing="1">
+    <text fill="#818cf8" opacity="0.5">NEXT.JS</text>
+    <text x="70" fill="#9e988e" opacity="0.2">◆</text>
+    <text x="90" fill="#818cf8" opacity="0.5">NESTJS</text>
+    <text x="148" fill="#9e988e" opacity="0.2">◆</text>
+    <text x="168" fill="#818cf8" opacity="0.5">POSTGRESQL</text>
+    <text x="260" fill="#9e988e" opacity="0.2">◆</text>
+    <text x="280" fill="#818cf8" opacity="0.5">REDIS</text>
+    <text x="325" fill="#9e988e" opacity="0.2">◆</text>
+    <text x="345" fill="#818cf8" opacity="0.5">WEBSOCKETS</text>
+  </g>
+</svg>

@@ -1,0 +1,413 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────── Enums ───────────────────────────
+
+enum SystemRole {
+  USER
+  SUPER_ADMIN
+}
+
+enum TeamRole {
+  ADMIN
+  MEMBER
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+  COMPLETED
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityType {
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_STATUS_CHANGED
+  TASK_ASSIGNED
+  TASK_COMMENTED
+  PROJECT_CREATED
+  PROJECT_ARCHIVED
+  PROJECT_RESTORED
+  TEAM_CREATED
+  MEMBER_INVITED
+  MEMBER_REMOVED
+  ROLE_CHANGED
+  USER_REGISTERED
+  USER_LOGIN
+  USER_LOGOUT
+  USER_TOKEN_REFRESH
+  USER_2FA_SETUP
+  USER_2FA_VERIFIED
+  USER_PASSWORD_RESET
+  USER_EMAIL_VERIFIED
+}
+
+// ─────────────────────────── Models ──────────────────────────
+
+model User {
+  id               String     @id @default(cuid())
+  email            String     @unique
+  passwordHash     String
+  name             String
+  avatarUrl        String?
+  systemRole       SystemRole @default(USER)
+  emailVerified    Boolean    @default(false)
+  twoFactorEnabled Boolean    @default(false)
+  twoFactorSecret  String?
+
+  refreshTokens           RefreshToken[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+  teamMemberships         TeamMember[]
+  assignedTasks           Task[]                   @relation("AssigneeRelation")
+  createdTasks            Task[]                   @relation("CreatorRelation")
+  comments                Comment[]
+  activities              Activity[]
+  notifications           Notification[]
+  ownedTeams              Team[]                   @relation("TeamOwner")
+  notificationPreference  NotificationPreference?
+  mentions                Mention[]                @relation("MentionedUser")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
+
+  aiConversations AiConversation[]
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model Team {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  ownerId     String
+  owner       User    @relation("TeamOwner", fields: [ownerId], references: [id])
+
+  members     TeamMember[]
+  projects    Project[]
+  invitations Invitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+}
+
+model TeamMember {
+  id       String   @id @default(cuid())
+  teamId   String
+  team     Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     TeamRole @default(MEMBER)
+  joinedAt DateTime @default(now())
+
+  @@unique([teamId, userId])
+  @@index([userId])
+}
+
+model Invitation {
+  id         String    @id @default(cuid())
+  teamId     String
+  team       Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  email      String
+  role       TeamRole  @default(MEMBER)
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  invitedBy  String
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+  @@index([tokenHash])
+}
+
+model Project {
+  id              String           @id @default(cuid())
+  teamId          String
+  team            Team             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  name            String
+  key             String
+  description     String?
+  status          ProjectStatus    @default(ACTIVE)
+  color           String           @default("#6366f1")
+  startDate       DateTime?
+  dueDate         DateTime?
+  tasks           Task[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  aiConversations AiConversation[]
+
+  @@unique([teamId, key])
+  @@index([teamId])
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  projectId   String
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  number      Int
+  title       String
+  description String?
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  position    Float
+
+  assigneeId String?
+  assignee   User?   @relation("AssigneeRelation", fields: [assigneeId], references: [id], onDelete: SetNull)
+  creatorId  String
+  creator    User    @relation("CreatorRelation", fields: [creatorId], references: [id])
+
+  parentTaskId String?
+  parentTask   Task?   @relation("Subtasks", fields: [parentTaskId], references: [id], onDelete: SetNull)
+  subtasks     Task[]  @relation("Subtasks")
+
+  dueDate          DateTime?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  estimatedMinutes Int?
+
+  comments    Comment[]
+  attachments Attachment[]
+  labels      LabelOnTask[]
+  blockedBy   TaskDependency[] @relation("BlockedTask")
+  blocking    TaskDependency[] @relation("BlockingTask")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, number])
+  @@index([projectId, status])
+  @@index([assigneeId])
+  @@index([dueDate])
+}
+
+model TaskDependency {
+  id             String @id @default(cuid())
+  blockedTaskId  String
+  blockedTask    Task   @relation("BlockedTask", fields: [blockedTaskId], references: [id], onDelete: Cascade)
+  blockingTaskId String
+  blockingTask   Task   @relation("BlockingTask", fields: [blockingTaskId], references: [id], onDelete: Cascade)
+
+  @@unique([blockedTaskId, blockingTaskId])
+}
+
+model Label {
+  id    String        @id @default(cuid())
+  name  String
+  color String
+  tasks LabelOnTask[]
+}
+
+model LabelOnTask {
+  taskId  String
+  task    Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  labelId String
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, labelId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  body      String
+  mentions  Mention[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([taskId])
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  taskId     String
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  fileName   String
+  fileUrl    String
+  fileSize   Int
+  mimeType   String
+  uploadedBy String
+  createdAt  DateTime @default(now())
+}
+
+model Activity {
+  id         String       @id @default(cuid())
+  userId     String
+  user       User         @relation(fields: [userId], references: [id])
+  type       ActivityType
+  entityType String
+  entityId   String
+  metadata   Json
+  teamId     String?
+  createdAt  DateTime     @default(now())
+
+  @@index([entityType, entityId])
+  @@index([teamId, createdAt])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String
+  link      String?
+  metadata  Json?     // extra context: actorId, taskId, etc.
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+}
+
+model NotificationPreference {
+  userId            String   @id
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskAssignedEmail Boolean  @default(true)
+  taskAssignedInApp Boolean  @default(true)
+  mentionEmail      Boolean  @default(true)
+  mentionInApp      Boolean  @default(true)
+  commentEmail      Boolean  @default(false)
+  commentInApp      Boolean  @default(true)
+  dueDateEmail      Boolean  @default(true)
+  dueDateInApp      Boolean  @default(true)
+  teamUpdateEmail   Boolean  @default(false)
+  teamUpdateInApp   Boolean  @default(true)
+  dailyDigest       Boolean  @default(true)
+  digestHourUTC     Int      @default(8)
+  updatedAt         DateTime @updatedAt
+}
+
+model Mention {
+  id          String    @id @default(cuid())
+  commentId   String
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  mentionedId String
+  mentioned   User      @relation("MentionedUser", fields: [mentionedId], references: [id])
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([mentionedId, readAt])
+}
+
+model DigestSent {
+  id       String   @id @default(cuid())
+  userId   String
+  sentDate String   // YYYY-MM-DD
+  sentAt   DateTime @default(now())
+
+  @@unique([userId, sentDate])
+}
+
+model AiCall {
+  id           String   @id @default(cuid())
+  userId       String?
+  teamId       String?
+  feature      String // 'breakdown' | 'suggest_assignee' | etc.
+  model        String
+  inputTokens  Int
+  outputTokens Int
+  latencyMs    Int
+  success      Boolean
+  errorMsg     String?
+  promptHash   String
+  cached       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([feature, createdAt])
+}
+
+model AiConversation {
+  id        String      @id @default(cuid())
+  projectId String
+  project   Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  AiMessage[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([projectId])
+  @@index([userId])
+}
+
+model AiMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String // 'user' | 'assistant'
+  content        String
+  toolCalls      Json? // Array of tool calls made
+  createdAt      DateTime       @default(now())
+
+  @@index([conversationId])
+}

@@ -1,0 +1,42 @@
+node_modules
+dist
+.next
+coverage
+*.tsbuildinfo
+
+# Editor
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Build
+build/
+out/
+
+# Docker volumes (local)
+docker-data/
+
+# Turbo
+.turbo
+
+# Misc
+*.tgz
+.cache

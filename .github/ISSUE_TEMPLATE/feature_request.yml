@@ -1,0 +1,36 @@
+name: Feature Request
+description: Propose a new feature, workflow improvement, or architectural change.
+title: '[FEAT]: '
+labels: ['enhancement', 'discussion']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement! We heavily value well-reasoned proposals that align with our "editorial calm" philosophy.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: Please describe the friction or missing capability.
+      placeholder: I am always frustrated when...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented. If architectural changes are required, please outline them.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Approaches Considered
+      description: Describe any alternative solutions or workarounds you've considered.
+  - type: checkboxes
+    id: willingness
+    attributes:
+      label: Contribution
+      description: Would you be willing to submit a PR to implement this feature?
+      options:
+        - label: Yes, I am willing to submit a Pull Request

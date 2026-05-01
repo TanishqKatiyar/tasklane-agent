@@ -1,0 +1,37 @@
+{
+  "name": "@pnpm/macos-arm64",
+  "version": "9.15.4",
+  "requiresBuild": false,
+  "files": {
+    "pnpm": {
+      "checkedAt": 1777551889593,
+      "integrity": "sha512-ZPiZwBm/g11J+DYLG22a8yU+63WEX03wnSaYam51kvBBqbMCTn+fZ2EsOji1+WqjZ5twrhTwXsOO0F6OaGCzbg==",
+      "mode": 493,
+      "size": 64022032
+    },
+    "package.json": {
+      "checkedAt": 1777551889593,
+      "integrity": "sha512-4CiBh5QnUFa+UMfNcEjk+5TnABUAxoRCm9uzPTRA5luh16Y/+uIWQuRv4DoU/MQWiJtrBhcM76kzKWDvbptT0g==",
+      "mode": 420,
+      "size": 563
+    },
+    "CHANGELOG.md": {
+      "checkedAt": 1777551889594,
+      "integrity": "sha512-l3Lddep1QJb+FNDaJ+6HT7Knjg0duss339hHMHHZ5zCpFaF5vdOhgG4xSUKwOzTPQHBnU8SrxoN1CLq5qxpkPw==",
+      "mode": 420,
+      "size": 129
+    },
+    "README.md": {
+      "checkedAt": 1777551889594,
+      "integrity": "sha512-lhfTaAgjqBSIks0dLo1kX5zgZq4O2aCO+7LQloVMUEQAcahJvh0J4nR8S8cadalXR3AgrWDej8ZFLP9BOhvYLw==",
+      "mode": 420,
+      "size": 20
+    },
+    "LICENSE": {
+      "checkedAt": 1777551889595,
+      "integrity": "sha512-nClgcIBxPMlGKrUmYSD5eErVXTLB+C928AU/0G2gRBddrJIX9QxzJKDAOw+i+gj+O9JRo4Xn1gg+LxYCLEiSmw==",
+      "mode": 420,
+      "size": 1170
+    }
+  }
+}

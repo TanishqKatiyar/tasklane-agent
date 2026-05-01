@@ -1,0 +1,49 @@
+{
+  "name": "tasklane",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Tasklane — real-time collaborative team task manager",
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"pnpm --filter @tasklane/api dev\" \"pnpm --filter @tasklane/web dev\"",
+    "build": "pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build && pnpm --filter @tasklane/web build",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:strict": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml,css,scss}\"",
+    "test": "pnpm --filter @tasklane/api test && pnpm --filter @tasklane/web test",
+    "test:api": "pnpm --filter @tasklane/api test",
+    "test:web": "pnpm --filter @tasklane/web test",
+    "test:cov": "pnpm --filter @tasklane/api test:cov && pnpm --filter @tasklane/web test:cov",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.3",
+    "typescript": "^5.7.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss}": [
+      "prettier --write"
+    ]
+  }
+}
