@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import {
-  DashboardController,
-  TeamAnalyticsController,
-} from './analytics.controller';
+import { DashboardController, TeamAnalyticsController } from './analytics.controller';
 import { AnalyticsService } from './analytics.service';
 import { CycleTimeService } from './cycle-time.service';
 

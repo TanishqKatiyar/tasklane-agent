@@ -1,5 +1,5 @@
 import { ConflictException } from '@nestjs/common';
-import { Test,TestingModule  } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { PrismaService } from '../../../prisma/prisma.service';
 import { ProjectsService } from '../projects.service';
@@ -31,10 +31,7 @@ describe('ProjectsService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ProjectsService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [ProjectsService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<ProjectsService>(ProjectsService);
@@ -227,9 +224,7 @@ describe('ProjectsService', () => {
 
   describe('ProjectAccessGuard', () => {
     it('should reject non-team members accessing a project', async () => {
-      const { ProjectAccessGuard } = await import(
-        '../guards/project-access.guard'
-      );
+      const { ProjectAccessGuard } = await import('../guards/project-access.guard');
       const { Reflector } = await import('@nestjs/core');
 
       // Constructed for completeness — actual assertion is on the prisma mock state below.

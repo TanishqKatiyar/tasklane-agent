@@ -1,10 +1,16 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
-export function PageTransition({ children, className }: { children: React.ReactNode, className?: string }) {
+export function PageTransition({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   if (shouldReduceMotion) {
@@ -16,7 +22,7 @@ export function PageTransition({ children, className }: { children: React.ReactN
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={className}
     >
       {children}
@@ -24,7 +30,13 @@ export function PageTransition({ children, className }: { children: React.ReactN
   );
 }
 
-export function StaggerContainer({ children, className }: { children: React.ReactNode, className?: string }) {
+export function StaggerContainer({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   if (shouldReduceMotion) {
@@ -51,7 +63,13 @@ export function StaggerContainer({ children, className }: { children: React.Reac
   );
 }
 
-export function StaggerItem({ children, className }: { children: React.ReactNode, className?: string }) {
+export function StaggerItem({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   if (shouldReduceMotion) {
@@ -62,7 +80,7 @@ export function StaggerItem({ children, className }: { children: React.ReactNode
     <motion.div
       variants={{
         hidden: { opacity: 0, y: 10 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+        show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
       }}
       className={className}
     >

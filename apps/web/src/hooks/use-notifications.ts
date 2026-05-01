@@ -91,9 +91,7 @@ export function useNotifications() {
           ...old,
           pages: old.pages.map((page: any) => ({
             ...page,
-            data: page.data.map((n: AppNotification) =>
-              n.id === updated.id ? updated : n,
-            ),
+            data: page.data.map((n: AppNotification) => (n.id === updated.id ? updated : n)),
             unreadCount: Math.max(0, (page.unreadCount ?? 0) - 1),
           })),
         };

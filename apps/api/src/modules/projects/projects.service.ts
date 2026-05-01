@@ -1,12 +1,7 @@
-import {
-  ConflictException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateProjectDto, ListProjectsDto,UpdateProjectDto } from './dto';
+import { CreateProjectDto, ListProjectsDto, UpdateProjectDto } from './dto';
 
 @Injectable()
 export class ProjectsService {
@@ -22,9 +17,7 @@ export class ProjectsService {
       where: { teamId_key: { teamId, key: dto.key } },
     });
     if (existing) {
-      throw new ConflictException(
-        `A project with key "${dto.key}" already exists in this team`,
-      );
+      throw new ConflictException(`A project with key "${dto.key}" already exists in this team`);
     }
 
     const project = await this.prisma.project.create({

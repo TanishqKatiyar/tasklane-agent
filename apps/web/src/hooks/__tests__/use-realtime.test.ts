@@ -88,9 +88,7 @@ describe('useRealtimeProject', () => {
   it('should register all event listeners on mount', () => {
     renderHook(() => useRealtimeProject('project-1'));
 
-    const registeredEvents = mockSocket.on.mock.calls.map(
-      (call) => call[0],
-    );
+    const registeredEvents = mockSocket.on.mock.calls.map((call) => call[0]);
 
     expect(registeredEvents).toContain('connect_error');
     expect(registeredEvents).toContain('disconnect');
@@ -137,9 +135,7 @@ describe('useRealtimeProject', () => {
     renderHook(() => useRealtimeProject('project-1'));
 
     // Find the task.updated handler
-    const taskUpdatedCall = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'task.updated',
-    );
+    const taskUpdatedCall = mockSocket.on.mock.calls.find((call) => call[0] === 'task.updated');
     expect(taskUpdatedCall).toBeDefined();
 
     const handler = taskUpdatedCall![1] as (data: unknown) => void;
@@ -160,9 +156,7 @@ describe('useRealtimeProject', () => {
   it('should IGNORE events from the current user (actorId === user.id)', () => {
     renderHook(() => useRealtimeProject('project-1'));
 
-    const taskUpdatedCall = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'task.updated',
-    );
+    const taskUpdatedCall = mockSocket.on.mock.calls.find((call) => call[0] === 'task.updated');
     const handler = taskUpdatedCall![1] as (data: unknown) => void;
 
     // Simulate receiving an update from self
@@ -178,9 +172,7 @@ describe('useRealtimeProject', () => {
   it('should call addOnlineUser on presence.online from another user', () => {
     renderHook(() => useRealtimeProject('project-1'));
 
-    const presenceCall = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'presence.online',
-    );
+    const presenceCall = mockSocket.on.mock.calls.find((call) => call[0] === 'presence.online');
     const handler = presenceCall![1] as (data: unknown) => void;
 
     handler({ userId: 'user-2' });
@@ -191,9 +183,7 @@ describe('useRealtimeProject', () => {
   it('should NOT call addOnlineUser for own presence event', () => {
     renderHook(() => useRealtimeProject('project-1'));
 
-    const presenceCall = mockSocket.on.mock.calls.find(
-      (call) => call[0] === 'presence.online',
-    );
+    const presenceCall = mockSocket.on.mock.calls.find((call) => call[0] === 'presence.online');
     const handler = presenceCall![1] as (data: unknown) => void;
 
     handler({ userId: 'user-1' }); // same as current user

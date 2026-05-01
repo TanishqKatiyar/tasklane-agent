@@ -89,9 +89,7 @@ export default function NotificationsPage() {
             </div>
             <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground tabular-nums">
               <span className="opacity-60">Unread</span>
-              <span className="text-foreground">
-                {String(unreadCount).padStart(2, '0')}
-              </span>
+              <span className="text-foreground">{String(unreadCount).padStart(2, '0')}</span>
             </div>
           </div>
 
@@ -108,10 +106,8 @@ export default function NotificationsPage() {
               ) : (
                 <>
                   All{' '}
-                  <span className="font-display-italic text-[rgb(var(--signature))]">
-                    quiet
-                  </span>{' '}
-                  on your front.
+                  <span className="font-display-italic text-[rgb(var(--signature))]">quiet</span> on
+                  your front.
                 </>
               )}
             </h1>
@@ -176,21 +172,15 @@ export default function NotificationsPage() {
           ) : grouped.length === 0 ? (
             <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card/40 px-6 py-20 text-center ring-inner-hl">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card">
-                <PartyPopper
-                  className="h-6 w-6 text-[rgb(var(--signature))]"
-                  strokeWidth={1.5}
-                />
+                <PartyPopper className="h-6 w-6 text-[rgb(var(--signature))]" strokeWidth={1.5} />
               </div>
               <h3 className="font-display text-[24px] leading-tight tracking-tight text-foreground">
                 You&apos;re all{' '}
-                <span className="font-display-italic text-[rgb(var(--signature))]">
-                  caught up
-                </span>
-                .
+                <span className="font-display-italic text-[rgb(var(--signature))]">caught up</span>.
               </h3>
               <p className="mt-2 max-w-[320px] text-[13px] text-muted-foreground">
-                No new notifications right now. We&apos;ll let you know the
-                moment something happens.
+                No new notifications right now. We&apos;ll let you know the moment something
+                happens.
               </p>
             </div>
           ) : (
@@ -236,9 +226,7 @@ export default function NotificationsPage() {
                     disabled={isFetchingNextPage}
                     className="flex items-center gap-2 rounded-lg border border-border/70 bg-card/60 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground ring-inner-hl transition-all hover:-translate-y-px hover:border-foreground/30 hover:text-foreground disabled:opacity-60"
                   >
-                    {isFetchingNextPage && (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    )}
+                    {isFetchingNextPage && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                     Load more
                   </button>
                 </div>

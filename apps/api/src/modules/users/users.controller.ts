@@ -56,10 +56,7 @@ export class UsersController {
   @Patch('me')
   @ApiOperation({ summary: 'Update current user profile (name, avatarUrl)' })
   @ApiResponse({ status: 200, description: 'Updated user profile' })
-  async updateProfile(
-    @CurrentUser('id') userId: string,
-    @Body() dto: UpdateProfileDto,
-  ) {
+  async updateProfile(@CurrentUser('id') userId: string, @Body() dto: UpdateProfileDto) {
     return this.users.updateProfile(userId, dto);
   }
 
@@ -104,10 +101,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Avatar uploaded' })
   @ApiResponse({ status: 413, description: 'File too large' })
   @ApiResponse({ status: 400, description: 'Invalid file type' })
-  async uploadAvatar(
-    @CurrentUser('id') userId: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
+  async uploadAvatar(@CurrentUser('id') userId: string, @UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
@@ -132,10 +126,7 @@ export class UsersController {
   @ApiQuery({ name: 'q', description: 'Search query (name or email)' })
   @ApiQuery({ name: 'teamId', description: 'Team ID to scope the search' })
   @ApiResponse({ status: 200, description: 'Matching team members' })
-  async search(
-    @Query('q') q: string,
-    @Query('teamId') teamId: string,
-  ) {
+  async search(@Query('q') q: string, @Query('teamId') teamId: string) {
     if (!q || !teamId) {
       throw new BadRequestException('Both "q" and "teamId" query params are required');
     }

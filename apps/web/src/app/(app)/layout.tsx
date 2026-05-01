@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Sidebar } from "@/components/app-shell/sidebar";
-import { TopBar } from "@/components/app-shell/top-bar";
-import { CommandPalette } from "@/components/command-palette";
-import { CreateProjectDialog } from "@/components/create-project-dialog";
-import { CreateTaskDialog } from "@/components/create-task-dialog";
-import { PageTransition } from "@/components/page-transition";
-import { ShortcutOverlay } from "@/components/shortcut-overlay";
-import { useGlobalShortcuts } from "@/hooks/use-global-shortcuts";
-import { useRequireAuth } from "@/lib/auth";
+import { Sidebar } from '@/components/app-shell/sidebar';
+import { TopBar } from '@/components/app-shell/top-bar';
+import { CommandPalette } from '@/components/command-palette';
+import { CreateProjectDialog } from '@/components/create-project-dialog';
+import { CreateTaskDialog } from '@/components/create-task-dialog';
+import { PageTransition } from '@/components/page-transition';
+import { ShortcutOverlay } from '@/components/shortcut-overlay';
+import { useGlobalShortcuts } from '@/hooks/use-global-shortcuts';
+import { useRequireAuth } from '@/lib/auth';
 
 // ── App shell skeleton (branded, not a spinner) ──
 function AppShellSkeleton() {
@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   // Register global shortcuts
   useGlobalShortcuts();
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return <AppShellSkeleton />;
   }
 
@@ -58,9 +58,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1 flex-col overflow-hidden">
         <TopBar />
         <main id="main-content" className="flex-1 overflow-y-auto">
-          <PageTransition className="h-full">
-            {children}
-          </PageTransition>
+          <PageTransition className="h-full">{children}</PageTransition>
         </main>
       </div>
 

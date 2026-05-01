@@ -25,13 +25,7 @@ import { z } from 'zod';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ProjectAccessGuard } from '../projects/guards/project-access.guard';
 import { TeamRoles } from '../teams/decorators/team-roles.decorator';
-import {
-  AddDependencyDto,
-  CreateTaskDto,
-  ListTasksDto,
-  MoveTaskDto,
-  UpdateTaskDto,
-} from './dto';
+import { AddDependencyDto, CreateTaskDto, ListTasksDto, MoveTaskDto, UpdateTaskDto } from './dto';
 import { TaskAccessGuard } from './guards/task-access.guard';
 import { TasksService } from './tasks.service';
 
@@ -105,10 +99,7 @@ export class ProjectTasksController {
       },
     },
   })
-  async list(
-    @Param('projectId') projectId: string,
-    @Query() query: ListTasksDto,
-  ) {
+  async list(@Param('projectId') projectId: string, @Query() query: ListTasksDto) {
     return this.tasks.list(projectId, query);
   }
 }
@@ -175,10 +166,7 @@ export class TasksController {
   @ApiOperation({ summary: 'Delete task + subtasks (ADMIN only)' })
   @ApiParam({ name: 'taskId' })
   @ApiResponse({ status: 200, description: 'Task deleted' })
-  async delete(
-    @Param('taskId') taskId: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async delete(@Param('taskId') taskId: string, @CurrentUser('id') userId: string) {
     return this.tasks.delete(taskId, userId);
   }
 
@@ -188,8 +176,7 @@ export class TasksController {
   @UseGuards(TaskAccessGuard)
   @ApiOperation({
     summary: 'Add a dependency (this task is blocked by blockingTaskId)',
-    description:
-      'Rejects self-dependencies and circular dependencies via DFS graph traversal.',
+    description: 'Rejects self-dependencies and circular dependencies via DFS graph traversal.',
   })
   @ApiParam({ name: 'taskId' })
   @ApiResponse({ status: 201, description: 'Dependency created' })
@@ -270,10 +257,7 @@ export class MyTasksController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @ApiResponse({ status: 200, description: 'Personal task list' })
-  async myTasks(
-    @CurrentUser('id') userId: string,
-    @Query() query: ListTasksDto,
-  ) {
+  async myTasks(@CurrentUser('id') userId: string, @Query() query: ListTasksDto) {
     return this.tasks.myTasks(userId, query);
   }
 }

@@ -16,7 +16,7 @@ export const StandupResponseSchema = z.object({
       wins: z.array(z.string()),
       todayFocus: z.array(z.string()),
       blockers: z.array(z.string()),
-    })
+    }),
   ),
   teamSummary: z.string(),
   generatedAt: z.string(), // ISO date

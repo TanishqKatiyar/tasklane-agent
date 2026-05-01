@@ -1,17 +1,14 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 /**
  * Base Skeleton primitive. Uses a subtle shimmer gradient that
  * respects `prefers-reduced-motion` (falls back to static muted bg).
  */
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="skeleton"
-      className={cn(
-        "rounded-md bg-muted skeleton-shimmer",
-        className,
-      )}
+      className={cn('rounded-md bg-muted skeleton-shimmer', className)}
       {...props}
     />
   );
@@ -24,7 +21,7 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
  */
 function SkeletonText({
   lines = 2,
-  lastWidth = "w-2/3",
+  lastWidth = 'w-2/3',
   className,
 }: {
   lines?: number;
@@ -32,15 +29,9 @@ function SkeletonText({
   className?: string;
 }) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className={cn(
-            "h-3",
-            i === lines - 1 ? lastWidth : "w-full",
-          )}
-        />
+        <Skeleton key={i} className={cn('h-3', i === lines - 1 ? lastWidth : 'w-full')} />
       ))}
     </div>
   );
@@ -49,16 +40,10 @@ function SkeletonText({
 /**
  * Circular skeleton (avatars, icons).
  */
-function SkeletonCircle({
-  size = 32,
-  className,
-}: {
-  size?: number;
-  className?: string;
-}) {
+function SkeletonCircle({ size = 32, className }: { size?: number; className?: string }) {
   return (
     <Skeleton
-      className={cn("rounded-full shrink-0", className)}
+      className={cn('rounded-full shrink-0', className)}
       style={{ width: size, height: size }}
     />
   );

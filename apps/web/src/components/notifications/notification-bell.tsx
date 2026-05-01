@@ -35,8 +35,7 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const displayed =
-    tab === 'unread' ? notifications.filter((n) => !n.readAt) : notifications;
+  const displayed = tab === 'unread' ? notifications.filter((n) => !n.readAt) : notifications;
 
   return (
     <div className="relative" ref={ref}>
@@ -80,9 +79,7 @@ export function NotificationBell() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border/60 px-4 pb-3 pt-4">
               <div className="flex items-baseline gap-3">
-                <h3 className="font-display text-[20px] leading-none tracking-tight">
-                  Inbox
-                </h3>
+                <h3 className="font-display text-[20px] leading-none tracking-tight">Inbox</h3>
                 {unreadCount > 0 && (
                   <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[rgb(var(--signature))] tabular-nums">
                     {String(unreadCount).padStart(2, '0')} unread
@@ -169,9 +166,7 @@ export function NotificationBell() {
                       disabled={isFetchingNextPage}
                       className="flex w-full items-center justify-center gap-2 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
                     >
-                      {isFetchingNextPage && (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      )}
+                      {isFetchingNextPage && <Loader2 className="h-3 w-3 animate-spin" />}
                       Load more
                     </button>
                   )}

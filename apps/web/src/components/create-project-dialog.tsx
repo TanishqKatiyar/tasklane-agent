@@ -23,7 +23,16 @@ interface Team {
   slug: string;
 }
 
-const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f97316', '#eab308', '#22c55e', '#06b6d4'];
+const COLORS = [
+  '#6366f1',
+  '#8b5cf6',
+  '#ec4899',
+  '#f43f5e',
+  '#f97316',
+  '#eab308',
+  '#22c55e',
+  '#06b6d4',
+];
 
 export function CreateProjectDialog() {
   const open = useUIStore((s) => s.createProjectOpen);
@@ -99,20 +108,27 @@ export function CreateProjectDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) resetForm(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) resetForm();
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FolderKanban className="h-4 w-4" />
             New Project
           </DialogTitle>
-          <DialogDescription>
-            Create a new project in your team
-          </DialogDescription>
+          <DialogDescription>Create a new project in your team</DialogDescription>
         </DialogHeader>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); mutation.mutate(); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            mutation.mutate();
+          }}
           className="space-y-4"
         >
           {/* Team selector */}
@@ -125,7 +141,9 @@ export function CreateProjectDialog() {
                 className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm outline-none focus:border-primary/50"
               >
                 {teams.map((t) => (
-                  <option key={t.id} value={t.id}>{t.name}</option>
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -133,7 +151,9 @@ export function CreateProjectDialog() {
 
           {/* Name */}
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1 block">Project name</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">
+              Project name
+            </label>
             <input
               type="text"
               value={name}
@@ -151,7 +171,10 @@ export function CreateProjectDialog() {
             <input
               type="text"
               value={key}
-              onChange={(e) => { setKey(e.target.value.toUpperCase()); setAutoKey(false); }}
+              onChange={(e) => {
+                setKey(e.target.value.toUpperCase());
+                setAutoKey(false);
+              }}
               placeholder="e.g. MKT"
               maxLength={5}
               className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm font-mono outline-none placeholder:text-muted-foreground focus:border-primary/50"
@@ -182,7 +205,10 @@ export function CreateProjectDialog() {
           <DialogFooter>
             <button
               type="button"
-              onClick={() => { setOpen(false); resetForm(); }}
+              onClick={() => {
+                setOpen(false);
+                resetForm();
+              }}
               className="rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
             >
               Cancel

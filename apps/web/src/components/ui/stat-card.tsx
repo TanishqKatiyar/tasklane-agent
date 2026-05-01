@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { ArrowDown, ArrowUp, Minus } from "lucide-react";
-import React, { memo } from "react";
+import { ArrowDown, ArrowUp, Minus } from 'lucide-react';
+import React, { memo } from 'react';
 
-import { useCountUp } from "@/hooks/use-count-up";
+import { useCountUp } from '@/hooks/use-count-up';
 
-export type StatTone = "accent" | "dark" | "muted" | "paper";
+export type StatTone = 'accent' | 'dark' | 'muted' | 'paper';
 
 type ToneSpec = {
   cardBg: string;
@@ -20,43 +20,43 @@ type ToneSpec = {
 
 const TONE_STYLES: Record<StatTone, ToneSpec> = {
   accent: {
-    cardBg: "var(--p-accent)",
-    cardText: "var(--p-paper)",
-    rule: "rgb(244 235 217 / 0.35)",
-    badgeBg: "var(--p-paper)",
-    badgeText: "var(--p-accent)",
-    bracket: "rgb(244 235 217 / 0.55)",
-    metaSoft: "rgb(244 235 217 / 0.7)",
+    cardBg: 'var(--p-accent)',
+    cardText: 'var(--p-paper)',
+    rule: 'rgb(244 235 217 / 0.35)',
+    badgeBg: 'var(--p-paper)',
+    badgeText: 'var(--p-accent)',
+    bracket: 'rgb(244 235 217 / 0.55)',
+    metaSoft: 'rgb(244 235 217 / 0.7)',
     showBrackets: true,
   },
   dark: {
-    cardBg: "var(--p-ink)",
-    cardText: "var(--p-paper)",
-    rule: "rgb(244 235 217 / 0.18)",
-    badgeBg: "var(--p-accent)",
-    badgeText: "var(--p-paper)",
-    bracket: "rgb(244 235 217 / 0.35)",
-    metaSoft: "rgb(244 235 217 / 0.55)",
+    cardBg: 'var(--p-ink)',
+    cardText: 'var(--p-paper)',
+    rule: 'rgb(244 235 217 / 0.18)',
+    badgeBg: 'var(--p-accent)',
+    badgeText: 'var(--p-paper)',
+    bracket: 'rgb(244 235 217 / 0.35)',
+    metaSoft: 'rgb(244 235 217 / 0.55)',
     showBrackets: false,
   },
   muted: {
-    cardBg: "var(--p-paper-muted)",
-    cardText: "var(--p-ink)",
-    rule: "rgb(28 15 9 / 0.18)",
-    badgeBg: "var(--p-ink)",
-    badgeText: "var(--p-paper)",
-    bracket: "rgb(28 15 9 / 0.35)",
-    metaSoft: "var(--p-ink-soft)",
+    cardBg: 'var(--p-paper-muted)',
+    cardText: 'var(--p-ink)',
+    rule: 'rgb(28 15 9 / 0.18)',
+    badgeBg: 'var(--p-ink)',
+    badgeText: 'var(--p-paper)',
+    bracket: 'rgb(28 15 9 / 0.35)',
+    metaSoft: 'var(--p-ink-soft)',
     showBrackets: true,
   },
   paper: {
-    cardBg: "var(--p-paper)",
-    cardText: "var(--p-ink)",
-    rule: "var(--p-rule)",
-    badgeBg: "var(--p-ink)",
-    badgeText: "var(--p-paper)",
-    bracket: "rgb(28 15 9 / 0.3)",
-    metaSoft: "var(--p-ink-soft)",
+    cardBg: 'var(--p-paper)',
+    cardText: 'var(--p-ink)',
+    rule: 'var(--p-rule)',
+    badgeBg: 'var(--p-ink)',
+    badgeText: 'var(--p-paper)',
+    bracket: 'rgb(28 15 9 / 0.3)',
+    metaSoft: 'var(--p-ink-soft)',
     showBrackets: false,
   },
 };
@@ -66,10 +66,10 @@ function CornerBrackets({ color }: { color: string }) {
   const thick = 1.5;
   const inset = 10;
   const common: React.CSSProperties = {
-    position: "absolute",
+    position: 'absolute',
     width: arm,
     height: arm,
-    pointerEvents: "none",
+    pointerEvents: 'none',
   };
   return (
     <>
@@ -134,10 +134,8 @@ function DeltaChip({
   }
 
   const isUp = delta > 0;
-  const upColor =
-    tone === "dark" || tone === "accent" ? "#74e2a3" : "#1b6b3d";
-  const downColor =
-    tone === "accent" ? "var(--p-paper)" : "var(--p-accent)";
+  const upColor = tone === 'dark' || tone === 'accent' ? '#74e2a3' : '#1b6b3d';
+  const downColor = tone === 'accent' ? 'var(--p-paper)' : 'var(--p-accent)';
 
   return (
     <span
@@ -145,7 +143,7 @@ function DeltaChip({
       style={{ color: isUp ? upColor : downColor }}
     >
       {isUp ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-      {isUp ? "+" : ""}
+      {isUp ? '+' : ''}
       {delta}
     </span>
   );
@@ -187,14 +185,13 @@ export const StatCard = memo(function StatCard({
   delta = 0,
   tone,
   Icon,
-  className = "",
+  className = '',
 }: StatCardProps) {
   const scale = Math.pow(10, decimals);
   const animatedRaw = useCountUp(Math.round(count * scale), 700);
   const styles = TONE_STYLES[tone];
 
-  const displayValue =
-    decimals > 0 ? (animatedRaw / scale).toFixed(decimals) : animatedRaw;
+  const displayValue = decimals > 0 ? (animatedRaw / scale).toFixed(decimals) : animatedRaw;
 
   return (
     <div
@@ -208,7 +205,7 @@ export const StatCard = memo(function StatCard({
           className="font-mono text-[10px] uppercase leading-snug tracking-[0.22em]"
           style={{ color: styles.metaSoft }}
         >
-          / {String(index).padStart(2, "0")} ·{" "}
+          / {String(index).padStart(2, '0')} ·{' '}
           <span style={{ color: styles.cardText }}>{label}</span>
         </div>
         <div
@@ -222,9 +219,7 @@ export const StatCard = memo(function StatCard({
       <div className="relative z-10">
         <div className="p-stat-num text-[clamp(56px,6.5vw,96px)] leading-[0.9]">
           {displayValue}
-          {suffix ? (
-            <span className="ml-0.5 align-baseline">{suffix}</span>
-          ) : null}
+          {suffix ? <span className="ml-0.5 align-baseline">{suffix}</span> : null}
         </div>
       </div>
 
@@ -243,7 +238,7 @@ export const StatCard = memo(function StatCard({
               className="font-mono text-[11px] uppercase tracking-[0.2em] tabular-nums"
               style={{ color: styles.metaSoft }}
             >
-              {String(index).padStart(3, "0")}/{String(total).padStart(2, "0")}
+              {String(index).padStart(3, '0')}/{String(total).padStart(2, '0')}
             </span>
           </div>
         </div>

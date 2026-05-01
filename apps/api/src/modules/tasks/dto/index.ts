@@ -24,9 +24,7 @@ export class CreateTaskDto extends createZodDto(createTaskSchema) {}
 export const updateTaskSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(10000).optional().nullable(),
-  status: z
-    .enum(['BACKLOG', 'TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE', 'CANCELLED'])
-    .optional(),
+  status: z.enum(['BACKLOG', 'TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE', 'CANCELLED']).optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
   assigneeId: z.string().optional().nullable(),
   dueDate: z.coerce.date().optional().nullable(),
@@ -40,14 +38,7 @@ export class UpdateTaskDto extends createZodDto(updateTaskSchema) {}
 // ── Move Task (drag-and-drop) ──────────────────────────
 
 export const moveTaskSchema = z.object({
-  status: z.enum([
-    'BACKLOG',
-    'TODO',
-    'IN_PROGRESS',
-    'IN_REVIEW',
-    'DONE',
-    'CANCELLED',
-  ]),
+  status: z.enum(['BACKLOG', 'TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE', 'CANCELLED']),
   position: z.number(),
 });
 
@@ -71,9 +62,7 @@ export const listTasksSchema = z.object({
   dueBefore: z.coerce.date().optional(),
   dueAfter: z.coerce.date().optional(),
   labelIds: z.string().optional(), // CSV
-  orderBy: z
-    .enum(['position', 'dueDate', 'priority', 'createdAt'])
-    .default('position'),
+  orderBy: z.enum(['position', 'dueDate', 'priority', 'createdAt']).default('position'),
   order: z.enum(['asc', 'desc']).default('asc'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(50),

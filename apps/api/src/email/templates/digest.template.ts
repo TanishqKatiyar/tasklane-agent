@@ -48,7 +48,8 @@ export function digestEmailTemplate(params: {
   mentionsRecently: DigestMention[];
   frontendUrl: string;
 }): { subject: string; html: string } {
-  const { userName, dueTodayTasks, overdueTasks, assignedRecently, mentionsRecently, frontendUrl } = params;
+  const { userName, dueTodayTasks, overdueTasks, assignedRecently, mentionsRecently, frontendUrl } =
+    params;
 
   const dueTodayRows = dueTodayTasks.map((t) => taskRow(t, frontendUrl)).join('');
   const overdueRows = overdueTasks.map((t) => taskRow(t, frontendUrl)).join('');

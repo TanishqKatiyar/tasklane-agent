@@ -29,10 +29,7 @@ export class EmailService {
           Authorization: `Bearer ${resendKey}`,
         },
         body: JSON.stringify({
-          from: this.config.get<string>(
-            'EMAIL_FROM',
-            'Tasklane <noreply@tasklane.dev>',
-          ),
+          from: this.config.get<string>('EMAIL_FROM', 'Tasklane <noreply@tasklane.dev>'),
           to,
           subject,
           html,

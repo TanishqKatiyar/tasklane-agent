@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { create } from "zustand";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { create } from 'zustand';
 
-import api from "./api";
+import api from './api';
 
 // ── Types ──
 export interface User {
@@ -16,7 +16,7 @@ export interface User {
   emailVerified?: boolean;
 }
 
-type AuthStatus = "loading" | "authenticated" | "unauthenticated";
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
 interface AuthState {
   user: User | null;
@@ -37,44 +37,44 @@ interface AuthState {
 // These set a non-httpOnly cookie that the Next.js middleware can read
 // to provide soft redirects (the real auth is the httpOnly refresh token)
 function setAuthHint() {
-  if (typeof document !== "undefined") {
-    document.cookie = "tasklane_authed=1; path=/; max-age=604800; SameSite=Lax";
+  if (typeof document !== 'undefined') {
+    document.cookie = 'tasklane_authed=1; path=/; max-age=604800; SameSite=Lax';
   }
 }
 
 function clearAuthHint() {
-  if (typeof document !== "undefined") {
-    document.cookie = "tasklane_authed=; path=/; max-age=0; SameSite=Lax";
+  if (typeof document !== 'undefined') {
+    document.cookie = 'tasklane_authed=; path=/; max-age=0; SameSite=Lax';
   }
 }
 
 export const useAuthStore = create<AuthState>((set, _get) => ({
   user: null,
   accessToken: null,
-  status: "loading",
+  status: 'loading',
 
-  setUser: (user) => set({ user, status: "authenticated" }),
+  setUser: (user) => set({ user, status: 'authenticated' }),
 
   setAccessToken: (token) => set({ accessToken: token }),
 
   clearAuth: () => {
     clearAuthHint();
-    set({ user: null, accessToken: null, status: "unauthenticated" });
+    set({ user: null, accessToken: null, status: 'unauthenticated' });
   },
 
   login: async (email, password) => {
-    const { data } = await api.post("/auth/login", { email, password });
+    const { data } = await api.post('/auth/login', { email, password });
     setAuthHint();
     set({
       user: data.user,
       accessToken: data.accessToken,
-      status: "authenticated",
+      status: 'authenticated',
     });
     return data.user;
   },
 
   register: async (email, password, name) => {
-    const { data } = await api.post("/auth/register", {
+    const { data } = await api.post('/auth/register', {
       email,
       password,
       name,
@@ -83,34 +83,34 @@ export const useAuthStore = create<AuthState>((set, _get) => ({
     set({
       user: data.user,
       accessToken: data.accessToken,
-      status: "authenticated",
+      status: 'authenticated',
     });
     return data.user;
   },
 
   logout: async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post('/auth/logout');
     } catch {
       // Even if logout fails server-side, clear local state
     }
     clearAuthHint();
-    set({ user: null, accessToken: null, status: "unauthenticated" });
+    set({ user: null, accessToken: null, status: 'unauthenticated' });
   },
 
   hydrate: async () => {
     try {
       // Try to refresh token (cookie-based) and get user
-      const { data } = await api.post("/auth/refresh");
+      const { data } = await api.post('/auth/refresh');
       setAuthHint();
       set({
         user: data.user,
         accessToken: data.accessToken,
-        status: "authenticated",
+        status: 'authenticated',
       });
     } catch {
       clearAuthHint();
-      set({ status: "unauthenticated" });
+      set({ status: 'unauthenticated' });
     }
   },
 }));
@@ -126,8 +126,8 @@ export function useRequireAuth() {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/login");
+    if (status === 'unauthenticated') {
+      router.replace('/login');
     }
   }, [status, router]);
 

@@ -1,7 +1,8 @@
 export function buildBreakdownPrompt(projectName: string, recentTasks: any[]) {
-  const samplesContext = recentTasks.length > 0 
-    ? `Recent similar tasks in project:\n${JSON.stringify(recentTasks, null, 2)}` 
-    : 'No recent tasks available.';
+  const samplesContext =
+    recentTasks.length > 0
+      ? `Recent similar tasks in project:\n${JSON.stringify(recentTasks, null, 2)}`
+      : 'No recent tasks available.';
 
   return `You are an expert product manager and technical lead.
 Break this task into 3-7 actionable subtasks.

@@ -79,10 +79,7 @@ function StatusGroup({
 
 function TaskRow({ task, onClick }: { task: Task; onClick: () => void }) {
   const priority = PRIORITY_CONFIG[task.priority];
-  const isOverdue =
-    task.dueDate &&
-    new Date(task.dueDate) < new Date() &&
-    task.status !== 'DONE';
+  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'DONE';
 
   return (
     <button
@@ -92,10 +89,12 @@ function TaskRow({ task, onClick }: { task: Task; onClick: () => void }) {
       <span className={cn('text-xs font-medium', priority?.color)} title={priority?.label}>
         {priority?.label?.charAt(0) ?? '—'}
       </span>
-      <span className={cn(
-        'flex-1 text-sm truncate',
-        task.status === 'DONE' && 'line-through text-muted-foreground',
-      )}>
+      <span
+        className={cn(
+          'flex-1 text-sm truncate',
+          task.status === 'DONE' && 'line-through text-muted-foreground',
+        )}
+      >
         {task.title}
       </span>
       {task.assignee && (
@@ -126,10 +125,7 @@ export default function MyTasksPage() {
     const done = tasks.filter((t) => t.status === 'DONE').length;
     const inProgress = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
     const overdue = tasks.filter(
-      (t) =>
-        t.dueDate &&
-        new Date(t.dueDate) < new Date() &&
-        t.status !== 'DONE',
+      (t) => t.dueDate && new Date(t.dueDate) < new Date() && t.status !== 'DONE',
     ).length;
     return { total, done, inProgress, overdue };
   }, [tasks]);
@@ -150,8 +146,8 @@ export default function MyTasksPage() {
           .
         </h1>
         <p className="mt-3 max-w-md text-[14px] leading-relaxed text-[var(--p-ink-muted)]">
-          Across every project, grouped by status. Collapse what you&apos;ve
-          shipped. Focus on what&apos;s next.
+          Across every project, grouped by status. Collapse what you&apos;ve shipped. Focus on
+          what&apos;s next.
         </p>
 
         {/* Stat strip */}

@@ -115,7 +115,7 @@ export function useRealtimeProject(projectId: string | undefined) {
     // Cleanup
     return () => {
       socket.emit('project:leave', { projectId });
-      
+
       socket.off('connect_error', onConnectError);
       socket.off('disconnect', onDisconnect);
       socket.io.off('reconnect', onReconnect);

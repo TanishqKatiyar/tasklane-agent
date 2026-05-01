@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus,Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
@@ -32,15 +38,18 @@ export class AiThrottlerGuard implements CanActivate {
         const oldestTime = parseInt(oldest[1] as string, 10);
         retryAfterSeconds = Math.ceil((oldestTime + 3600000 - now) / 1000);
       }
-      
+
       const response = context.switchToHttp().getResponse();
       response.header('Retry-After', retryAfterSeconds.toString());
-      
-      throw new HttpException({
-        statusCode: HttpStatus.TOO_MANY_REQUESTS,
-        message: 'AI rate limit reached. Resets soon.',
-        error: 'Too Many Requests',
-      }, HttpStatus.TOO_MANY_REQUESTS);
+
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.TOO_MANY_REQUESTS,
+          message: 'AI rate limit reached. Resets soon.',
+          error: 'Too Many Requests',
+        },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
 
     await this.redis.zadd(key, now, `${now}-${Math.random()}`);

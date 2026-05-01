@@ -15,8 +15,19 @@ import {
 import { NotificationsService } from './notifications.service';
 
 @Module({
-  imports: [PrismaModule, EventBusModule, EmailModule, ScheduleModule, forwardRef(() => TasksModule)],
-  controllers: [NotificationsController, TeamActivityController, MyActivityController, DevController],
+  imports: [
+    PrismaModule,
+    EventBusModule,
+    EmailModule,
+    ScheduleModule,
+    forwardRef(() => TasksModule),
+  ],
+  controllers: [
+    NotificationsController,
+    TeamActivityController,
+    MyActivityController,
+    DevController,
+  ],
   providers: [NotificationsService, DigestService],
   exports: [NotificationsService],
 })

@@ -58,9 +58,7 @@ export async function getNotifications(opts?: {
   if (opts?.limit) params.set('limit', String(opts.limit));
   if (opts?.filter) params.set('filter', opts.filter);
   const qs = params.toString();
-  const { data } = await api.get<NotificationsResponse>(
-    `/notifications${qs ? `?${qs}` : ''}`,
-  );
+  const { data } = await api.get<NotificationsResponse>(`/notifications${qs ? `?${qs}` : ''}`);
   return data;
 }
 
@@ -118,13 +116,11 @@ export async function getTeamActivity(
 
 // ── Global Activity (all teams) ──────────────────────────────────────────────
 
-export async function getGlobalActivity(
-  opts?: {
-    cursor?: string;
-    limit?: number;
-    entityType?: string;
-  },
-): Promise<{ data: ActivityItem[]; nextCursor: string | null }> {
+export async function getGlobalActivity(opts?: {
+  cursor?: string;
+  limit?: number;
+  entityType?: string;
+}): Promise<{ data: ActivityItem[]; nextCursor: string | null }> {
   const params = new URLSearchParams();
   if (opts?.cursor) params.set('cursor', opts.cursor);
   if (opts?.limit) params.set('limit', String(opts.limit));

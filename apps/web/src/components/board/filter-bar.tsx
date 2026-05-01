@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { ChevronDown,Filter, Search, X } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Filter, Search, X } from 'lucide-react';
+import { useState } from 'react';
 
-import type { Label,TaskFilters,TaskPriority , User } from "@/lib/types";
-import { PRIORITY_CONFIG } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import type { Label, TaskFilters, TaskPriority, User } from '@/lib/types';
+import { PRIORITY_CONFIG } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface FilterBarProps {
   filters: TaskFilters;
@@ -31,11 +31,7 @@ function MultiSelect({
   const [open, setOpen] = useState(false);
 
   const toggle = (id: string) => {
-    onChange(
-      selected.includes(id)
-        ? selected.filter((s) => s !== id)
-        : [...selected, id]
-    );
+    onChange(selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id]);
   };
 
   return (
@@ -43,8 +39,8 @@ function MultiSelect({
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          "flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs transition-colors hover:bg-accent",
-          selected.length > 0 && "border-primary/30 bg-primary/5"
+          'flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs transition-colors hover:bg-accent',
+          selected.length > 0 && 'border-primary/30 bg-primary/5',
         )}
       >
         {label}
@@ -68,12 +64,12 @@ function MultiSelect({
               >
                 <div
                   className={cn(
-                    "flex h-4 w-4 items-center justify-center rounded border border-border text-[10px]",
+                    'flex h-4 w-4 items-center justify-center rounded border border-border text-[10px]',
                     selected.includes(opt.id) &&
-                      "border-primary bg-primary text-primary-foreground"
+                      'border-primary bg-primary text-primary-foreground',
                   )}
                 >
-                  {selected.includes(opt.id) && "✓"}
+                  {selected.includes(opt.id) && '✓'}
                 </div>
                 {renderOption ? renderOption(opt) : opt.label}
               </button>
@@ -85,12 +81,7 @@ function MultiSelect({
   );
 }
 
-export function FilterBar({
-  filters,
-  onFiltersChange,
-  members,
-  labels,
-}: FilterBarProps) {
+export function FilterBar({ filters, onFiltersChange, members, labels }: FilterBarProps) {
   const hasActiveFilters =
     (filters.assigneeIds?.length ?? 0) > 0 ||
     (filters.priorities?.length ?? 0) > 0 ||
@@ -111,10 +102,8 @@ export function FilterBar({
         <input
           type="text"
           placeholder="Search tasks…"
-          value={filters.search ?? ""}
-          onChange={(e) =>
-            onFiltersChange({ ...filters, search: e.target.value || undefined })
-          }
+          value={filters.search ?? ''}
+          onChange={(e) => onFiltersChange({ ...filters, search: e.target.value || undefined })}
           className="h-8 w-40 rounded-lg border border-border bg-transparent pl-7 pr-2 text-xs outline-none placeholder:text-muted-foreground focus:border-primary/30 focus:ring-1 focus:ring-primary/20"
         />
       </div>
@@ -135,9 +124,9 @@ export function FilterBar({
             <span className="flex items-center gap-2">
               <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[9px] font-medium text-primary">
                 {opt.label
-                  .split(" ")
+                  .split(' ')
                   .map((n) => n[0])
-                  .join("")
+                  .join('')
                   .toUpperCase()
                   .slice(0, 2)}
               </div>
@@ -150,9 +139,7 @@ export function FilterBar({
       {/* Priority filter */}
       <MultiSelect
         label="Priority"
-        options={(
-          ["URGENT", "HIGH", "MEDIUM", "LOW"] as TaskPriority[]
-        ).map((p) => ({
+        options={(['URGENT', 'HIGH', 'MEDIUM', 'LOW'] as TaskPriority[]).map((p) => ({
           id: p,
           label: PRIORITY_CONFIG[p].label,
         }))}
@@ -160,8 +147,7 @@ export function FilterBar({
         onChange={(ids) =>
           onFiltersChange({
             ...filters,
-            priorities:
-              ids.length > 0 ? (ids as TaskPriority[]) : undefined,
+            priorities: ids.length > 0 ? (ids as TaskPriority[]) : undefined,
           })
         }
         renderOption={(opt) => {
@@ -170,11 +156,11 @@ export function FilterBar({
             <span className="flex items-center gap-2">
               <span
                 className={cn(
-                  "h-2 w-2 rounded-full",
-                  opt.id === "URGENT" && "bg-red-400",
-                  opt.id === "HIGH" && "bg-orange-400",
-                  opt.id === "MEDIUM" && "bg-yellow-400",
-                  opt.id === "LOW" && "bg-blue-400"
+                  'h-2 w-2 rounded-full',
+                  opt.id === 'URGENT' && 'bg-red-400',
+                  opt.id === 'HIGH' && 'bg-orange-400',
+                  opt.id === 'MEDIUM' && 'bg-yellow-400',
+                  opt.id === 'LOW' && 'bg-blue-400',
                 )}
               />
               <span className="text-sm">{cfg.label}</span>

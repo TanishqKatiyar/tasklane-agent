@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AlertTriangle, RotateCcw } from "lucide-react";
+import { AlertTriangle, RotateCcw } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 /**
  * Small inline error boundary fallback — 60×60 card with a retry button.
@@ -20,7 +20,7 @@ export function InlineError({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center",
+        'flex flex-col items-center justify-center gap-2 rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center',
         className,
       )}
     >

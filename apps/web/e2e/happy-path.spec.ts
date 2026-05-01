@@ -46,7 +46,10 @@ test.describe('Happy Path', () => {
     // Fill registration form
     await page.getByPlaceholder(/name/i).fill('E2E Test User');
     await page.getByPlaceholder(/email/i).fill(uniqueEmail);
-    await page.getByPlaceholder(/password/i).first().fill('TestPass123!');
+    await page
+      .getByPlaceholder(/password/i)
+      .first()
+      .fill('TestPass123!');
 
     // Check for confirm password field
     const confirmField = page.getByPlaceholder(/confirm/i);

@@ -1,4 +1,4 @@
-import { Logger,UseGuards } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   ConnectedSocket,
@@ -44,7 +44,7 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
         return;
       }
 
-      // Simplified token validation for connection event. 
+      // Simplified token validation for connection event.
       // Assuming payload has sub. (Best practice: extract common logic from WsJwtGuard).
       const payloadBase64Url = token.split('.')[1];
       const payload = JSON.parse(Buffer.from(payloadBase64Url, 'base64').toString());
@@ -140,7 +140,12 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @OnEvent('task.updated')
-  handleTaskUpdated(payload: { task: any; actorId: string; projectId: string; changedFields: string[] }) {
+  handleTaskUpdated(payload: {
+    task: any;
+    actorId: string;
+    projectId: string;
+    changedFields: string[];
+  }) {
     this.server.to(`project:${payload.projectId}`).emit('task.updated', payload);
   }
 
@@ -155,7 +160,12 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @OnEvent('comment.created')
-  handleCommentCreated(payload: { comment: any; taskId: string; projectId: string; actorId: string }) {
+  handleCommentCreated(payload: {
+    comment: any;
+    taskId: string;
+    projectId: string;
+    actorId: string;
+  }) {
     this.server.to(`project:${payload.projectId}`).emit('comment.created', payload);
   }
 

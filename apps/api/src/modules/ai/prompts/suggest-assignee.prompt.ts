@@ -1,4 +1,8 @@
-export function buildSuggestAssigneePrompt(taskTitle: string, taskDesc: string, membersData: any[]) {
+export function buildSuggestAssigneePrompt(
+  taskTitle: string,
+  taskDesc: string,
+  membersData: any[],
+) {
   const membersContext = JSON.stringify(membersData, null, 2);
 
   return `You are an intelligent project management assistant.

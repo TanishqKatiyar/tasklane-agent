@@ -68,58 +68,57 @@ export class DigestService {
     const yesterday = subDays(now, 1);
 
     // Aggregate data in parallel
-    const [dueTodayTasks, overdueTasks, assignedRecently, mentionsRecently] =
-      await Promise.all([
-        // Tasks due today
-        this.prisma.task.findMany({
-          where: {
-            assigneeId: userId,
-            status: { notIn: ['DONE', 'CANCELLED'] },
-            dueDate: {
-              gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
-              lte: new Date(new Date().setUTCHours(23, 59, 59, 999)),
+    const [dueTodayTasks, overdueTasks, assignedRecently, mentionsRecently] = await Promise.all([
+      // Tasks due today
+      this.prisma.task.findMany({
+        where: {
+          assigneeId: userId,
+          status: { notIn: ['DONE', 'CANCELLED'] },
+          dueDate: {
+            gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
+            lte: new Date(new Date().setUTCHours(23, 59, 59, 999)),
+          },
+        },
+        select: { id: true, title: true, priority: true, dueDate: true },
+        take: 10,
+      }),
+      // Overdue tasks
+      this.prisma.task.findMany({
+        where: {
+          assigneeId: userId,
+          status: { notIn: ['DONE', 'CANCELLED'] },
+          dueDate: { lt: new Date(new Date().setUTCHours(0, 0, 0, 0)) },
+        },
+        select: { id: true, title: true, priority: true, dueDate: true },
+        take: 10,
+      }),
+      // Assigned in last 24h
+      this.prisma.task.findMany({
+        where: {
+          assigneeId: userId,
+          createdAt: { gte: yesterday },
+        },
+        select: { id: true, title: true, priority: true },
+        take: 10,
+      }),
+      // Mentions in last 24h
+      this.prisma.mention.findMany({
+        where: {
+          mentionedId: userId,
+          createdAt: { gte: yesterday },
+          readAt: null,
+        },
+        include: {
+          comment: {
+            select: {
+              body: true,
+              task: { select: { id: true, title: true } },
             },
           },
-          select: { id: true, title: true, priority: true, dueDate: true },
-          take: 10,
-        }),
-        // Overdue tasks
-        this.prisma.task.findMany({
-          where: {
-            assigneeId: userId,
-            status: { notIn: ['DONE', 'CANCELLED'] },
-            dueDate: { lt: new Date(new Date().setUTCHours(0, 0, 0, 0)) },
-          },
-          select: { id: true, title: true, priority: true, dueDate: true },
-          take: 10,
-        }),
-        // Assigned in last 24h
-        this.prisma.task.findMany({
-          where: {
-            assigneeId: userId,
-            createdAt: { gte: yesterday },
-          },
-          select: { id: true, title: true, priority: true },
-          take: 10,
-        }),
-        // Mentions in last 24h
-        this.prisma.mention.findMany({
-          where: {
-            mentionedId: userId,
-            createdAt: { gte: yesterday },
-            readAt: null,
-          },
-          include: {
-            comment: {
-              select: {
-                body: true,
-                task: { select: { id: true, title: true } },
-              },
-            },
-          },
-          take: 10,
-        }),
-      ]);
+        },
+        take: 10,
+      }),
+    ]);
 
     // Skip if nothing to report
     if (
@@ -131,8 +130,7 @@ export class DigestService {
       return;
     }
 
-    const frontendUrl =
-      process.env.FRONTEND_URL || 'http://localhost:3000';
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
     const { subject, html } = digestEmailTemplate({
       userName: user.name,

@@ -23,7 +23,7 @@ import {
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TeamRoles } from '../teams/decorators/team-roles.decorator';
 import { TeamMembershipGuard } from '../teams/guards/team-membership.guard';
-import { CreateProjectDto, ListProjectsDto,UpdateProjectDto } from './dto';
+import { CreateProjectDto, ListProjectsDto, UpdateProjectDto } from './dto';
 import { ProjectAccessGuard } from './guards/project-access.guard';
 import { ProjectsService } from './projects.service';
 
@@ -84,10 +84,7 @@ export class TeamProjectsController {
       },
     },
   })
-  async list(
-    @Param('teamId') teamId: string,
-    @Query() query: ListProjectsDto,
-  ) {
+  async list(@Param('teamId') teamId: string, @Query() query: ListProjectsDto) {
     return this.projects.list(teamId, query);
   }
 }
@@ -126,10 +123,7 @@ export class ProjectsController {
   })
   @ApiParam({ name: 'projectId' })
   @ApiResponse({ status: 200, description: 'Project updated' })
-  async update(
-    @Param('projectId') projectId: string,
-    @Body() dto: UpdateProjectDto,
-  ) {
+  async update(@Param('projectId') projectId: string, @Body() dto: UpdateProjectDto) {
     return this.projects.update(projectId, dto);
   }
 
@@ -143,10 +137,7 @@ export class ProjectsController {
   })
   @ApiParam({ name: 'projectId' })
   @ApiResponse({ status: 200, description: 'Project archived' })
-  async archive(
-    @Param('projectId') projectId: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async archive(@Param('projectId') projectId: string, @CurrentUser('id') userId: string) {
     return this.projects.archive(projectId, userId);
   }
 
@@ -157,10 +148,7 @@ export class ProjectsController {
   @ApiOperation({ summary: 'Restore an archived project (ADMIN only)' })
   @ApiParam({ name: 'projectId' })
   @ApiResponse({ status: 200, description: 'Project restored' })
-  async restore(
-    @Param('projectId') projectId: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async restore(@Param('projectId') projectId: string, @CurrentUser('id') userId: string) {
     return this.projects.restore(projectId, userId);
   }
 }

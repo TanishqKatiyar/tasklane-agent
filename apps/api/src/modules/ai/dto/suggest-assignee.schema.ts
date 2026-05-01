@@ -13,8 +13,8 @@ export const SuggestAssigneeResponseSchema = z.object({
       userId: z.string(),
       confidence: z.number().min(0).max(1),
       reasoning: z.string(),
-    })
-  )
+    }),
+  ),
 });
 
 export type SuggestAssigneeResponse = z.infer<typeof SuggestAssigneeResponseSchema>;

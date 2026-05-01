@@ -7,7 +7,7 @@ export function GooDefs() {
     <svg
       width="0"
       height="0"
-      style={{ position: "absolute", pointerEvents: "none" }}
+      style={{ position: 'absolute', pointerEvents: 'none' }}
       aria-hidden="true"
     >
       <defs>

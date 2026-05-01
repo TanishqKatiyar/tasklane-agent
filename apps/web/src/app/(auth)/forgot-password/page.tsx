@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, Mail } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, Loader2, Mail } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import api from "@/lib/api";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import api from '@/lib/api';
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email('Please enter a valid email address'),
 });
 
 type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
@@ -29,15 +29,15 @@ export default function ForgotPasswordPage() {
     formState: { errors },
   } = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: { email: "" },
+    defaultValues: { email: '' },
   });
 
   const onSubmit = async (values: ForgotPasswordValues) => {
     setIsLoading(true);
     try {
-      await api.post("/auth/forgot-password", { email: values.email });
+      await api.post('/auth/forgot-password', { email: values.email });
       setIsSubmitted(true);
-      toast.success("Check your email for a reset link");
+      toast.success('Check your email for a reset link');
     } catch (error: any) {
       setIsSubmitted(true);
       toast.success("If that email is registered, you'll receive a reset link");
@@ -59,15 +59,12 @@ export default function ForgotPasswordPage() {
             <Mail className="h-5 w-5 text-[rgb(var(--signature))]" />
           </div>
           <h1 className="font-display text-[44px] leading-[1.0] tracking-tight text-foreground">
-            Check your{" "}
-            <span className="font-display-italic text-[rgb(var(--signature))]">
-              email
-            </span>
-            .
+            Check your{' '}
+            <span className="font-display-italic text-[rgb(var(--signature))]">email</span>.
           </h1>
           <p className="max-w-sm text-[14px] leading-relaxed text-muted-foreground">
-            If an account with that email exists, we&apos;ve sent a reset link.
-            It may take a minute to arrive — check spam, just in case.
+            If an account with that email exists, we&apos;ve sent a reset link. It may take a minute
+            to arrive — check spam, just in case.
           </p>
         </div>
 
@@ -90,15 +87,12 @@ export default function ForgotPasswordPage() {
 
       <div className="space-y-3">
         <h1 className="font-display text-[44px] leading-[1.0] tracking-tight text-foreground">
-          Forgot your{" "}
-          <span className="font-display-italic text-[rgb(var(--signature))]">
-            password
-          </span>
-          ?
+          Forgot your{' '}
+          <span className="font-display-italic text-[rgb(var(--signature))]">password</span>?
         </h1>
         <p className="max-w-sm text-[14px] leading-relaxed text-muted-foreground">
-          Happens to the best of us. Enter the email tied to your account and
-          we&apos;ll send a fresh reset link.
+          Happens to the best of us. Enter the email tied to your account and we&apos;ll send a
+          fresh reset link.
         </p>
       </div>
 
@@ -118,12 +112,10 @@ export default function ForgotPasswordPage() {
               placeholder="alice@tasklane.dev"
               className="h-12 pl-11 text-[15px] bg-card/60 ring-inner-hl"
               autoComplete="email"
-              {...register("email")}
+              {...register('email')}
             />
           </div>
-          {errors.email && (
-            <p className="text-xs text-destructive">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
         </div>
 
         <Button
@@ -132,9 +124,7 @@ export default function ForgotPasswordPage() {
           disabled={isLoading}
           size="lg"
         >
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : null}
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Send reset link
         </Button>
       </form>

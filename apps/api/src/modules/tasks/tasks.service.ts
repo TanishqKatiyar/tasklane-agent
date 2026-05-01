@@ -11,13 +11,7 @@ import {
 import { EventBusService } from '../../common/event-bus/event-bus.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import {
-  AddDependencyDto,
-  CreateTaskDto,
-  ListTasksDto,
-  MoveTaskDto,
-  UpdateTaskDto,
-} from './dto';
+import { AddDependencyDto, CreateTaskDto, ListTasksDto, MoveTaskDto, UpdateTaskDto } from './dto';
 
 // Shared select for task list items
 const TASK_LIST_SELECT = {
@@ -142,16 +136,18 @@ export class TasksService {
 
     // Notify assignee (if different from creator)
     if (task.assigneeId && task.assigneeId !== userId) {
-      this.notificationsService.create({
-        userId: task.assigneeId,
-        type: 'TASK_ASSIGNED',
-        title: 'Task assigned to you',
-        body: `You've been assigned "${task.title}"`,
-        link: `/tasks/${task.id}`,
-        taskId: task.id,
-        actorId: userId,
-        metadata: { taskId: task.id, actorId: userId },
-      }).catch((err) => this.logger.warn('Notification failed', err));
+      this.notificationsService
+        .create({
+          userId: task.assigneeId,
+          type: 'TASK_ASSIGNED',
+          title: 'Task assigned to you',
+          body: `You've been assigned "${task.title}"`,
+          link: `/tasks/${task.id}`,
+          taskId: task.id,
+          actorId: userId,
+          metadata: { taskId: task.id, actorId: userId },
+        })
+        .catch((err) => this.logger.warn('Notification failed', err));
     }
 
     this.eventBus.emitTaskEvent('task.created', task, userId, projectId);
@@ -317,8 +313,7 @@ export class TasksService {
     if (dto.assigneeId !== undefined) data.assigneeId = dto.assigneeId;
     if (dto.dueDate !== undefined) data.dueDate = dto.dueDate;
     if (dto.parentTaskId !== undefined) data.parentTaskId = dto.parentTaskId;
-    if (dto.estimatedMinutes !== undefined)
-      data.estimatedMinutes = dto.estimatedMinutes;
+    if (dto.estimatedMinutes !== undefined) data.estimatedMinutes = dto.estimatedMinutes;
 
     // Status change logic
     if (dto.status !== undefined && dto.status !== existing.status) {
@@ -346,10 +341,7 @@ export class TasksService {
     }
 
     // Assignee change
-    if (
-      dto.assigneeId !== undefined &&
-      dto.assigneeId !== existing.assigneeId
-    ) {
+    if (dto.assigneeId !== undefined && dto.assigneeId !== existing.assigneeId) {
       await this.logActivity(userId, 'Task', taskId, 'TASK_ASSIGNED', {
         action: 'assignee_changed',
         oldAssigneeId: existing.assigneeId,
@@ -359,16 +351,18 @@ export class TasksService {
 
       // Notify new assignee via NotificationsService (skips self-assign automatically)
       if (dto.assigneeId) {
-        this.notificationsService.create({
-          userId: dto.assigneeId,
-          type: 'TASK_ASSIGNED',
-          title: 'Task assigned to you',
-          body: `You've been assigned "${existing.title}"`,
-          link: `/tasks/${taskId}`,
-          taskId,
-          actorId: userId,
-          metadata: { taskId, actorId: userId },
-        }).catch((err) => this.logger.warn('Notification failed', err));
+        this.notificationsService
+          .create({
+            userId: dto.assigneeId,
+            type: 'TASK_ASSIGNED',
+            title: 'Task assigned to you',
+            body: `You've been assigned "${existing.title}"`,
+            link: `/tasks/${taskId}`,
+            taskId,
+            actorId: userId,
+            metadata: { taskId, actorId: userId },
+          })
+          .catch((err) => this.logger.warn('Notification failed', err));
       }
     }
 
@@ -389,7 +383,13 @@ export class TasksService {
       }
     }
 
-    this.eventBus.emitTaskEvent('task.updated', updated, userId, updated.projectId, Object.keys(dto));
+    this.eventBus.emitTaskEvent(
+      'task.updated',
+      updated,
+      userId,
+      updated.projectId,
+      Object.keys(dto),
+    );
 
     return updated;
   }
@@ -409,8 +409,7 @@ export class TasksService {
     if (dto.status !== existing.status) {
       if (dto.status === 'IN_PROGRESS') data.startedAt = new Date();
       if (dto.status === 'DONE') data.completedAt = new Date();
-      if (existing.status === 'DONE' && dto.status !== 'DONE')
-        data.completedAt = null;
+      if (existing.status === 'DONE' && dto.status !== 'DONE') data.completedAt = null;
 
       await this.logActivity(userId, 'Task', taskId, 'TASK_STATUS_CHANGED', {
         action: 'task_moved',
@@ -449,18 +448,19 @@ export class TasksService {
       taskNumber: task.number,
     });
 
-    this.eventBus.emitTaskEvent('task.deleted', { id: taskId, projectId: task.projectId }, userId, task.projectId);
+    this.eventBus.emitTaskEvent(
+      'task.deleted',
+      { id: taskId, projectId: task.projectId },
+      userId,
+      task.projectId,
+    );
 
     return { message: `Task "${task.title}" deleted` };
   }
 
   // ────────────────────── Dependencies ──────────────────────
 
-  async addDependency(
-    taskId: string,
-    dto: AddDependencyDto,
-    userId: string,
-  ) {
+  async addDependency(taskId: string, dto: AddDependencyDto, userId: string) {
     const { blockingTaskId } = dto;
 
     // Self-dependency check
@@ -499,9 +499,7 @@ export class TasksService {
     // Cycle detection via DFS
     const hasCycle = await this.detectCycle(taskId, blockingTaskId);
     if (hasCycle) {
-      throw new BadRequestException(
-        'Adding this dependency would create a circular dependency',
-      );
+      throw new BadRequestException('Adding this dependency would create a circular dependency');
     }
 
     const dep = await this.prisma.taskDependency.create({
@@ -529,11 +527,7 @@ export class TasksService {
     return dep;
   }
 
-  async removeDependency(
-    taskId: string,
-    blockingTaskId: string,
-    userId: string,
-  ) {
+  async removeDependency(taskId: string, blockingTaskId: string, userId: string) {
     const dep = await this.prisma.taskDependency.findUnique({
       where: {
         blockedTaskId_blockingTaskId: {
@@ -569,10 +563,7 @@ export class TasksService {
    * If blockingTaskId is itself blocked by X, and X is blocked by Y,
    * and eventually we reach blockedTaskId, then it's a cycle.
    */
-  async detectCycle(
-    blockedTaskId: string,
-    blockingTaskId: string,
-  ): Promise<boolean> {
+  async detectCycle(blockedTaskId: string, blockingTaskId: string): Promise<boolean> {
     const visited = new Set<string>();
 
     const dfs = async (currentId: string): Promise<boolean> => {
@@ -643,10 +634,7 @@ export class TasksService {
     return where;
   }
 
-  private buildOrderBy(
-    orderBy: string,
-    order: string,
-  ): any {
+  private buildOrderBy(orderBy: string, order: string): any {
     // Postgres orders native enums by definition order, not alphabetically.
     // Our TaskPriority is defined LOW, MEDIUM, HIGH, URGENT — so:
     //   asc  → LOW first,    URGENT last
@@ -656,10 +644,7 @@ export class TasksService {
 
   // ────────────────────── Private: Validate Assignee ──────────────────
 
-  private async validateAssignee(
-    projectId: string,
-    assigneeId: string,
-  ): Promise<void> {
+  private async validateAssignee(projectId: string, assigneeId: string): Promise<void> {
     const project = await this.prisma.project.findUnique({
       where: { id: projectId },
       select: { teamId: true },
@@ -672,9 +657,7 @@ export class TasksService {
       },
     });
     if (!membership) {
-      throw new BadRequestException(
-        'Assignee must be a member of the project team',
-      );
+      throw new BadRequestException('Assignee must be a member of the project team');
     }
   }
 
@@ -736,7 +719,9 @@ export class TasksService {
       const validIds = new Set(validMembers.map((m) => m.userId));
       const invalid = uniqueMentionIds.filter((id) => !validIds.has(id));
       if (invalid.length > 0) {
-        throw new BadRequestException(`Cannot mention users not on the team: ${invalid.join(', ')}`);
+        throw new BadRequestException(
+          `Cannot mention users not on the team: ${invalid.join(', ')}`,
+        );
       }
     }
 
@@ -768,16 +753,18 @@ export class TasksService {
 
     // Notify mentioned users
     for (const uid of uniqueMentionIds) {
-      this.notificationsService.create({
-        userId: uid,
-        type: 'MENTION',
-        title: 'You were mentioned in a comment',
-        body: `On task "${task.title}"`,
-        link: `/tasks/${taskId}`,
-        taskId,
-        actorId: authorId,
-        metadata: { commentId: comment.id, taskId, actorId: authorId },
-      }).catch((err) => this.logger.warn('Mention notification failed', err));
+      this.notificationsService
+        .create({
+          userId: uid,
+          type: 'MENTION',
+          title: 'You were mentioned in a comment',
+          body: `On task "${task.title}"`,
+          link: `/tasks/${taskId}`,
+          taskId,
+          actorId: authorId,
+          metadata: { commentId: comment.id, taskId, actorId: authorId },
+        })
+        .catch((err) => this.logger.warn('Mention notification failed', err));
     }
 
     // Notify task assignee about the comment (if different from author and not already mentioned)
@@ -786,16 +773,18 @@ export class TasksService {
       task.assigneeId !== authorId &&
       !uniqueMentionIds.includes(task.assigneeId)
     ) {
-      this.notificationsService.create({
-        userId: task.assigneeId,
-        type: 'TASK_COMMENTED',
-        title: 'New comment on your task',
-        body: `Someone commented on "${task.title}"`,
-        link: `/tasks/${taskId}`,
-        taskId,
-        actorId: authorId,
-        metadata: { commentId: comment.id, taskId, actorId: authorId },
-      }).catch((err) => this.logger.warn('Comment notification failed', err));
+      this.notificationsService
+        .create({
+          userId: task.assigneeId,
+          type: 'TASK_COMMENTED',
+          title: 'New comment on your task',
+          body: `Someone commented on "${task.title}"`,
+          link: `/tasks/${taskId}`,
+          taskId,
+          actorId: authorId,
+          metadata: { commentId: comment.id, taskId, actorId: authorId },
+        })
+        .catch((err) => this.logger.warn('Comment notification failed', err));
     }
 
     return comment;

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AnimatePresence,motion } from 'framer-motion';
-import React, { useCallback,useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAuthStore } from '@/lib/auth';
 import { socket } from '@/lib/socket';
@@ -17,7 +17,7 @@ export function PresenceLayer({ projectId, view, children }: PresenceLayerProps)
   const { user } = useAuthStore();
   const cursors = usePresenceStore((state) => state.cursors);
   const cleanupStaleCursors = usePresenceStore((state) => state.cleanupStaleCursors);
-  
+
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
@@ -28,27 +28,30 @@ export function PresenceLayer({ projectId, view, children }: PresenceLayerProps)
     return () => clearInterval(interval);
   }, [cleanupStaleCursors]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!user || !containerRect || !socket.connected) return;
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!user || !containerRect || !socket.connected) return;
 
-    // Throttle to roughly 30fps could be done with a ref timestamp, but React synthetic events are already somewhat batched.
-    // Let's add a simple throttle manually to avoid spamming the socket.
-    const now = Date.now();
-    // @ts-expect-error attaching a private throttle marker to the native event
-    if (e.nativeEvent._lastEmit && now - e.nativeEvent._lastEmit < 30) return;
-    // @ts-expect-error attaching a private throttle marker to the native event
-    e.nativeEvent._lastEmit = now;
+      // Throttle to roughly 30fps could be done with a ref timestamp, but React synthetic events are already somewhat batched.
+      // Let's add a simple throttle manually to avoid spamming the socket.
+      const now = Date.now();
+      // @ts-expect-error attaching a private throttle marker to the native event
+      if (e.nativeEvent._lastEmit && now - e.nativeEvent._lastEmit < 30) return;
+      // @ts-expect-error attaching a private throttle marker to the native event
+      e.nativeEvent._lastEmit = now;
 
-    const x = Math.max(0, Math.min(1, (e.clientX - containerRect.left) / containerRect.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - containerRect.top) / containerRect.height));
+      const x = Math.max(0, Math.min(1, (e.clientX - containerRect.left) / containerRect.width));
+      const y = Math.max(0, Math.min(1, (e.clientY - containerRect.top) / containerRect.height));
 
-    socket.emit('cursor:move', {
-      projectId,
-      view,
-      x,
-      y,
-    });
-  }, [user, containerRect, projectId, view]);
+      socket.emit('cursor:move', {
+        projectId,
+        view,
+        x,
+        y,
+      });
+    },
+    [user, containerRect, projectId, view],
+  );
 
   // ── Stable ref callback — avoids infinite loop caused by calling setState
   // directly inside an inline ref (which fires on every render).
@@ -65,13 +68,9 @@ export function PresenceLayer({ projectId, view, children }: PresenceLayerProps)
   }, []); // empty deps — only run on mount/unmount
 
   return (
-    <div
-      className="relative w-full h-full"
-      onMouseMove={handleMouseMove}
-      ref={containerRef}
-    >
+    <div className="relative w-full h-full" onMouseMove={handleMouseMove} ref={containerRef}>
       {children}
-      
+
       {/* Render Cursors */}
       {containerRect && (
         <AnimatePresence>
@@ -88,7 +87,7 @@ export function PresenceLayer({ projectId, view, children }: PresenceLayerProps)
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, x: px, y: py }}
                 exit={{ opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25, mass: 0.5 }}
                 className="absolute top-0 left-0 pointer-events-none z-50 flex items-center justify-center"
                 style={{ originX: 0, originY: 0 }}
               >

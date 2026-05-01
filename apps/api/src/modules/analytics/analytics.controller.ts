@@ -5,8 +5,10 @@ import {
   HttpCode,
   HttpStatus,
   Param,
- Post,  Query,
-  UseGuards } from '@nestjs/common';
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -56,10 +58,7 @@ export class DashboardController {
   })
   @ApiResponse({ status: 201, description: 'Task created' })
   @ApiResponse({ status: 422, description: 'No projects found' })
-  async createQuickTask(
-    @CurrentUser('id') userId: string,
-    @Body() body: { title: string },
-  ) {
+  async createQuickTask(@CurrentUser('id') userId: string, @Body() body: { title: string }) {
     return this.analytics.createQuickTask(userId, body.title);
   }
 }
@@ -91,12 +90,8 @@ export class TeamAnalyticsController {
   })
   @ApiResponse({ status: 200, description: 'Full analytics payload' })
   @ApiResponse({ status: 403, description: 'Not a team admin' })
-  async getOverview(
-    @Param('teamId') teamId: string,
-    @Query('period') period?: string,
-  ) {
-    const periodDays =
-      period === '90d' ? 90 : period === '7d' ? 7 : 30;
+  async getOverview(@Param('teamId') teamId: string, @Query('period') period?: string) {
+    const periodDays = period === '90d' ? 90 : period === '7d' ? 7 : 30;
     return this.analytics.getTeamAnalytics(teamId, periodDays);
   }
 }

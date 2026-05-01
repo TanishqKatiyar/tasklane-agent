@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { Calendar,Sparkles } from "lucide-react";
-import { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Calendar, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-import { AiSparkleButton } from "@/components/ui/ai-sparkle-button";
-import { generateStandup } from "@/lib/ai";
+import { AiSparkleButton } from '@/components/ui/ai-sparkle-button';
+import { generateStandup } from '@/lib/ai';
 
 export default function StandupPage() {
   const [standup, setStandup] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleGenerate = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
-      // Using a hardcoded team ID for demo purposes. 
+      // Using a hardcoded team ID for demo purposes.
       // In a real app we'd fetch the active team context.
-      const res = await generateStandup("1");
+      const res = await generateStandup('1');
       setStandup(res);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to generate standup.");
+      setError(err.response?.data?.message || 'Failed to generate standup.');
     } finally {
       setIsLoading(false);
     }
@@ -45,8 +45,8 @@ export default function StandupPage() {
           .
         </h1>
         <p className="mt-3 max-w-md text-[14px] leading-relaxed text-[var(--p-ink-muted)]">
-          An intelligent summary of your team&apos;s progress, blockers, and
-          upcoming tasks based on recent activity.
+          An intelligent summary of your team&apos;s progress, blockers, and upcoming tasks based on
+          recent activity.
         </p>
 
         <div className="mt-8 flex flex-col gap-6">
@@ -62,11 +62,7 @@ export default function StandupPage() {
                 Summarizes activity over the last 24 hours.
               </p>
             </div>
-            <AiSparkleButton
-              isLoading={isLoading}
-              onClick={handleGenerate}
-              className="px-6 py-5"
-            >
+            <AiSparkleButton isLoading={isLoading} onClick={handleGenerate} className="px-6 py-5">
               Generate
             </AiSparkleButton>
           </div>
@@ -86,9 +82,7 @@ export default function StandupPage() {
                 </span>
               </h2>
               <div className="prose prose-stone max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {standup.summary}
-                </ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{standup.summary}</ReactMarkdown>
               </div>
 
               {(standup.blockers?.length > 0 || standup.actionItems?.length > 0) && (
@@ -108,7 +102,10 @@ export default function StandupPage() {
 
                   {standup.actionItems?.length > 0 && (
                     <div className="rounded-xl border border-[var(--p-rule)] bg-[var(--p-paper)] p-4">
-                      <h4 className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: '#1b6b3d' }}>
+                      <h4
+                        className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em]"
+                        style={{ color: '#1b6b3d' }}
+                      >
                         Action items
                       </h4>
                       <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--p-ink)]">

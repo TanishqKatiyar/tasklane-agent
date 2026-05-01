@@ -1,61 +1,76 @@
-"use client";
+'use client';
 
-import { Bot, Loader2,Send, Sparkles, User, X } from "lucide-react";
-import { useEffect,useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Bot, Loader2, Send, Sparkles, User, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-import api from "@/lib/api";
-import { cn } from "@/lib/utils";
+import api from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   createdAt: Date;
 }
 
-export function AiChatPanel({ isOpen, onClose, projectId = "demo" }: { isOpen: boolean; onClose: () => void; projectId?: string }) {
+export function AiChatPanel({
+  isOpen,
+  onClose,
+  projectId = 'demo',
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  projectId?: string;
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
   if (!isOpen) return null;
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
-    
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input.trim(), createdAt: new Date() };
-    setMessages(prev => [...prev, userMsg]);
-    setInput("");
+
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input.trim(),
+      createdAt: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput('');
     setIsLoading(true);
 
     try {
       // Send message to the backend. In reality, we'd use EventSource for SSE or handle chunks.
       // But we will just do a standard POST to /ai/chat for now (or a placeholder if SSE isn't fully implemented in frontend yet)
-      const res = await api.post("/ai/chat", { projectId, question: userMsg.content });
-      
-      const aiMsg: Message = { 
-        id: (Date.now() + 1).toString(), 
-        role: "assistant", 
+      const res = await api.post('/ai/chat', { projectId, question: userMsg.content });
+
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
         // fallback to a dummy reply if the backend expects SSE but we aren't handling it properly
-        content: res.data?.reply || "I am the AI assistant. I can help you with project tasks and reporting.", 
-        createdAt: new Date() 
+        content:
+          res.data?.reply ||
+          'I am the AI assistant. I can help you with project tasks and reporting.',
+        createdAt: new Date(),
       };
-      setMessages(prev => [...prev, aiMsg]);
+      setMessages((prev) => [...prev, aiMsg]);
     } catch (err: any) {
       const errMsg: Message = {
         id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `Error: ${err.response?.data?.message || err.message || "Failed to communicate with AI."}`,
-        createdAt: new Date()
+        role: 'assistant',
+        content: `Error: ${err.response?.data?.message || err.message || 'Failed to communicate with AI.'}`,
+        createdAt: new Date(),
       };
-      setMessages(prev => [...prev, errMsg]);
+      setMessages((prev) => [...prev, errMsg]);
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +83,10 @@ export function AiChatPanel({ isOpen, onClose, projectId = "demo" }: { isOpen: b
           <Sparkles className="h-5 w-5" />
           Tasklane AI
         </div>
-        <button onClick={onClose} className="p-1 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+        <button
+          onClick={onClose}
+          className="p-1 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+        >
           <X className="h-5 w-5" />
         </button>
       </div>
@@ -81,19 +99,43 @@ export function AiChatPanel({ isOpen, onClose, projectId = "demo" }: { isOpen: b
             </div>
             <p>How can I help you manage your project today?</p>
             <div className="flex flex-col gap-2 mt-4 text-xs">
-              <button onClick={() => setInput("Summarize my active tasks.")} className="px-3 py-2 bg-accent hover:bg-accent/80 rounded-lg text-left transition-colors">"Summarize my active tasks."</button>
-              <button onClick={() => setInput("What's the status of the mobile app?")} className="px-3 py-2 bg-accent hover:bg-accent/80 rounded-lg text-left transition-colors">"What's the status of the mobile app?"</button>
+              <button
+                onClick={() => setInput('Summarize my active tasks.')}
+                className="px-3 py-2 bg-accent hover:bg-accent/80 rounded-lg text-left transition-colors"
+              >
+                "Summarize my active tasks."
+              </button>
+              <button
+                onClick={() => setInput("What's the status of the mobile app?")}
+                className="px-3 py-2 bg-accent hover:bg-accent/80 rounded-lg text-left transition-colors"
+              >
+                "What's the status of the mobile app?"
+              </button>
             </div>
           </div>
         )}
 
         {messages.map((m) => (
-          <div key={m.id} className={cn("flex gap-3", m.role === "user" ? "flex-row-reverse" : "")}>
-            <div className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold", m.role === "user" ? "bg-primary text-primary-foreground" : "bg-purple-500/20 text-purple-400")}>
-              {m.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+          <div key={m.id} className={cn('flex gap-3', m.role === 'user' ? 'flex-row-reverse' : '')}>
+            <div
+              className={cn(
+                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
+                m.role === 'user'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-purple-500/20 text-purple-400',
+              )}
+            >
+              {m.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
             </div>
-            <div className={cn("max-w-[75%] rounded-2xl px-4 py-2 text-sm", m.role === "user" ? "bg-primary text-primary-foreground rounded-tr-sm" : "bg-accent rounded-tl-sm")}>
-              {m.role === "assistant" ? (
+            <div
+              className={cn(
+                'max-w-[75%] rounded-2xl px-4 py-2 text-sm',
+                m.role === 'user'
+                  ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                  : 'bg-accent rounded-tl-sm',
+              )}
+            >
+              {m.role === 'assistant' ? (
                 <div className="prose prose-sm prose-invert max-w-none">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown>
                 </div>
@@ -122,7 +164,7 @@ export function AiChatPanel({ isOpen, onClose, projectId = "demo" }: { isOpen: b
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 handleSend();
               }

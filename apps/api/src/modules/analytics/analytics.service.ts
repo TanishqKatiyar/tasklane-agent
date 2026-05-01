@@ -1,14 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TaskStatus } from '@prisma/client';
-import {
-  addDays,
-  endOfWeek,
-  startOfDay,
-  startOfWeek,
-  subDays,
-  subWeeks,
-} from 'date-fns';
+import { addDays, endOfWeek, startOfDay, startOfWeek, subDays, subWeeks } from 'date-fns';
 import Redis from 'ioredis';
 
 import { PrismaService } from '../../prisma/prisma.service';
@@ -24,8 +17,7 @@ export class AnalyticsService {
     private readonly configService: ConfigService,
     private readonly cycleTime: CycleTimeService,
   ) {
-    const redisUrl =
-      this.configService.get<string>('REDIS_URL') || 'redis://localhost:6379';
+    const redisUrl = this.configService.get<string>('REDIS_URL') || 'redis://localhost:6379';
     this.redis = new Redis(redisUrl);
   }
 
@@ -125,10 +117,7 @@ export class AnalyticsService {
         where: {
           assigneeId: userId,
           status: { notIn: ['DONE', 'CANCELLED'] },
-          OR: [
-            { dueDate: { lte: todayEnd } },
-            { status: 'IN_PROGRESS' },
-          ],
+          OR: [{ dueDate: { lte: todayEnd } }, { status: 'IN_PROGRESS' }],
         },
         take: 10,
         orderBy: { dueDate: 'asc' },
@@ -159,9 +148,7 @@ export class AnalyticsService {
       }),
 
       // ── Sparkline: last 7 days, daily open + completed counts ──
-      this.prisma.$queryRaw<
-        Array<{ date: Date; open_tasks: bigint; completed_tasks: bigint }>
-      >`
+      this.prisma.$queryRaw<Array<{ date: Date; open_tasks: bigint; completed_tasks: bigint }>>`
         WITH dates AS (
           SELECT generate_series(
             date_trunc('day', NOW() - INTERVAL '6 days'),
@@ -386,13 +373,12 @@ export class AnalyticsService {
         .map((t) => this.cycleTime.calculateHours(t))
         .filter((h): h is number => h !== null);
       if (hours.length > 0) {
-        avgCycleTimeHours =
-          hours.reduce((a, b) => a + b, 0) / hours.length;
+        avgCycleTimeHours = hours.reduce((a, b) => a + b, 0) / hours.length;
       }
     }
 
     // ── Throughput ──
-    const throughputWeeks = (throughputRaw).map((r) =>
+    const throughputWeeks = throughputRaw.map((r) =>
       r.week instanceof Date ? r.week.toISOString().split('T')[0] : String(r.week).split('T')[0],
     );
     const throughputCompleted = throughputRaw.map((r) => Number(r.completed));
@@ -416,10 +402,7 @@ export class AnalyticsService {
     );
 
     // ── Workload heatmap ──
-    const membersMap = new Map<
-      string,
-      { userId: string; name: string; days: number[] }
-    >();
+    const membersMap = new Map<string, { userId: string; name: string; days: number[] }>();
     for (const row of workloadRaw) {
       if (!membersMap.has(row.assigneeId)) {
         membersMap.set(row.assigneeId, {

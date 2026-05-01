@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AlertTriangle, Home, RotateCcw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { AlertTriangle, Home, RotateCcw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function ProjectError({
   error: _error,
@@ -19,12 +19,10 @@ export default function ProjectError({
           <AlertTriangle className="h-7 w-7 text-destructive" />
         </div>
 
-        <h1 className="mb-2 text-xl font-semibold">
-          Couldn&apos;t load this project
-        </h1>
+        <h1 className="mb-2 text-xl font-semibold">Couldn&apos;t load this project</h1>
         <p className="mb-6 text-sm text-muted-foreground">
-          It may have been deleted, or you may have lost access. Try again or
-          head back to your projects.
+          It may have been deleted, or you may have lost access. Try again or head back to your
+          projects.
         </p>
 
         <div className="flex items-center justify-center gap-3">
@@ -36,7 +34,7 @@ export default function ProjectError({
             Try again
           </button>
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push('/dashboard')}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Home className="h-4 w-4" />

@@ -1,16 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { useAuthStore } from "./auth";
+import { useAuthStore } from './auth';
 
 const api = axios.create({
-  baseURL: (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000") + "/api/v1",
+  baseURL: (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000') + '/api/v1',
   withCredentials: true,
-  headers: { "Content-Type": "application/json" },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 // ── Request Interceptor: Attach access token ──
 api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     const token = useAuthStore.getState().accessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -46,8 +46,8 @@ api.interceptors.response.use(
     if (
       error.response?.status !== 401 ||
       originalRequest._retry ||
-      originalRequest.url?.includes("/auth/refresh") ||
-      originalRequest.url?.includes("/auth/login")
+      originalRequest.url?.includes('/auth/refresh') ||
+      originalRequest.url?.includes('/auth/login')
     ) {
       return Promise.reject(error);
     }
@@ -62,7 +62,7 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const { data } = await api.post("/auth/refresh");
+      const { data } = await api.post('/auth/refresh');
       useAuthStore.getState().setAccessToken(data.accessToken);
       useAuthStore.getState().setUser(data.user);
       processQueue(null);
@@ -70,14 +70,14 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError);
       useAuthStore.getState().clearAuth();
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
       }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );
 
 export default api;

@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Test,TestingModule  } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { EmailService } from '../../../email/email.service';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -102,13 +102,13 @@ describe('TeamsService', () => {
       // Only 1 admin in the team
       mockPrisma.teamMember.count.mockResolvedValue(1);
 
-      await expect(
-        service.removeMember(teamId, onlyAdminId, actorId),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.removeMember(teamId, onlyAdminId, actorId)).rejects.toThrow(
+        BadRequestException,
+      );
 
-      await expect(
-        service.removeMember(teamId, onlyAdminId, actorId),
-      ).rejects.toThrow('Cannot remove the last admin');
+      await expect(service.removeMember(teamId, onlyAdminId, actorId)).rejects.toThrow(
+        'Cannot remove the last admin',
+      );
     });
 
     it('should ALLOW removing an admin when another admin exists', async () => {
@@ -146,9 +146,9 @@ describe('TeamsService', () => {
         ownerId,
       });
 
-      await expect(
-        service.removeMember(teamId, ownerId, 'admin-1'),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.removeMember(teamId, ownerId, 'admin-1')).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
@@ -184,15 +184,10 @@ describe('TeamsService', () => {
   describe('TeamMembershipGuard (cross-team isolation)', () => {
     it('Member of Team A cannot access Team B endpoints', async () => {
       // We import and test the guard directly
-      const { TeamMembershipGuard } = await import(
-        '../guards/team-membership.guard'
-      );
+      const { TeamMembershipGuard } = await import('../guards/team-membership.guard');
       const { Reflector } = await import('@nestjs/core');
 
-      const guard = new TeamMembershipGuard(
-        mockPrisma as any,
-        new Reflector(),
-      );
+      const guard = new TeamMembershipGuard(mockPrisma as any, new Reflector());
 
       // Team B exists
       mockPrisma.team.findUnique.mockResolvedValue({
@@ -214,21 +209,14 @@ describe('TeamsService', () => {
         getClass: () => ({}),
       } as any;
 
-      await expect(guard.canActivate(mockContext)).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(guard.canActivate(mockContext)).rejects.toThrow(ForbiddenException);
     });
 
     it('Member of Team A CAN access Team A endpoints', async () => {
-      const { TeamMembershipGuard } = await import(
-        '../guards/team-membership.guard'
-      );
+      const { TeamMembershipGuard } = await import('../guards/team-membership.guard');
       const { Reflector } = await import('@nestjs/core');
 
-      const guard = new TeamMembershipGuard(
-        mockPrisma as any,
-        new Reflector(),
-      );
+      const guard = new TeamMembershipGuard(mockPrisma as any, new Reflector());
 
       mockPrisma.team.findUnique.mockResolvedValue({
         id: 'team-A',

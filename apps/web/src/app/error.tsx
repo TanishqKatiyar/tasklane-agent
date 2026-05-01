@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AlertTriangle, Home, RotateCcw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { AlertTriangle, Home, RotateCcw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function GlobalError({
   error,
@@ -11,7 +11,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   const router = useRouter();
-  const isDev = process.env.NODE_ENV !== "production";
+  const isDev = process.env.NODE_ENV !== 'production';
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-6">
@@ -22,8 +22,7 @@ export default function GlobalError({
 
         <h1 className="mb-2 text-xl font-semibold">Something went wrong</h1>
         <p className="mb-4 text-sm text-muted-foreground">
-          An unexpected error occurred. Please try again or return to the
-          dashboard.
+          An unexpected error occurred. Please try again or return to the dashboard.
         </p>
 
         {isDev && error?.message && (
@@ -41,7 +40,7 @@ export default function GlobalError({
             Try again
           </button>
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push('/dashboard')}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             <Home className="h-4 w-4" />

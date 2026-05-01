@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   addMonths,
@@ -11,14 +11,14 @@ import {
   startOfMonth,
   startOfWeek,
   subMonths,
-} from "date-fns";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import { useMemo,useState } from "react";
-import { toast } from "sonner";
+} from 'date-fns';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
-import type { Task } from "@/lib/types";
-import { PRIORITY_CONFIG, STATUS_CONFIG } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import type { Task } from '@/lib/types';
+import { PRIORITY_CONFIG, STATUS_CONFIG } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -28,7 +28,7 @@ interface CalendarViewProps {
 }
 
 const MAX_VISIBLE_TASKS = 3;
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function CalendarView({
   tasks,
@@ -54,7 +54,7 @@ export function CalendarView({
     const map: Record<string, Task[]> = {};
     tasks.forEach((task) => {
       if (task.dueDate) {
-        const key = format(new Date(task.dueDate), "yyyy-MM-dd");
+        const key = format(new Date(task.dueDate), 'yyyy-MM-dd');
         if (!map[key]) map[key] = [];
         map[key].push(task);
       }
@@ -75,9 +75,9 @@ export function CalendarView({
   const handleDrop = (e: React.DragEvent, dateKey: string) => {
     e.preventDefault();
     if (draggedTaskId) {
-      const newDate = new Date(dateKey + "T12:00:00");
+      const newDate = new Date(dateKey + 'T12:00:00');
       onTaskUpdate?.(draggedTaskId, { dueDate: newDate.toISOString() });
-      toast.success(`Rescheduled to ${format(newDate, "MMM d, yyyy")}`);
+      toast.success(`Rescheduled to ${format(newDate, 'MMM d, yyyy')}`);
     }
     setDraggedTaskId(null);
     setDragOverDate(null);
@@ -92,9 +92,7 @@ export function CalendarView({
     <div className="flex h-full flex-col overflow-auto p-4">
       {/* ── Month header ── */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          {format(currentMonth, "MMMM yyyy")}
-        </h2>
+        <h2 className="text-lg font-semibold">{format(currentMonth, 'MMMM yyyy')}</h2>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
@@ -130,7 +128,7 @@ export function CalendarView({
 
         {/* ── Day cells ── */}
         {calendarDays.map((day) => {
-          const dateKey = format(day, "yyyy-MM-dd");
+          const dateKey = format(day, 'yyyy-MM-dd');
           const dayTasks = tasksByDate[dateKey] ?? [];
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const today = isToday(day);
@@ -142,9 +140,9 @@ export function CalendarView({
             <div
               key={dateKey}
               className={cn(
-                "min-h-[100px] bg-background p-1.5 transition-colors",
-                !isCurrentMonth && "bg-muted/20",
-                isDragOver && "bg-primary/5 ring-1 ring-inset ring-primary/20"
+                'min-h-[100px] bg-background p-1.5 transition-colors',
+                !isCurrentMonth && 'bg-muted/20',
+                isDragOver && 'bg-primary/5 ring-1 ring-inset ring-primary/20',
               )}
               onDragOver={(e) => handleDragOver(e, dateKey)}
               onDrop={(e) => handleDrop(e, dateKey)}
@@ -153,13 +151,13 @@ export function CalendarView({
               <div className="mb-1 flex items-center justify-between">
                 <span
                   className={cn(
-                    "flex h-6 w-6 items-center justify-center rounded-full text-xs",
-                    today && "bg-primary font-bold text-primary-foreground",
-                    !isCurrentMonth && "text-muted-foreground/40",
-                    isCurrentMonth && !today && "text-foreground"
+                    'flex h-6 w-6 items-center justify-center rounded-full text-xs',
+                    today && 'bg-primary font-bold text-primary-foreground',
+                    !isCurrentMonth && 'text-muted-foreground/40',
+                    isCurrentMonth && !today && 'text-foreground',
                   )}
                 >
-                  {format(day, "d")}
+                  {format(day, 'd')}
                 </span>
                 {isCurrentMonth && (
                   <button
@@ -184,9 +182,9 @@ export function CalendarView({
                       onDragEnd={handleDragEnd}
                       onClick={() => onTaskClick?.(task)}
                       className={cn(
-                        "group flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] transition-colors",
-                        "hover:bg-accent",
-                        draggedTaskId === task.id && "opacity-40"
+                        'group flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 text-[10px] transition-colors',
+                        'hover:bg-accent',
+                        draggedTaskId === task.id && 'opacity-40',
                       )}
                     >
                       <div

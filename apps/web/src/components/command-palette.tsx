@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Command } from "cmdk";
+import { Command } from 'cmdk';
 import {
   Activity,
   ArrowRight,
@@ -17,16 +17,16 @@ import {
   Users,
   X,
   Zap,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { useCallback, useEffect, useRef,useState } from "react";
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const router = useRouter();
   const { setTheme } = useTheme();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,16 +34,16 @@ export function CommandPalette() {
   // ── Toggle with ⌘K / Ctrl+K ──
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setOpen((prev) => !prev);
       }
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setOpen(false);
       }
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
   }, []);
 
   // Focus input when opened
@@ -51,17 +51,14 @@ export function CommandPalette() {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
-      setSearch("");
+      setSearch('');
     }
   }, [open]);
 
-  const runAction = useCallback(
-    (fn: () => void) => {
-      fn();
-      setOpen(false);
-    },
-    []
-  );
+  const runAction = useCallback((fn: () => void) => {
+    fn();
+    setOpen(false);
+  }, []);
 
   if (!open) return null;
 
@@ -77,14 +74,11 @@ export function CommandPalette() {
       <div className="fixed inset-0 z-[101] flex items-start justify-center pt-[20vh]">
         <div
           className={cn(
-            "w-full max-w-[560px] overflow-hidden rounded-xl border border-border bg-popover shadow-2xl shadow-black/30",
-            "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-200"
+            'w-full max-w-[560px] overflow-hidden rounded-xl border border-border bg-popover shadow-2xl shadow-black/30',
+            'animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-200',
           )}
         >
-          <Command
-            shouldFilter={true}
-            className="flex flex-col"
-          >
+          <Command shouldFilter={true} className="flex flex-col">
             {/* Search input */}
             <div className="flex items-center gap-2.5 border-b border-border px-4">
               <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -170,49 +164,49 @@ export function CommandPalette() {
                 }
               >
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/dashboard"))}
+                  onSelect={() => runAction(() => router.push('/dashboard'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                   <span>Dashboard</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/inbox"))}
+                  onSelect={() => runAction(() => router.push('/inbox'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Inbox className="h-4 w-4 text-muted-foreground" />
                   <span>Inbox</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/my-tasks"))}
+                  onSelect={() => runAction(() => router.push('/my-tasks'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <CheckSquare className="h-4 w-4 text-muted-foreground" />
                   <span>My Tasks</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/projects"))}
+                  onSelect={() => runAction(() => router.push('/projects'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <FolderKanban className="h-4 w-4 text-muted-foreground" />
                   <span>Projects</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/members"))}
+                  onSelect={() => runAction(() => router.push('/members'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Members</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/activity"))}
+                  onSelect={() => runAction(() => router.push('/activity'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Activity className="h-4 w-4 text-muted-foreground" />
                   <span>Activity</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => router.push("/settings"))}
+                  onSelect={() => runAction(() => router.push('/settings'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Settings className="h-4 w-4 text-muted-foreground" />
@@ -229,21 +223,21 @@ export function CommandPalette() {
                 }
               >
                 <Command.Item
-                  onSelect={() => runAction(() => setTheme("light"))}
+                  onSelect={() => runAction(() => setTheme('light'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Sun className="h-4 w-4 text-muted-foreground" />
                   <span>Switch to Light Mode</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => setTheme("dark"))}
+                  onSelect={() => runAction(() => setTheme('dark'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Moon className="h-4 w-4 text-muted-foreground" />
                   <span>Switch to Dark Mode</span>
                 </Command.Item>
                 <Command.Item
-                  onSelect={() => runAction(() => setTheme("system"))}
+                  onSelect={() => runAction(() => setTheme('system'))}
                   className="flex cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm aria-selected:bg-accent"
                 >
                   <Monitor className="h-4 w-4 text-muted-foreground" />

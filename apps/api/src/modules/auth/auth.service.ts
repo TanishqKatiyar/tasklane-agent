@@ -128,9 +128,7 @@ export class AuthService {
         `🚨 Refresh token reuse detected for user ${stored.userId}. Revoking all tokens.`,
       );
       await this.revokeAllUserTokens(stored.userId);
-      throw new UnauthorizedException(
-        'Token reuse detected. All sessions have been revoked.',
-      );
+      throw new UnauthorizedException('Token reuse detected. All sessions have been revoked.');
     }
 
     // Check expiration
@@ -378,9 +376,7 @@ export class AuthService {
       expiresIn: this.config.get<string>('JWT_ACCESS_EXPIRY', '15m'),
     });
 
-    const rawRefreshToken = crypto
-      .randomBytes(this.REFRESH_TOKEN_BYTES)
-      .toString('hex');
+    const rawRefreshToken = crypto.randomBytes(this.REFRESH_TOKEN_BYTES).toString('hex');
     const tokenHash = this.hashToken(rawRefreshToken);
 
     const refreshExpiryStr = this.config.get<string>('JWT_REFRESH_EXPIRY', '7d');

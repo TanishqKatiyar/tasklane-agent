@@ -1,10 +1,4 @@
-import {
-  PrismaClient,
-  SystemRole,
-  TaskPriority,
-  TaskStatus,
-  TeamRole,
-} from '@prisma/client';
+import { PrismaClient, SystemRole, TaskPriority, TaskStatus, TeamRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import process from 'process';
 
@@ -170,9 +164,7 @@ async function main() {
         ...task,
         projectId: project.id,
         creatorId: admin.id,
-        ...(task.status === TaskStatus.DONE
-          ? { completedAt: new Date() }
-          : {}),
+        ...(task.status === TaskStatus.DONE ? { completedAt: new Date() } : {}),
       },
     });
   }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   closestCenter,
@@ -9,17 +9,17 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format, isToday } from "date-fns";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { format, isToday } from 'date-fns';
 import {
   ArrowUpRight,
   Calendar,
@@ -31,18 +31,18 @@ import {
   Plus,
   TrendingUp,
   Users,
-} from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+} from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
-import { CursorTracker } from "@/components/cinematic/cursor-tracker";
-import { GooDefs } from "@/components/cinematic/goo-defs";
-import { KineticHeading } from "@/components/cinematic/kinetic-heading";
-import { DashboardSkeleton } from "@/components/ui/skeletons";
-import { StatCard } from "@/components/ui/stat-card";
-import { analyticsApi, type DashboardResponse } from "@/lib/analytics";
-import { useAuthStore } from "@/lib/auth";
-import { PRIORITY_CONFIG } from "@/lib/types";
+import { CursorTracker } from '@/components/cinematic/cursor-tracker';
+import { GooDefs } from '@/components/cinematic/goo-defs';
+import { KineticHeading } from '@/components/cinematic/kinetic-heading';
+import { DashboardSkeleton } from '@/components/ui/skeletons';
+import { StatCard } from '@/components/ui/stat-card';
+import { analyticsApi, type DashboardResponse } from '@/lib/analytics';
+import { useAuthStore } from '@/lib/auth';
+import { PRIORITY_CONFIG } from '@/lib/types';
 
 // ────────────────────────────────────────────────────────────────
 // Live ticking clock — shown in hero & footer
@@ -66,17 +66,12 @@ function SortableTaskRow({
   task,
   index,
 }: {
-  task: DashboardResponse["myDay"][number];
+  task: DashboardResponse['myDay'][number];
   index: number;
 }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -92,9 +87,7 @@ function SortableTaskRow({
       ref={setNodeRef}
       style={style}
       className={`spotlight-row group flex items-center gap-3 border-t border-[var(--p-rule)] px-5 py-3.5 transition-colors ${
-        isDragging
-          ? "bg-[var(--p-paper-muted)]"
-          : "hover:bg-[rgb(28_15_9_/_0.025)]"
+        isDragging ? 'bg-[var(--p-paper-muted)]' : 'hover:bg-[rgb(28_15_9_/_0.025)]'
       }`}
     >
       <button
@@ -107,14 +100,11 @@ function SortableTaskRow({
       </button>
 
       <span className="w-8 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-ink-softer)] tabular-nums">
-        /{String(index + 1).padStart(2, "0")}
+        /{String(index + 1).padStart(2, '0')}
       </span>
 
       <div
-        className={`h-2 w-2 shrink-0 rounded-full ${priorityCfg.color.replace(
-          "text-",
-          "bg-",
-        )}`}
+        className={`h-2 w-2 shrink-0 rounded-full ${priorityCfg.color.replace('text-', 'bg-')}`}
         title={`Priority: ${task.priority}`}
       />
 
@@ -130,8 +120,8 @@ function SortableTaskRow({
         <span
           className="hidden shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] sm:inline-flex"
           style={{
-            borderColor: task.project.color ?? "var(--p-rule)",
-            color: task.project.color ?? "var(--p-ink-soft)",
+            borderColor: task.project.color ?? 'var(--p-rule)',
+            color: task.project.color ?? 'var(--p-ink-soft)',
           }}
         >
           {task.project.name}
@@ -142,17 +132,17 @@ function SortableTaskRow({
         <span
           className="flex shrink-0 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.18em]"
           style={{
-            color: isOverdue ? "var(--p-accent)" : "var(--p-ink-soft)",
+            color: isOverdue ? 'var(--p-accent)' : 'var(--p-ink-soft)',
           }}
         >
           <Clock className="h-3 w-3" />
-          {format(new Date(task.dueDate), "MMM d")}
+          {format(new Date(task.dueDate), 'MMM d')}
         </span>
       )}
 
       <ArrowUpRight
         className="h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-60"
-        style={{ color: "var(--p-ink-soft)" }}
+        style={{ color: 'var(--p-ink-soft)' }}
       />
     </div>
   );
@@ -163,40 +153,38 @@ function SortableTaskRow({
 // ────────────────────────────────────────────────────────────────
 
 const ACTIVITY_VERBS: Record<string, string> = {
-  TASK_CREATED: "created",
-  TASK_UPDATED: "updated",
-  TASK_STATUS_CHANGED: "moved",
-  TASK_ASSIGNED: "assigned",
-  TASK_COMMENTED: "commented on",
-  PROJECT_CREATED: "created project",
+  TASK_CREATED: 'created',
+  TASK_UPDATED: 'updated',
+  TASK_STATUS_CHANGED: 'moved',
+  TASK_ASSIGNED: 'assigned',
+  TASK_COMMENTED: 'commented on',
+  PROJECT_CREATED: 'created project',
 };
 
 function ActivityItem({
   activity,
   index,
 }: {
-  activity: DashboardResponse["recentActivity"][number];
+  activity: DashboardResponse['recentActivity'][number];
   index: number;
 }) {
-  const verb =
-    ACTIVITY_VERBS[activity.type] ??
-    activity.type.toLowerCase().replace(/_/g, " ");
+  const verb = ACTIVITY_VERBS[activity.type] ?? activity.type.toLowerCase().replace(/_/g, ' ');
   const meta = activity.metadata as Record<string, string>;
   const entity = meta?.title || meta?.projectName || activity.entityType;
 
   return (
     <div className="flex items-start gap-3 border-t border-[var(--p-rule)] py-3">
       <span className="w-7 shrink-0 pt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[var(--p-ink-softer)] tabular-nums">
-        /{String(index + 1).padStart(2, "0")}
+        /{String(index + 1).padStart(2, '0')}
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-[13px] leading-snug text-[var(--p-ink)]">
-          <span className="font-medium">{activity.user.name}</span>{" "}
-          <span className="text-[var(--p-ink-soft)]">{verb}</span>{" "}
+          <span className="font-medium">{activity.user.name}</span>{' '}
+          <span className="text-[var(--p-ink-soft)]">{verb}</span>{' '}
           <span className="font-medium">{entity}</span>
         </p>
         <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-ink-softer)]">
-          {format(new Date(activity.createdAt), "MMM d · h:mm a")}
+          {format(new Date(activity.createdAt), 'MMM d · h:mm a')}
         </p>
       </div>
     </div>
@@ -215,38 +203,37 @@ const DASHBOARD_MEASURING_CONFIG = {
 // Page
 // ────────────────────────────────────────────────────────────────
 
-const BINARY_LINE =
-  "01010100 01000001 01010011 01001011 01001100 01000001 01001110 01000101";
+const BINARY_LINE = '01010100 01000001 01010011 01001011 01001100 01000001 01001110 01000101';
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
-  const [quickInput, setQuickInput] = useState("");
+  const [quickInput, setQuickInput] = useState('');
   const [myDayOrder, setMyDayOrder] = useState<string[]>([]);
   const now = useLiveClock();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["personalDashboard"],
+    queryKey: ['personalDashboard'],
     queryFn: analyticsApi.getPersonalDashboard,
     staleTime: 30_000,
   });
 
   const { data: inboxData } = useQuery({
-    queryKey: ["inboxQuickCreate"],
+    queryKey: ['inboxQuickCreate'],
     queryFn: analyticsApi.getInboxQuickCreate,
   });
 
   const quickCreateMutation = useMutation({
     mutationFn: (title: string) => analyticsApi.createQuickTask(title),
     onSuccess: () => {
-      setQuickInput("");
-      queryClient.invalidateQueries({ queryKey: ["personalDashboard"] });
-      toast.success("Task created");
+      setQuickInput('');
+      queryClient.invalidateQueries({ queryKey: ['personalDashboard'] });
+      toast.success('Task created');
     },
     onError: (err: unknown) => {
       const message =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? "Failed to create task";
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
+        'Failed to create task';
       toast.error(message);
     },
   });
@@ -289,10 +276,7 @@ export default function DashboardPage() {
         const newIdx = prev.indexOf(over.id as string);
         const next = arrayMove(prev, oldIdx, newIdx);
         if (user?.id) {
-          localStorage.setItem(
-            `tasklane_myday_order_${user.id}`,
-            JSON.stringify(next),
-          );
+          localStorage.setItem(`tasklane_myday_order_${user.id}`, JSON.stringify(next));
         }
         return next;
       });
@@ -304,7 +288,7 @@ export default function DashboardPage() {
     if (!data?.myDay) return [];
     return myDayOrder
       .map((id) => data.myDay.find((t) => t.id === id))
-      .filter(Boolean) as DashboardResponse["myDay"];
+      .filter(Boolean) as DashboardResponse['myDay'];
   }, [data?.myDay, myDayOrder]);
 
   const upcomingDates = useMemo(
@@ -321,29 +305,27 @@ export default function DashboardPage() {
   const greetingHour = today.getHours();
   const greeting =
     greetingHour < 5
-      ? "Still up"
+      ? 'Still up'
       : greetingHour < 12
-        ? "Good morning"
+        ? 'Good morning'
         : greetingHour < 18
-          ? "Good afternoon"
-          : "Good evening";
-  const firstName = user?.name?.split(" ")[0] ?? "there";
+          ? 'Good afternoon'
+          : 'Good evening';
+  const firstName = user?.name?.split(' ')[0] ?? 'there';
   const timeLabel = now
-    ? now.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
+    ? now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
         hour12: false,
       })
-    : "—";
+    : '—';
 
-  const activeTotal =
-    data.stats.openTasks.count + data.stats.completedThisMonth.count;
+  const activeTotal = data.stats.openTasks.count + data.stats.completedThisMonth.count;
   const focusScore =
     data.stats.openTasks.count > 0
       ? Math.round(
-          ((data.stats.openTasks.count - data.stats.overdue.count) /
-            data.stats.openTasks.count) *
+          ((data.stats.openTasks.count - data.stats.overdue.count) / data.stats.openTasks.count) *
             50,
         ) / 10
       : 0;
@@ -362,40 +344,40 @@ export default function DashboardPage() {
       <div className="pointer-events-none sticky top-0 z-0 h-0 overflow-visible">
         <div className="relative h-screen w-full">
           <div className="paper-blobs" aria-hidden>
-          <span
-            className="paper-blobs__node paper-blobs__node--a"
-            style={{
-              top: "-8%",
-              left: "-6%",
-              width: "44vw",
-              height: "44vw",
-              background:
-                "radial-gradient(circle at 35% 35%, rgb(214 52 38 / 0.22), rgb(214 52 38 / 0))",
-            }}
-          />
-          <span
-            className="paper-blobs__node paper-blobs__node--b"
-            style={{
-              top: "20%",
-              right: "-12%",
-              width: "48vw",
-              height: "48vw",
-              background:
-                "radial-gradient(circle at 50% 50%, rgb(232 184 64 / 0.26), rgb(232 184 64 / 0))",
-            }}
-          />
-          <span
-            className="paper-blobs__node paper-blobs__node--c"
-            style={{
-              bottom: "-10%",
-              left: "30%",
-              width: "36vw",
-              height: "36vw",
-              background:
-                "radial-gradient(circle at 50% 50%, rgb(107 155 201 / 0.18), rgb(107 155 201 / 0))",
-            }}
-          />
-        </div>
+            <span
+              className="paper-blobs__node paper-blobs__node--a"
+              style={{
+                top: '-8%',
+                left: '-6%',
+                width: '44vw',
+                height: '44vw',
+                background:
+                  'radial-gradient(circle at 35% 35%, rgb(214 52 38 / 0.22), rgb(214 52 38 / 0))',
+              }}
+            />
+            <span
+              className="paper-blobs__node paper-blobs__node--b"
+              style={{
+                top: '20%',
+                right: '-12%',
+                width: '48vw',
+                height: '48vw',
+                background:
+                  'radial-gradient(circle at 50% 50%, rgb(232 184 64 / 0.26), rgb(232 184 64 / 0))',
+              }}
+            />
+            <span
+              className="paper-blobs__node paper-blobs__node--c"
+              style={{
+                bottom: '-10%',
+                left: '30%',
+                width: '36vw',
+                height: '36vw',
+                background:
+                  'radial-gradient(circle at 50% 50%, rgb(107 155 201 / 0.18), rgb(107 155 201 / 0))',
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -403,19 +385,17 @@ export default function DashboardPage() {
       <div className="relative z-10 border-b border-[var(--p-rule)] backdrop-blur-[2px]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-4">
           <div className="flex items-baseline gap-2">
-            <span className="p-display text-[16px] font-medium tracking-tight">
-              Tasklane
-            </span>
+            <span className="p-display text-[16px] font-medium tracking-tight">Tasklane</span>
             <span className="p-edge-tag">/ Workspace · The Atelier</span>
           </div>
           <div className="flex items-center gap-4 p-edge-tag">
             <span className="inline-flex items-center gap-2">
               <span className="live-dot" />
-              <span style={{ color: "var(--p-accent)" }}>
-                {timeLabel} · {format(today, "EEE")}
+              <span style={{ color: 'var(--p-accent)' }}>
+                {timeLabel} · {format(today, 'EEE')}
               </span>
             </span>
-            <span style={{ color: "var(--p-rule)" }}>/</span>
+            <span style={{ color: 'var(--p-rule)' }}>/</span>
             <span>#TLN-2026 · Edition 01</span>
           </div>
         </div>
@@ -423,18 +403,10 @@ export default function DashboardPage() {
 
       <div className="relative z-10 mx-auto max-w-6xl px-8 pb-32 pt-12">
         {/* Floating coordinate marks */}
-        <div
-          aria-hidden
-          className="corner-label hidden md:flex"
-          style={{ top: 88, left: 18 }}
-        >
+        <div aria-hidden className="corner-label hidden md:flex" style={{ top: 88, left: 18 }}>
           47.49°N · 19.04°E
         </div>
-        <div
-          aria-hidden
-          className="corner-label hidden md:flex"
-          style={{ top: 88, right: 18 }}
-        >
+        <div aria-hidden className="corner-label hidden md:flex" style={{ top: 88, right: 18 }}>
           rev 04 / 07
         </div>
 
@@ -442,17 +414,14 @@ export default function DashboardPage() {
         <nav className="animate-rise mb-12 flex flex-wrap items-center gap-x-7 gap-y-2 border-b border-[var(--p-rule)] pb-4">
           <span className="p-edge-tag">Index</span>
           {[
-            { n: "01", label: "Today" },
-            { n: "02", label: "Capture" },
-            { n: "03", label: "Vital signs" },
-            { n: "04", label: "My day" },
-            { n: "05", label: "Pulse" },
-            { n: "06", label: "Week ahead" },
+            { n: '01', label: 'Today' },
+            { n: '02', label: 'Capture' },
+            { n: '03', label: 'Vital signs' },
+            { n: '04', label: 'My day' },
+            { n: '05', label: 'Pulse' },
+            { n: '06', label: 'Week ahead' },
           ].map((item) => (
-            <span
-              key={item.n}
-              className="text-[13px] text-[var(--p-ink-muted)]"
-            >
+            <span key={item.n} className="text-[13px] text-[var(--p-ink-muted)]">
               <span className="p-section-no mr-2">{item.n} ·</span>
               {item.label}
             </span>
@@ -463,9 +432,9 @@ export default function DashboardPage() {
         <header className="animate-rise mb-14">
           <div className="mb-5 flex items-center gap-3 p-edge-tag">
             <span className="p-section-no">/ 01</span>
-            <span>Brief · {format(today, "EEEE")}</span>
+            <span>Brief · {format(today, 'EEEE')}</span>
             <span className="h-px max-w-[140px] flex-1 bg-[var(--p-rule)]" />
-            <span>#TLN-{format(today, "yyyyMMdd")}/05</span>
+            <span>#TLN-{format(today, 'yyyyMMdd')}/05</span>
           </div>
 
           <KineticHeading
@@ -477,9 +446,9 @@ export default function DashboardPage() {
                 key="name"
                 className="font-display-italic ink-sweep"
                 style={{
-                  color: "var(--p-accent)",
-                  fontFamily: "var(--font-display)",
-                  fontStyle: "italic",
+                  color: 'var(--p-accent)',
+                  fontFamily: 'var(--font-display)',
+                  fontStyle: 'italic',
                 }}
               >
                 {firstName}.
@@ -490,20 +459,18 @@ export default function DashboardPage() {
           />
 
           <p className="animate-rise-3 mt-7 max-w-[600px] text-[16px] leading-relaxed text-[var(--p-ink-muted)]">
-            A calm read of your <span className="italic">working day</span> —
-            what&apos;s on your plate, what&apos;s landing soon, and the rhythm
-            of your team. Nothing buried, nothing decorative.
+            A calm read of your <span className="italic">working day</span> — what&apos;s on your
+            plate, what&apos;s landing soon, and the rhythm of your team. Nothing buried, nothing
+            decorative.
           </p>
 
           {/* CTA bar */}
           <div className="animate-rise-4 mt-8 flex flex-wrap items-center gap-3">
             <span className="p-pill p-pill--solid">Live workspace</span>
-            <span className="p-pill p-pill--accent">
-              {orderedMyDay.length} on deck
-            </span>
+            <span className="p-pill p-pill--accent">{orderedMyDay.length} on deck</span>
             <span className="p-pill">{data.stats.openTasks.count} open total</span>
             <span className="ml-auto p-edge-tag opacity-70">
-              {format(today, "EEEE · MMM d")} · {timeLabel}
+              {format(today, 'EEEE · MMM d')} · {timeLabel}
             </span>
           </div>
         </header>
@@ -519,52 +486,52 @@ export default function DashboardPage() {
 
           <div
             className="grid grid-cols-2 gap-y-6 border-y py-7 sm:grid-cols-4"
-            style={{ borderColor: "var(--p-rule)" }}
+            style={{ borderColor: 'var(--p-rule)' }}
           >
             {[
               {
-                label: "On deck",
+                label: 'On deck',
                 value: orderedMyDay.length,
-                hint: "for today",
+                hint: 'for today',
               },
               {
-                label: "Active total",
+                label: 'Active total',
                 value: activeTotal,
-                hint: "open + done · 30d",
+                hint: 'open + done · 30d',
               },
               {
-                label: "Due this wk",
+                label: 'Due this wk',
                 value: data.stats.dueThisWeek.count,
-                hint: "next 7 days",
+                hint: 'next 7 days',
               },
               {
-                label: "Focus",
+                label: 'Focus',
                 value: focusScore,
-                hint: "/ 5 ratio",
+                hint: '/ 5 ratio',
               },
             ].map((m) => (
               <div
                 key={m.label}
                 className="glint relative px-4 first:pl-0 last:pr-0"
-                style={{ borderLeft: "1px solid var(--p-rule)" }}
+                style={{ borderLeft: '1px solid var(--p-rule)' }}
               >
                 <div
                   className="font-mono text-[10px] uppercase tracking-[0.22em]"
-                  style={{ color: "var(--p-ink-soft)" }}
+                  style={{ color: 'var(--p-ink-soft)' }}
                 >
                   / {m.label}
                 </div>
                 <div
                   className="kinetic-num mt-2 text-[clamp(48px,5.4vw,80px)]"
-                  style={{ color: "var(--p-ink)" }}
+                  style={{ color: 'var(--p-ink)' }}
                 >
-                  {typeof m.value === "number" && Number.isInteger(m.value)
-                    ? String(m.value).padStart(2, "0")
+                  {typeof m.value === 'number' && Number.isInteger(m.value)
+                    ? String(m.value).padStart(2, '0')
                     : Number(m.value).toFixed(1)}
                 </div>
                 <div
                   className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em]"
-                  style={{ color: "var(--p-ink-softer)" }}
+                  style={{ color: 'var(--p-ink-softer)' }}
                 >
                   {m.hint}
                 </div>
@@ -588,28 +555,22 @@ export default function DashboardPage() {
               value={quickInput}
               onChange={(e) => setQuickInput(e.target.value)}
               onKeyDown={(e) => {
-                if (
-                  e.key === "Enter" &&
-                  (e.metaKey || e.ctrlKey) &&
-                  quickInput.trim()
-                ) {
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && quickInput.trim()) {
                   quickCreateMutation.mutate(quickInput.trim());
                 }
               }}
               placeholder="What needs to get done?"
               className="w-full rounded-2xl border bg-[var(--p-paper-deep)] py-5 pl-12 pr-56 text-[15px] text-[var(--p-ink)] placeholder:text-[var(--p-ink-softer)] outline-none transition-all focus:border-[var(--p-accent)] focus:ring-2 focus:ring-[var(--p-accent)]/25"
               style={{
-                borderColor: "var(--p-rule)",
+                borderColor: 'var(--p-rule)',
                 boxShadow:
-                  "inset 0 0 0 1px rgb(28 15 9 / 0.02), 0 30px 50px -40px rgb(28 15 9 / 0.18)",
+                  'inset 0 0 0 1px rgb(28 15 9 / 0.02), 0 30px 50px -40px rgb(28 15 9 / 0.18)',
               }}
               disabled={quickCreateMutation.isPending}
             />
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
               {inboxData?.defaultProject ? (
-                <span className="p-pill">
-                  → {inboxData.defaultProject.name}
-                </span>
+                <span className="p-pill">→ {inboxData.defaultProject.name}</span>
               ) : (
                 <span className="p-pill p-pill--accent">No project yet</span>
               )}
@@ -695,7 +656,7 @@ export default function DashboardPage() {
         <section className="animate-rise-3 mb-16">
           <div
             className="grid grid-cols-1 gap-8 border-y py-10 md:grid-cols-12"
-            style={{ borderColor: "var(--p-rule)" }}
+            style={{ borderColor: 'var(--p-rule)' }}
           >
             <div className="md:col-span-3">
               <div className="p-edge-tag mb-2">/ Note</div>
@@ -704,19 +665,18 @@ export default function DashboardPage() {
             <blockquote
               className="font-display-italic md:col-span-9"
               style={{
-                color: "var(--p-ink)",
-                fontFamily: "var(--font-display)",
-                fontStyle: "italic",
-                fontSize: "clamp(24px, 3.4vw, 38px)",
+                color: 'var(--p-ink)',
+                fontFamily: 'var(--font-display)',
+                fontStyle: 'italic',
+                fontSize: 'clamp(24px, 3.4vw, 38px)',
                 lineHeight: 1.25,
-                letterSpacing: "-0.01em",
+                letterSpacing: '-0.01em',
               }}
             >
               <span className="sigil">&ldquo;</span>
-              The trick isn&apos;t to do more — it&apos;s to do the{" "}
-              <span style={{ color: "var(--p-accent)" }}>right thing</span>{" "}
-              calmly, in order, and on purpose. Treat the day like a draft you
-              get to publish.
+              The trick isn&apos;t to do more — it&apos;s to do the{' '}
+              <span style={{ color: 'var(--p-accent)' }}>right thing</span> calmly, in order, and on
+              purpose. Treat the day like a draft you get to publish.
             </blockquote>
           </div>
         </section>
@@ -729,16 +689,13 @@ export default function DashboardPage() {
               <span>My day</span>
               <span className="h-px max-w-[140px] flex-1 bg-[var(--p-rule)]" />
               <span className="tabular-nums">
-                {String(orderedMyDay.length).padStart(2, "0")} items
+                {String(orderedMyDay.length).padStart(2, '0')} items
               </span>
             </div>
 
             <h2 className="p-display mb-4 text-[clamp(30px,3vw,40px)] leading-tight tracking-tight">
-              The list,{" "}
-              <span
-                className="ink-sweep italic"
-                style={{ color: "var(--p-accent)" }}
-              >
+              The list,{' '}
+              <span className="ink-sweep italic" style={{ color: 'var(--p-accent)' }}>
                 in order
               </span>
               .
@@ -751,11 +708,8 @@ export default function DashboardPage() {
                   strokeWidth={1.5}
                 />
                 <p className="p-display text-[22px] tracking-tight">
-                  Your day is{" "}
-                  <span
-                    className="italic"
-                    style={{ color: "var(--p-accent)" }}
-                  >
+                  Your day is{' '}
+                  <span className="italic" style={{ color: 'var(--p-accent)' }}>
                     clear
                   </span>
                   .
@@ -772,10 +726,7 @@ export default function DashboardPage() {
                   measuring={DASHBOARD_MEASURING_CONFIG}
                   onDragEnd={handleDragEnd}
                 >
-                  <SortableContext
-                    items={myDayOrder}
-                    strategy={verticalListSortingStrategy}
-                  >
+                  <SortableContext items={myDayOrder} strategy={verticalListSortingStrategy}>
                     <div className="-mt-px">
                       {orderedMyDay.map((task, i) => (
                         <SortableTaskRow key={task.id} task={task} index={i} />
@@ -795,11 +746,8 @@ export default function DashboardPage() {
             </div>
 
             <h2 className="p-display mb-4 text-[clamp(30px,3vw,40px)] leading-tight tracking-tight">
-              Studio{" "}
-              <span
-                className="ink-sweep italic"
-                style={{ color: "var(--p-accent)" }}
-              >
+              Studio{' '}
+              <span className="ink-sweep italic" style={{ color: 'var(--p-accent)' }}>
                 feed
               </span>
               .
@@ -811,9 +759,9 @@ export default function DashboardPage() {
                   <p
                     className="text-[18px] italic"
                     style={{
-                      color: "var(--p-ink-soft)",
-                      fontFamily: "var(--font-display)",
-                      fontStyle: "italic",
+                      color: 'var(--p-ink-soft)',
+                      fontFamily: 'var(--font-display)',
+                      fontStyle: 'italic',
                     }}
                   >
                     Quiet so far.
@@ -833,27 +781,20 @@ export default function DashboardPage() {
 
         {/* ── Decorative double-lane binary ticker ── */}
         <div className="animate-rise-4 mb-12 space-y-1.5">
-          <div
-            className="overflow-hidden border-y py-3"
-            style={{ borderColor: "var(--p-rule)" }}
-          >
+          <div className="overflow-hidden border-y py-3" style={{ borderColor: 'var(--p-rule)' }}>
             <div className="ticker-track p-ticker">
               {Array.from({ length: 6 }).map((_, i) => (
-                <span key={i}>
-                  ◆ #TLN-2026 · {BINARY_LINE} · TLN-2026 ·{" "}
-                </span>
+                <span key={i}>◆ #TLN-2026 · {BINARY_LINE} · TLN-2026 · </span>
               ))}
             </div>
           </div>
           <div className="overflow-hidden">
             <div
               className="ticker-track ticker-track--rev p-ticker"
-              style={{ color: "var(--p-accent)" }}
+              style={{ color: 'var(--p-accent)' }}
             >
               {Array.from({ length: 6 }).map((_, i) => (
-                <span key={i}>
-                  THE WORKSHOP · BUILT FOR TEAMS THAT SHIP · STUDIO QUALITY · ◆{" "}
-                </span>
+                <span key={i}>THE WORKSHOP · BUILT FOR TEAMS THAT SHIP · STUDIO QUALITY · ◆ </span>
               ))}
             </div>
           </div>
@@ -869,11 +810,8 @@ export default function DashboardPage() {
           </div>
 
           <h2 className="p-display mb-5 text-[clamp(30px,3vw,40px)] leading-tight tracking-tight">
-            What&apos;s{" "}
-            <span
-              className="ink-sweep italic"
-              style={{ color: "var(--p-accent)" }}
-            >
+            What&apos;s{' '}
+            <span className="ink-sweep italic" style={{ color: 'var(--p-accent)' }}>
               coming
             </span>
             .
@@ -887,7 +825,7 @@ export default function DashboardPage() {
             <div className="flex snap-x gap-4 overflow-x-auto pb-2">
               {upcomingDates.map((dateStr, idx) => {
                 const tasks = data.upcoming[dateStr]!;
-                const date = new Date(dateStr + "T00:00:00");
+                const date = new Date(dateStr + 'T00:00:00');
                 const isCurrentDay = isToday(date);
 
                 return (
@@ -895,29 +833,27 @@ export default function DashboardPage() {
                     key={dateStr}
                     className={`tilt-card flex w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border ${
                       isCurrentDay
-                        ? "border-[var(--p-accent)] bg-[rgb(214_52_38_/_0.05)]"
-                        : "border-[var(--p-rule)] bg-[var(--p-paper-deep)]"
+                        ? 'border-[var(--p-accent)] bg-[rgb(214_52_38_/_0.05)]'
+                        : 'border-[var(--p-rule)] bg-[var(--p-paper-deep)]'
                     }`}
                   >
                     <div
                       className="flex items-end justify-between border-b border-[var(--p-rule)] px-4 py-3"
                       style={{
-                        color: isCurrentDay
-                          ? "var(--p-accent)"
-                          : "var(--p-ink)",
+                        color: isCurrentDay ? 'var(--p-accent)' : 'var(--p-ink)',
                       }}
                     >
                       <div>
                         <div className="p-display text-[22px] leading-none tracking-tight">
-                          {format(date, "EEEE")}
+                          {format(date, 'EEEE')}
                         </div>
                         <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em]">
-                          {format(date, "MMM d")}
-                          {isCurrentDay && " · today"}
+                          {format(date, 'MMM d')}
+                          {isCurrentDay && ' · today'}
                         </div>
                       </div>
                       <span className="font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums opacity-70">
-                        /{String(idx + 1).padStart(2, "0")}
+                        /{String(idx + 1).padStart(2, '0')}
                       </span>
                     </div>
                     <div className="flex-1 space-y-1.5 p-3">
@@ -927,9 +863,7 @@ export default function DashboardPage() {
                           className="flex items-center gap-2 truncate rounded-md border border-[var(--p-rule)] bg-[var(--p-paper)] px-2.5 py-1.5 text-[13px]"
                         >
                           <Circle className="h-3 w-3 shrink-0 text-[var(--p-ink-softer)]" />
-                          <span className="truncate text-[var(--p-ink-muted)]">
-                            {t.title}
-                          </span>
+                          <span className="truncate text-[var(--p-ink-muted)]">{t.title}</span>
                         </div>
                       ))}
                       {tasks.length > 4 && (
@@ -956,35 +890,30 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
             {[
-              { label: "Display", spec: "Aa", note: "Space Grotesk" },
-              { label: "Body", spec: "Aa", note: "Geist Sans" },
-              { label: "Mono", spec: "Aa", note: "Geist Mono" },
-              { label: "Accent", spec: "■", note: "Crimson 426" },
+              { label: 'Display', spec: 'Aa', note: 'Space Grotesk' },
+              { label: 'Body', spec: 'Aa', note: 'Geist Sans' },
+              { label: 'Mono', spec: 'Aa', note: 'Geist Mono' },
+              { label: 'Accent', spec: '■', note: 'Crimson 426' },
             ].map((item, i) => (
               <div key={i}>
                 <div className="p-edge-tag mb-2">{item.label}</div>
                 <div
                   className="p-display text-[44px] leading-none tracking-tight"
                   style={{
-                    color:
-                      item.label === "Accent" ? "var(--p-accent)" : undefined,
+                    color: item.label === 'Accent' ? 'var(--p-accent)' : undefined,
                   }}
                 >
                   {item.spec}
                 </div>
-                <div className="mt-2 text-[12px] text-[var(--p-ink-soft)]">
-                  {item.note}
-                </div>
+                <div className="mt-2 text-[12px] text-[var(--p-ink-soft)]">{item.note}</div>
               </div>
             ))}
           </div>
 
           <div className="mt-10 flex flex-col gap-2 border-t border-[var(--p-rule)] pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <span className="p-edge-tag">
-              Tasklane · The Workshop — Built for teams that ship
-            </span>
+            <span className="p-edge-tag">Tasklane · The Workshop — Built for teams that ship</span>
             <span className="p-edge-tag opacity-70">
-              © {format(today, "yyyy")} · #TLN-2026 / v1.0
+              © {format(today, 'yyyy')} · #TLN-2026 / v1.0
             </span>
           </div>
         </footer>

@@ -1,77 +1,77 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
-import { GitCommit, Sparkles, Wrench, Zap } from "lucide-react";
+import { format } from 'date-fns';
+import { GitCommit, Sparkles, Wrench, Zap } from 'lucide-react';
 
-import { StaggerContainer, StaggerItem } from "@/components/page-transition";
+import { StaggerContainer, StaggerItem } from '@/components/page-transition';
 
 const CHANGELOG_ENTRIES = [
   {
-    version: "1.4.0",
-    date: "2026-04-30",
-    title: "UX Polish & Accessibility",
+    version: '1.4.0',
+    date: '2026-04-30',
+    title: 'UX Polish & Accessibility',
     icon: Sparkles,
-    color: "#a855f7",
+    color: '#a855f7',
     changes: [
-      "Responsive mobile sidebar with sheet navigation",
-      "Touch-friendly Kanban drag-and-drop with scroll snapping",
-      "Task detail dialog now slides up as a bottom sheet on mobile",
-      "Keyboard shortcuts for List View (j/k, Enter, e, x, ?)",
-      "KeyboardSensor added to Kanban board for full keyboard DnD",
-      "Escape key closes task detail dialog",
-      "Optimistic updates with React Query mutations and rollback",
-      "axe-core integrated for dev-mode accessibility auditing",
-      "Global focus-visible ring for keyboard navigation",
-      "Reduced motion support — animations disabled when OS preference set",
-      "Page transition animations with staggered fade-ins",
-      "Skip-to-content link for screen readers",
+      'Responsive mobile sidebar with sheet navigation',
+      'Touch-friendly Kanban drag-and-drop with scroll snapping',
+      'Task detail dialog now slides up as a bottom sheet on mobile',
+      'Keyboard shortcuts for List View (j/k, Enter, e, x, ?)',
+      'KeyboardSensor added to Kanban board for full keyboard DnD',
+      'Escape key closes task detail dialog',
+      'Optimistic updates with React Query mutations and rollback',
+      'axe-core integrated for dev-mode accessibility auditing',
+      'Global focus-visible ring for keyboard navigation',
+      'Reduced motion support — animations disabled when OS preference set',
+      'Page transition animations with staggered fade-ins',
+      'Skip-to-content link for screen readers',
     ],
   },
   {
-    version: "1.3.0",
-    date: "2026-04-25",
-    title: "AI Features & Dashboard",
+    version: '1.3.0',
+    date: '2026-04-25',
+    title: 'AI Features & Dashboard',
     icon: Zap,
-    color: "#6366f1",
+    color: '#6366f1',
     changes: [
-      "AI-powered task breakdown into subtasks",
-      "Smart assignee suggestion with confidence scores",
-      "Auto-priority classification using LLM",
-      "Personal dashboard with draggable My Day list",
-      "KPI stat cards with sparkline trends",
-      "Quick capture input with ⌘+Enter to create",
-      "Upcoming deadlines carousel with snap scrolling",
+      'AI-powered task breakdown into subtasks',
+      'Smart assignee suggestion with confidence scores',
+      'Auto-priority classification using LLM',
+      'Personal dashboard with draggable My Day list',
+      'KPI stat cards with sparkline trends',
+      'Quick capture input with ⌘+Enter to create',
+      'Upcoming deadlines carousel with snap scrolling',
     ],
   },
   {
-    version: "1.2.0",
-    date: "2026-04-18",
-    title: "Real-time Collaboration",
+    version: '1.2.0',
+    date: '2026-04-18',
+    title: 'Real-time Collaboration',
     icon: Wrench,
-    color: "#10b981",
+    color: '#10b981',
     changes: [
-      "Socket.IO-based real-time task sync",
-      "Presence indicators on Kanban board",
-      "@mentions in task comments with notifications",
-      "Activity feed with timeline visualization",
-      "Notification center with read/unread states",
-      "Command palette (⌘K) for quick navigation",
+      'Socket.IO-based real-time task sync',
+      'Presence indicators on Kanban board',
+      '@mentions in task comments with notifications',
+      'Activity feed with timeline visualization',
+      'Notification center with read/unread states',
+      'Command palette (⌘K) for quick navigation',
     ],
   },
   {
-    version: "1.1.0",
-    date: "2026-04-10",
-    title: "Core Features",
+    version: '1.1.0',
+    date: '2026-04-10',
+    title: 'Core Features',
     icon: GitCommit,
-    color: "#f59e0b",
+    color: '#f59e0b',
     changes: [
-      "Kanban board with drag-and-drop",
-      "List view with sort, filter, and bulk actions",
-      "Calendar view for deadline visualization",
-      "Task detail dialog with markdown description",
-      "Inline title editing in list view",
-      "Label management and priority system",
-      "Team workspaces and project management",
+      'Kanban board with drag-and-drop',
+      'List view with sort, filter, and bulk actions',
+      'Calendar view for deadline visualization',
+      'Task detail dialog with markdown description',
+      'Inline title editing in list view',
+      'Label management and priority system',
+      'Team workspaces and project management',
     ],
   },
 ];
@@ -99,12 +99,9 @@ export default function ChangelogPage() {
                   {/* Timeline dot */}
                   <div
                     className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card shadow-sm"
-                    style={{ borderColor: entry.color + "40" }}
+                    style={{ borderColor: entry.color + '40' }}
                   >
-                    <Icon
-                      className="h-5 w-5"
-                      style={{ color: entry.color }}
-                    />
+                    <Icon className="h-5 w-5" style={{ color: entry.color }} />
                   </div>
 
                   {/* Content */}
@@ -113,25 +110,20 @@ export default function ChangelogPage() {
                       <span
                         className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
                         style={{
-                          backgroundColor: entry.color + "18",
+                          backgroundColor: entry.color + '18',
                           color: entry.color,
                         }}
                       >
                         v{entry.version}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {format(new Date(entry.date), "MMMM d, yyyy")}
+                        {format(new Date(entry.date), 'MMMM d, yyyy')}
                       </span>
                     </div>
-                    <h2 className="mb-3 text-base font-semibold">
-                      {entry.title}
-                    </h2>
+                    <h2 className="mb-3 text-base font-semibold">{entry.title}</h2>
                     <ul className="space-y-1.5">
                       {entry.changes.map((change, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-sm text-foreground/80"
-                        >
+                        <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
                           <span
                             className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
                             style={{ backgroundColor: entry.color }}

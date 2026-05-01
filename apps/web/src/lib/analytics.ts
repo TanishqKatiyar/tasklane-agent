@@ -83,14 +83,8 @@ export const analyticsApi = {
     return data;
   },
 
-  getTeamAnalytics: async (
-    teamId: string,
-    period = '30d',
-  ): Promise<TeamAnalyticsResponse> => {
-    const { data } = await api.get(
-      `/teams/${teamId}/analytics/overview`,
-      { params: { period } },
-    );
+  getTeamAnalytics: async (teamId: string, period = '30d'): Promise<TeamAnalyticsResponse> => {
+    const { data } = await api.get(`/teams/${teamId}/analytics/overview`, { params: { period } });
     return data;
   },
 };

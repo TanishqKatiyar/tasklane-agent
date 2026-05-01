@@ -15,12 +15,7 @@ import { EmailService } from '../../email/email.service';
 import { invitationEmailTemplate } from '../../email/templates/invitation.template';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import {
-  ChangeRoleDto,
-  CreateTeamDto,
-  InviteMemberDto,
-  UpdateTeamDto,
-} from './dto';
+import { ChangeRoleDto, CreateTeamDto, InviteMemberDto, UpdateTeamDto } from './dto';
 
 @Injectable()
 export class TeamsService {
@@ -185,17 +180,12 @@ export class TeamsService {
       where: { teamId, email: dto.email.toLowerCase(), acceptedAt: null },
     });
     if (pending) {
-      throw new ConflictException(
-        'An invitation is already pending for this email',
-      );
+      throw new ConflictException('An invitation is already pending for this email');
     }
 
     // Generate token
     const rawToken = crypto.randomBytes(32).toString('hex');
-    const tokenHash = crypto
-      .createHash('sha256')
-      .update(rawToken)
-      .digest('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
 
     const invitation = await this.prisma.invitation.create({
       data: {
@@ -220,10 +210,7 @@ export class TeamsService {
       }),
     ]);
 
-    const frontendUrl = this.config.get<string>(
-      'FRONTEND_URL',
-      'http://localhost:3000',
-    );
+    const frontendUrl = this.config.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const inviteUrl = `${frontendUrl}/invitations/accept?token=${rawToken}`;
 
     const { subject, html } = invitationEmailTemplate({
@@ -250,10 +237,7 @@ export class TeamsService {
   // ────────────────────── Accept Invitation ──────────────────────
 
   async acceptInvitation(rawToken: string, userId: string, userEmail: string) {
-    const tokenHash = crypto
-      .createHash('sha256')
-      .update(rawToken)
-      .digest('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
 
     const invitation = await this.prisma.invitation.findUnique({
       where: { tokenHash },
@@ -273,9 +257,7 @@ export class TeamsService {
     }
 
     if (invitation.email.toLowerCase() !== userEmail.toLowerCase()) {
-      throw new ForbiddenException(
-        'This invitation was sent to a different email address',
-      );
+      throw new ForbiddenException('This invitation was sent to a different email address');
     }
 
     // Check if already a member
@@ -315,15 +297,17 @@ export class TeamsService {
       select: { userId: true },
     });
     for (const admin of admins) {
-      this.notificationsService.create({
-        userId: admin.userId,
-        type: 'TEAM_UPDATE',
-        title: 'New team member joined',
-        body: `Someone accepted the invitation to join your team`,
-        link: `/teams/${invitation.teamId}`,
-        actorId: userId,
-        metadata: { teamId: invitation.teamId, newMemberId: userId },
-      }).catch((err) => this.logger.warn('Notification failed', err));
+      this.notificationsService
+        .create({
+          userId: admin.userId,
+          type: 'TEAM_UPDATE',
+          title: 'New team member joined',
+          body: `Someone accepted the invitation to join your team`,
+          link: `/teams/${invitation.teamId}`,
+          actorId: userId,
+          metadata: { teamId: invitation.teamId, newMemberId: userId },
+        })
+        .catch((err) => this.logger.warn('Notification failed', err));
     }
 
     return {
@@ -357,9 +341,7 @@ export class TeamsService {
         where: { teamId, role: 'ADMIN' },
       });
       if (adminCount <= 1 && targetMember.role === 'ADMIN') {
-        throw new BadRequestException(
-          'Cannot remove the last admin. Transfer admin role first.',
-        );
+        throw new BadRequestException('Cannot remove the last admin. Transfer admin role first.');
       }
     }
 
@@ -377,12 +359,7 @@ export class TeamsService {
 
   // ────────────────────── Change Role ──────────────────────
 
-  async changeRole(
-    teamId: string,
-    targetUserId: string,
-    dto: ChangeRoleDto,
-    actorId: string,
-  ) {
+  async changeRole(teamId: string, targetUserId: string, dto: ChangeRoleDto, actorId: string) {
     const team = await this.prisma.team.findUnique({ where: { id: teamId } });
     if (!team) throw new NotFoundException('Team not found');
 
@@ -421,15 +398,17 @@ export class TeamsService {
     });
 
     // Notify the user whose role changed
-    this.notificationsService.create({
-      userId: targetUserId,
-      type: 'TEAM_UPDATE',
-      title: 'Your team role has changed',
-      body: `Your role has been updated to ${dto.role}`,
-      link: `/teams/${teamId}`,
-      actorId,
-      metadata: { teamId, newRole: dto.role },
-    }).catch((err) => this.logger.warn('Role notification failed', err));
+    this.notificationsService
+      .create({
+        userId: targetUserId,
+        type: 'TEAM_UPDATE',
+        title: 'Your team role has changed',
+        body: `Your role has been updated to ${dto.role}`,
+        link: `/teams/${teamId}`,
+        actorId,
+        metadata: { teamId, newRole: dto.role },
+      })
+      .catch((err) => this.logger.warn('Role notification failed', err));
 
     return updated;
   }
@@ -453,7 +432,14 @@ export class TeamsService {
   ) {
     try {
       await this.prisma.activity.create({
-        data: { userId, entityType, entityId, type: type as any, metadata: metadata as any, teamId: entityId },
+        data: {
+          userId,
+          entityType,
+          entityId,
+          type: type as any,
+          metadata: metadata as any,
+          teamId: entityId,
+        },
       });
     } catch (err) {
       this.logger.warn('Failed to log activity', err);

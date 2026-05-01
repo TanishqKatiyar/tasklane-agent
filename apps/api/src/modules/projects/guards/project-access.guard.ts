@@ -57,9 +57,7 @@ export class ProjectAccessGuard implements CanActivate {
     });
 
     if (!membership) {
-      throw new ForbiddenException(
-        'You are not a member of the team that owns this project',
-      );
+      throw new ForbiddenException('You are not a member of the team that owns this project');
     }
 
     // Attach to request
@@ -67,16 +65,14 @@ export class ProjectAccessGuard implements CanActivate {
     request.teamMembership = membership;
 
     // Check @TeamRoles() if present
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
-      TEAM_ROLES_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(TEAM_ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     if (requiredRoles && requiredRoles.length > 0) {
       if (!requiredRoles.includes(membership.role)) {
-        throw new ForbiddenException(
-          `This action requires one of: ${requiredRoles.join(', ')}`,
-        );
+        throw new ForbiddenException(`This action requires one of: ${requiredRoles.join(', ')}`);
       }
     }
 

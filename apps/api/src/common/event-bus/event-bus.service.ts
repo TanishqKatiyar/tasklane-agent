@@ -10,7 +10,7 @@ export class EventBusService {
     task: any, // Using any for now to avoid Prisma client dependency issues
     actorId: string,
     projectId: string,
-    changedFields?: string[]
+    changedFields?: string[],
   ) {
     this.eventEmitter.emit(type, { task, actorId, projectId, changedFields });
   }
@@ -20,7 +20,7 @@ export class EventBusService {
     comment: any,
     taskId: string,
     projectId: string,
-    actorId: string
+    actorId: string,
   ) {
     this.eventEmitter.emit(type, { comment, taskId, projectId, actorId });
   }

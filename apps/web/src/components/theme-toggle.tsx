@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Monitor,Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 const themes = [
-  { value: "light", icon: Sun, label: "Light" },
-  { value: "dark", icon: Moon, label: "Dark" },
-  { value: "system", icon: Monitor, label: "System" },
+  { value: 'light', icon: Sun, label: 'Light' },
+  { value: 'dark', icon: Moon, label: 'Dark' },
+  { value: 'system', icon: Monitor, label: 'System' },
 ] as const;
 
 export function ThemeToggle({ collapsed = false }: { collapsed?: boolean }) {
@@ -21,8 +21,7 @@ export function ThemeToggle({ collapsed = false }: { collapsed?: boolean }) {
 
   if (collapsed) {
     // Cycle through themes on click
-    const next =
-      theme === "dark" ? "light" : theme === "light" ? "system" : "dark";
+    const next = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark';
     const current = themes.find((t) => t.value === theme) ?? themes[1];
     const Icon = current.icon;
     return (
@@ -43,10 +42,10 @@ export function ThemeToggle({ collapsed = false }: { collapsed?: boolean }) {
           key={value}
           onClick={() => setTheme(value)}
           className={cn(
-            "flex h-7 items-center justify-center rounded-md px-2.5 text-xs font-medium transition-all",
+            'flex h-7 items-center justify-center rounded-md px-2.5 text-xs font-medium transition-all',
             theme === value
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground',
           )}
           title={label}
         >

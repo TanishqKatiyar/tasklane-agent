@@ -113,20 +113,27 @@ export function CreateTaskDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) resetForm(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) resetForm();
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckSquare className="h-4 w-4" />
             New Task
           </DialogTitle>
-          <DialogDescription>
-            Create a new task in a project
-          </DialogDescription>
+          <DialogDescription>Create a new task in a project</DialogDescription>
         </DialogHeader>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); mutation.mutate(); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            mutation.mutate();
+          }}
           className="space-y-4"
         >
           {/* Team selector */}
@@ -139,7 +146,9 @@ export function CreateTaskDialog() {
                 className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm outline-none focus:border-primary/50"
               >
                 {teams.map((t) => (
-                  <option key={t.id} value={t.id}>{t.name}</option>
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -149,7 +158,9 @@ export function CreateTaskDialog() {
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-1 block">Project</label>
             {projects.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-2">No projects in this team. Create a project first.</p>
+              <p className="text-xs text-muted-foreground py-2">
+                No projects in this team. Create a project first.
+              </p>
             ) : (
               <select
                 value={projectId}
@@ -159,7 +170,9 @@ export function CreateTaskDialog() {
               >
                 <option value="">Select a project</option>
                 {projects.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name} ({p.key})</option>
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.key})
+                  </option>
                 ))}
               </select>
             )}
@@ -167,7 +180,9 @@ export function CreateTaskDialog() {
 
           {/* Title */}
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1 block">Task title</label>
+            <label className="text-xs font-medium text-muted-foreground mb-1 block">
+              Task title
+            </label>
             <input
               type="text"
               value={title}
@@ -203,7 +218,10 @@ export function CreateTaskDialog() {
           <DialogFooter>
             <button
               type="button"
-              onClick={() => { setOpen(false); resetForm(); }}
+              onClick={() => {
+                setOpen(false);
+                resetForm();
+              }}
               className="rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
             >
               Cancel

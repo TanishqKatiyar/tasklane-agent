@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft,Loader2, Lock } from "lucide-react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense,useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, Loader2, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import api from "@/lib/api";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import api from '@/lib/api';
 
 const resetPasswordSchema = z
   .object({
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[a-zA-Z]/, "Password must contain at least one letter")
-      .regex(/[0-9]/, "Password must contain at least one number"),
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[a-zA-Z]/, 'Password must contain at least one letter')
+      .regex(/[0-9]/, 'Password must contain at least one number'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ["confirmPassword"],
+    path: ['confirmPassword'],
   });
 
 type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
@@ -33,7 +33,7 @@ type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get('token');
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -42,19 +42,16 @@ function ResetPasswordForm() {
     formState: { errors },
   } = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
-    defaultValues: { password: "", confirmPassword: "" },
+    defaultValues: { password: '', confirmPassword: '' },
   });
 
   if (!token) {
     return (
       <>
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Invalid reset link
-          </h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Invalid reset link</h1>
           <p className="text-sm text-muted-foreground">
-            This password reset link is missing a token. Please request a new
-            one.
+            This password reset link is missing a token. Please request a new one.
           </p>
         </div>
         <Link href="/forgot-password">
@@ -70,16 +67,14 @@ function ResetPasswordForm() {
   const onSubmit = async (values: ResetPasswordValues) => {
     setIsLoading(true);
     try {
-      await api.post("/auth/reset-password", {
+      await api.post('/auth/reset-password', {
         token,
         password: values.password,
       });
-      toast.success("Password reset successfully! Please sign in.");
-      router.push("/login");
+      toast.success('Password reset successfully! Please sign in.');
+      router.push('/login');
     } catch (error: any) {
-      const message =
-        error?.response?.data?.message ??
-        "Reset failed. The link may have expired.";
+      const message = error?.response?.data?.message ?? 'Reset failed. The link may have expired.';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -90,12 +85,8 @@ function ResetPasswordForm() {
     <>
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Set new password
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Choose a strong password for your account
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">Set new password</h1>
+        <p className="text-sm text-muted-foreground">Choose a strong password for your account</p>
       </div>
 
       {/* Form */}
@@ -110,14 +101,10 @@ function ResetPasswordForm() {
               placeholder="Min. 8 characters"
               className="pl-10"
               autoComplete="new-password"
-              {...register("password")}
+              {...register('password')}
             />
           </div>
-          {errors.password && (
-            <p className="text-sm text-destructive">
-              {errors.password.message}
-            </p>
-          )}
+          {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
         </div>
 
         <div className="space-y-2">
@@ -130,25 +117,16 @@ function ResetPasswordForm() {
               placeholder="Repeat your password"
               className="pl-10"
               autoComplete="new-password"
-              {...register("confirmPassword")}
+              {...register('confirmPassword')}
             />
           </div>
           {errors.confirmPassword && (
-            <p className="text-sm text-destructive">
-              {errors.confirmPassword.message}
-            </p>
+            <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
           )}
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isLoading}
-          size="lg"
-        >
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : null}
+        <Button type="submit" className="w-full" disabled={isLoading} size="lg">
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Reset password
         </Button>
       </form>

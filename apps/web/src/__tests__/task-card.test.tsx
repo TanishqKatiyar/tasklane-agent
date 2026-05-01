@@ -27,10 +27,7 @@ vi.mock('@dnd-kit/utilities', () => ({
 // ── Mock framer-motion ──
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({
-      children,
-      ...props
-    }: React.PropsWithChildren<Record<string, unknown>>) => {
+    div: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => {
       const { layoutId: _layoutId, ...rest } = props;
       return <div {...(rest as Record<string, unknown>)}>{children}</div>;
     },
@@ -74,18 +71,14 @@ describe('TaskCard', () => {
   it('renders description when present', () => {
     render(<TaskCard task={baseTask} projectKey="PROJ" />);
 
-    expect(
-      screen.getByText('The login page crashes on mobile browsers'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('The login page crashes on mobile browsers')).toBeInTheDocument();
   });
 
   it('does NOT render description when absent', () => {
     const taskNoDesc = { ...baseTask, description: null };
     render(<TaskCard task={taskNoDesc} projectKey="PROJ" />);
 
-    expect(
-      screen.queryByText('The login page crashes on mobile browsers'),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('The login page crashes on mobile browsers')).not.toBeInTheDocument();
   });
 
   it('renders assignee initials', () => {
@@ -133,9 +126,7 @@ describe('TaskCard', () => {
     const user = userEvent.setup();
     const handleClick = vi.fn();
 
-    render(
-      <TaskCard task={baseTask} projectKey="PROJ" onClick={handleClick} />,
-    );
+    render(<TaskCard task={baseTask} projectKey="PROJ" onClick={handleClick} />);
 
     await user.click(screen.getByText('Fix login page crash'));
     expect(handleClick).toHaveBeenCalledTimes(1);
@@ -148,9 +139,7 @@ describe('TaskCard', () => {
       status: 'TODO',
     };
 
-    const { container } = render(
-      <TaskCard task={overdueTask} projectKey="PROJ" />,
-    );
+    const { container } = render(<TaskCard task={overdueTask} projectKey="PROJ" />);
 
     // The overdue chip should have red styling
     const dueDateChip = container.querySelector('.text-red-400');
@@ -165,9 +154,7 @@ describe('TaskCard', () => {
       status: 'DONE',
     };
 
-    const { container } = render(
-      <TaskCard task={doneTask} projectKey="PROJ" />,
-    );
+    const { container } = render(<TaskCard task={doneTask} projectKey="PROJ" />);
 
     const overdueChip = container.querySelector('.text-red-400');
     expect(overdueChip).not.toBeInTheDocument();

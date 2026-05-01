@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { addDays, format,formatDistanceToNow, isBefore } from "date-fns";
+import { addDays, format, formatDistanceToNow, isBefore } from 'date-fns';
 import {
   ArrowDown,
   ArrowUp,
@@ -10,18 +10,14 @@ import {
   HelpCircle,
   Trash2,
   X,
-} from "lucide-react";
-import { useMemo, useRef, useState } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
-import { toast } from "sonner";
+} from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { toast } from 'sonner';
 
-import type { Task, TaskPriority,TaskStatus } from "@/lib/types";
-import {
-  BOARD_COLUMNS,
-  PRIORITY_CONFIG,
-  STATUS_CONFIG,
-} from "@/lib/types";
-import { cn } from "@/lib/utils";
+import type { Task, TaskPriority, TaskStatus } from '@/lib/types';
+import { BOARD_COLUMNS, PRIORITY_CONFIG, STATUS_CONFIG } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface ListViewProps {
   tasks: Task[];
@@ -30,8 +26,8 @@ interface ListViewProps {
   onTaskUpdate?: (taskId: string, updates: Partial<Task>) => void;
 }
 
-type SortField = "number" | "title" | "priority" | "dueDate" | "updatedAt";
-type SortDir = "asc" | "desc";
+type SortField = 'number' | 'title' | 'priority' | 'dueDate' | 'updatedAt';
+type SortDir = 'asc' | 'desc';
 
 const PRIORITY_ORDER: Record<TaskPriority, number> = {
   URGENT: 0,
@@ -40,18 +36,13 @@ const PRIORITY_ORDER: Record<TaskPriority, number> = {
   LOW: 3,
 };
 
-export function ListView({
-  tasks,
-  projectKey,
-  onTaskClick,
-  onTaskUpdate,
-}: ListViewProps) {
+export function ListView({ tasks, projectKey, onTaskClick, onTaskUpdate }: ListViewProps) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<TaskStatus>>(new Set());
-  const [sortField, setSortField] = useState<SortField>("number");
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [sortField, setSortField] = useState<SortField>('number');
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState("");
+  const [editTitle, setEditTitle] = useState('');
   const [focusIndex, setFocusIndex] = useState(-1);
   const [showHelp, setShowHelp] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -60,29 +51,32 @@ export function ListView({
   const groupedTasks = useMemo(() => {
     const groups: { status: TaskStatus; tasks: Task[] }[] = [];
 
-    for (const col of [...BOARD_COLUMNS, { id: "CANCELLED" as TaskStatus, title: "Cancelled", color: "#EF4444" }]) {
+    for (const col of [
+      ...BOARD_COLUMNS,
+      { id: 'CANCELLED' as TaskStatus, title: 'Cancelled', color: '#EF4444' },
+    ]) {
       const colTasks = tasks
         .filter((t) => t.status === col.id)
         .sort((a, b) => {
           let cmp = 0;
           switch (sortField) {
-            case "number":
+            case 'number':
               cmp = a.number - b.number;
               break;
-            case "title":
+            case 'title':
               cmp = a.title.localeCompare(b.title);
               break;
-            case "priority":
+            case 'priority':
               cmp = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
               break;
-            case "dueDate":
-              cmp = (a.dueDate ?? "z").localeCompare(b.dueDate ?? "z");
+            case 'dueDate':
+              cmp = (a.dueDate ?? 'z').localeCompare(b.dueDate ?? 'z');
               break;
-            case "updatedAt":
+            case 'updatedAt':
               cmp = a.updatedAt.localeCompare(b.updatedAt);
               break;
           }
-          return sortDir === "desc" ? -cmp : cmp;
+          return sortDir === 'desc' ? -cmp : cmp;
         });
 
       if (colTasks.length > 0) {
@@ -94,20 +88,17 @@ export function ListView({
 
   // ── Flat list for keyboard nav ──
   const flatTasks = useMemo(
-    () =>
-      groupedTasks
-        .filter((g) => !collapsedGroups.has(g.status))
-        .flatMap((g) => g.tasks),
-    [groupedTasks, collapsedGroups]
+    () => groupedTasks.filter((g) => !collapsedGroups.has(g.status)).flatMap((g) => g.tasks),
+    [groupedTasks, collapsedGroups],
   );
 
   // ── Sort toggle ──
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDir(sortDir === "asc" ? "desc" : "asc");
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
-      setSortDir("asc");
+      setSortDir('asc');
     }
   };
 
@@ -138,7 +129,7 @@ export function ListView({
   const saveTitle = () => {
     if (editingTitleId && editTitle.trim()) {
       onTaskUpdate?.(editingTitleId, { title: editTitle.trim() });
-      toast.success("Title updated");
+      toast.success('Title updated');
     }
     setEditingTitleId(null);
   };
@@ -156,28 +147,63 @@ export function ListView({
   };
 
   // ── Keyboard navigation ──
-  useHotkeys("j", () => setFocusIndex((i) => Math.min(i + 1, flatTasks.length - 1)), { enabled: !editingTitleId, preventDefault: true }, [flatTasks, editingTitleId]);
-  useHotkeys("k", () => setFocusIndex((i) => Math.max(i - 1, 0)), { enabled: !editingTitleId, preventDefault: true }, [editingTitleId]);
-  useHotkeys("enter", () => {
-    if (focusIndex >= 0 && focusIndex < flatTasks.length) {
-      onTaskClick?.(flatTasks[focusIndex]);
-    }
-  }, { enabled: !editingTitleId, preventDefault: true }, [focusIndex, flatTasks, editingTitleId, onTaskClick]);
-  useHotkeys("e", () => {
-    if (focusIndex >= 0 && focusIndex < flatTasks.length) {
-      startEditTitle(flatTasks[focusIndex]);
-    }
-  }, { enabled: !editingTitleId }, [focusIndex, flatTasks, editingTitleId]);
-  useHotkeys("x", () => {
-    if (focusIndex >= 0 && focusIndex < flatTasks.length) {
-      toggleSelect(flatTasks[focusIndex].id);
-    }
-  }, { enabled: !editingTitleId }, [focusIndex, flatTasks, editingTitleId]);
-  useHotkeys("shift+/", () => setShowHelp((p) => !p), { enabled: !editingTitleId, preventDefault: true }, [editingTitleId]);
-  useHotkeys("escape", () => {
-    setShowHelp(false);
-    setSelectedIds(new Set());
-  }, { enabled: !editingTitleId, enableOnFormTags: true }, [editingTitleId]);
+  useHotkeys(
+    'j',
+    () => setFocusIndex((i) => Math.min(i + 1, flatTasks.length - 1)),
+    { enabled: !editingTitleId, preventDefault: true },
+    [flatTasks, editingTitleId],
+  );
+  useHotkeys(
+    'k',
+    () => setFocusIndex((i) => Math.max(i - 1, 0)),
+    { enabled: !editingTitleId, preventDefault: true },
+    [editingTitleId],
+  );
+  useHotkeys(
+    'enter',
+    () => {
+      if (focusIndex >= 0 && focusIndex < flatTasks.length) {
+        onTaskClick?.(flatTasks[focusIndex]);
+      }
+    },
+    { enabled: !editingTitleId, preventDefault: true },
+    [focusIndex, flatTasks, editingTitleId, onTaskClick],
+  );
+  useHotkeys(
+    'e',
+    () => {
+      if (focusIndex >= 0 && focusIndex < flatTasks.length) {
+        startEditTitle(flatTasks[focusIndex]);
+      }
+    },
+    { enabled: !editingTitleId },
+    [focusIndex, flatTasks, editingTitleId],
+  );
+  useHotkeys(
+    'x',
+    () => {
+      if (focusIndex >= 0 && focusIndex < flatTasks.length) {
+        toggleSelect(flatTasks[focusIndex].id);
+      }
+    },
+    { enabled: !editingTitleId },
+    [focusIndex, flatTasks, editingTitleId],
+  );
+  useHotkeys(
+    'shift+/',
+    () => setShowHelp((p) => !p),
+    { enabled: !editingTitleId, preventDefault: true },
+    [editingTitleId],
+  );
+  useHotkeys(
+    'escape',
+    () => {
+      setShowHelp(false);
+      setSelectedIds(new Set());
+    },
+    { enabled: !editingTitleId, enableOnFormTags: true },
+    [editingTitleId],
+  );
 
   const SortHeader = ({
     field,
@@ -191,18 +217,14 @@ export function ListView({
     <button
       onClick={() => toggleSort(field)}
       className={cn(
-        "flex items-center gap-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground",
-        sortField === field && "text-foreground",
-        className
+        'flex items-center gap-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground',
+        sortField === field && 'text-foreground',
+        className,
       )}
     >
       {children}
       {sortField === field &&
-        (sortDir === "asc" ? (
-          <ArrowUp className="h-3 w-3" />
-        ) : (
-          <ArrowDown className="h-3 w-3" />
-        ))}
+        (sortDir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />)}
     </button>
   );
 
@@ -213,11 +235,9 @@ export function ListView({
       {/* ── Bulk actions toolbar ── */}
       {selectedIds.size > 0 && (
         <div className="sticky top-0 z-20 flex items-center gap-2 border-b border-primary/20 bg-primary/5 px-4 py-2 backdrop-blur-sm">
-          <span className="text-xs font-medium">
-            {selectedIds.size} selected
-          </span>
+          <span className="text-xs font-medium">{selectedIds.size} selected</span>
           <div className="h-4 w-px bg-border" />
-          {(["TODO", "IN_PROGRESS", "DONE"] as TaskStatus[]).map((s) => (
+          {(['TODO', 'IN_PROGRESS', 'DONE'] as TaskStatus[]).map((s) => (
             <button
               key={s}
               onClick={() => bulkChangeStatus(s)}
@@ -291,10 +311,7 @@ export function ListView({
               ) : (
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
               )}
-              <div
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: cfg.dot }}
-              />
+              <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cfg.dot }} />
               <span className="font-medium">{cfg.label}</span>
               <span className="text-muted-foreground">{groupTasks.length}</span>
             </button>
@@ -307,18 +324,21 @@ export function ListView({
                 const isSelected = selectedIds.has(task.id);
                 const priority = PRIORITY_CONFIG[task.priority];
                 const dueDate = task.dueDate ? new Date(task.dueDate) : null;
-                const isOverdue = dueDate && isBefore(dueDate, now) && task.status !== "DONE";
+                const isOverdue = dueDate && isBefore(dueDate, now) && task.status !== 'DONE';
                 const isDueSoon =
-                  dueDate && !isOverdue && isBefore(dueDate, addDays(now, 2)) && task.status !== "DONE";
+                  dueDate &&
+                  !isOverdue &&
+                  isBefore(dueDate, addDays(now, 2)) &&
+                  task.status !== 'DONE';
 
                 return (
                   <div
                     key={task.id}
                     className={cn(
-                      "grid grid-cols-[36px_60px_1fr_120px_90px_100px_80px] items-center gap-2 border-b border-border/50 px-4 py-2 text-sm transition-colors",
-                      "cursor-pointer hover:bg-accent/30",
-                      isFocused && "bg-primary/5 ring-1 ring-inset ring-primary/20",
-                      isSelected && "bg-primary/10"
+                      'grid grid-cols-[36px_60px_1fr_120px_90px_100px_80px] items-center gap-2 border-b border-border/50 px-4 py-2 text-sm transition-colors',
+                      'cursor-pointer hover:bg-accent/30',
+                      isFocused && 'bg-primary/5 ring-1 ring-inset ring-primary/20',
+                      isSelected && 'bg-primary/10',
                     )}
                     onClick={() => onTaskClick?.(task)}
                   >
@@ -349,8 +369,8 @@ export function ListView({
                           onChange={(e) => setEditTitle(e.target.value)}
                           onBlur={saveTitle}
                           onKeyDown={(e) => {
-                            if (e.key === "Enter") saveTitle();
-                            if (e.key === "Escape") setEditingTitleId(null);
+                            if (e.key === 'Enter') saveTitle();
+                            if (e.key === 'Escape') setEditingTitleId(null);
                           }}
                           className="w-full rounded border border-primary/30 bg-transparent px-1.5 py-0.5 text-sm outline-none focus:ring-1 focus:ring-primary/20"
                         />
@@ -371,13 +391,15 @@ export function ListView({
                         <div className="flex items-center gap-1.5">
                           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[9px] font-medium text-primary">
                             {task.assignee.name
-                              .split(" ")
+                              .split(' ')
                               .map((n) => n[0])
-                              .join("")
+                              .join('')
                               .toUpperCase()
                               .slice(0, 2)}
                           </div>
-                          <span className="truncate text-xs">{task.assignee.name.split(" ")[0]}</span>
+                          <span className="truncate text-xs">
+                            {task.assignee.name.split(' ')[0]}
+                          </span>
                         </div>
                       ) : (
                         <span className="text-xs text-muted-foreground/50">—</span>
@@ -388,9 +410,9 @@ export function ListView({
                     <div onClick={(e) => e.stopPropagation()}>
                       <span
                         className={cn(
-                          "inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium cursor-pointer",
+                          'inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium cursor-pointer',
                           priority.bg,
-                          priority.color
+                          priority.color,
                         )}
                       >
                         {priority.label}
@@ -402,14 +424,14 @@ export function ListView({
                       {dueDate ? (
                         <span
                           className={cn(
-                            "inline-flex items-center gap-1 text-[11px]",
-                            isOverdue && "text-red-400",
-                            isDueSoon && !isOverdue && "text-amber-400",
-                            !isOverdue && !isDueSoon && "text-muted-foreground"
+                            'inline-flex items-center gap-1 text-[11px]',
+                            isOverdue && 'text-red-400',
+                            isDueSoon && !isOverdue && 'text-amber-400',
+                            !isOverdue && !isDueSoon && 'text-muted-foreground',
                           )}
                         >
                           <Calendar className="h-3 w-3" />
-                          {format(dueDate, "MMM d")}
+                          {format(dueDate, 'MMM d')}
                         </span>
                       ) : (
                         <span className="text-xs text-muted-foreground/50">—</span>
@@ -444,12 +466,12 @@ export function ListView({
             </div>
             <div className="space-y-2 text-xs">
               {[
-                ["j / k", "Move focus down / up"],
-                ["Enter", "Open task detail"],
-                ["e", "Edit task title"],
-                ["x", "Toggle selection"],
-                ["?", "Show / hide this help"],
-                ["Esc", "Clear selection / close"],
+                ['j / k', 'Move focus down / up'],
+                ['Enter', 'Open task detail'],
+                ['e', 'Edit task title'],
+                ['x', 'Toggle selection'],
+                ['?', 'Show / hide this help'],
+                ['Esc', 'Clear selection / close'],
               ].map(([key, desc]) => (
                 <div key={key} className="flex items-center justify-between">
                   <span className="text-muted-foreground">{desc}</span>

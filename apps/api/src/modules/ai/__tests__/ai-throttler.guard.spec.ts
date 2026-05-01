@@ -62,10 +62,7 @@ describe('AiThrottlerGuard', () => {
 
     expect(result).toBe(true);
     expect(mockRedis.zadd).toHaveBeenCalled();
-    expect(mockRedis.expire).toHaveBeenCalledWith(
-      'ai:ratelimit:user-1',
-      3600,
-    );
+    expect(mockRedis.expire).toHaveBeenCalledWith('ai:ratelimit:user-1', 3600);
   });
 
   it('should allow exactly 20 requests (limit boundary)', async () => {
@@ -77,21 +74,14 @@ describe('AiThrottlerGuard', () => {
 
   it('should reject the 21st request with 429', async () => {
     mockRedis.zcard.mockResolvedValue(20); // already at limit
-    mockRedis.zrange.mockResolvedValue([
-      'entry',
-      String(Date.now() - 1000),
-    ]);
+    mockRedis.zrange.mockResolvedValue(['entry', String(Date.now() - 1000)]);
 
-    await expect(
-      guard.canActivate(createMockContext('user-1')),
-    ).rejects.toThrow(HttpException);
+    await expect(guard.canActivate(createMockContext('user-1'))).rejects.toThrow(HttpException);
 
     try {
       await guard.canActivate(createMockContext('user-1'));
     } catch (err) {
-      expect((err as HttpException).getStatus()).toBe(
-        HttpStatus.TOO_MANY_REQUESTS,
-      );
+      expect((err as HttpException).getStatus()).toBe(HttpStatus.TOO_MANY_REQUESTS);
     }
   });
 

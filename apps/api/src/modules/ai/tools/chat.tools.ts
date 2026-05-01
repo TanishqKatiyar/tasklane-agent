@@ -6,10 +6,13 @@ export const listTasksTool = {
     parameters: {
       type: 'object',
       properties: {
-        status: { type: 'string', description: 'Filter by task status (e.g. TODO, IN_PROGRESS, DONE)' }
-      }
-    }
-  }
+        status: {
+          type: 'string',
+          description: 'Filter by task status (e.g. TODO, IN_PROGRESS, DONE)',
+        },
+      },
+    },
+  },
 };
 
 export const getTaskByIdTool = {
@@ -20,11 +23,11 @@ export const getTaskByIdTool = {
     parameters: {
       type: 'object',
       properties: {
-        taskId: { type: 'string' }
+        taskId: { type: 'string' },
       },
-      required: ['taskId']
-    }
-  }
+      required: ['taskId'],
+    },
+  },
 };
 
 export const getMemberWorkloadTool = {
@@ -35,11 +38,11 @@ export const getMemberWorkloadTool = {
     parameters: {
       type: 'object',
       properties: {
-        userId: { type: 'string' }
+        userId: { type: 'string' },
       },
-      required: ['userId']
-    }
-  }
+      required: ['userId'],
+    },
+  },
 };
 
 export const chatTools = [listTasksTool, getTaskByIdTool, getMemberWorkloadTool];

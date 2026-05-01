@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 type Particle = {
   x: number;
@@ -30,8 +30,8 @@ type CursorVfxProps = {
  * --cursor-x / --cursor-y CSS variables on the root for use by halos.
  */
 export function CursorVfx({
-  inkRgb = "28 15 9",
-  accentRgb = "214 52 38",
+  inkRgb = '28 15 9',
+  accentRgb = '214 52 38',
   density = 1,
   className,
 }: CursorVfxProps) {
@@ -40,12 +40,10 @@ export function CursorVfx({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const pointer = { x: -9999, y: -9999, active: false };
     const particles: Particle[] = [];
@@ -60,8 +58,8 @@ export function CursorVfx({
       // Convert to viewport % so layouts can reference --cursor-x/y broadly.
       const xPct = (clientX / window.innerWidth) * 100;
       const yPct = (clientY / window.innerHeight) * 100;
-      document.documentElement.style.setProperty("--cursor-x", `${xPct}%`);
-      document.documentElement.style.setProperty("--cursor-y", `${yPct}%`);
+      document.documentElement.style.setProperty('--cursor-x', `${xPct}%`);
+      document.documentElement.style.setProperty('--cursor-y', `${yPct}%`);
     };
 
     const reseed = () => {
@@ -201,25 +199,19 @@ export function CursorVfx({
     reseed();
     frame = requestAnimationFrame(step);
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerleave", onPointerLeave);
-    window.addEventListener("blur", onPointerLeave);
-    window.addEventListener("resize", onResize);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerleave', onPointerLeave);
+    window.addEventListener('blur', onPointerLeave);
+    window.addEventListener('resize', onResize);
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
-      window.removeEventListener("blur", onPointerLeave);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerleave', onPointerLeave);
+      window.removeEventListener('blur', onPointerLeave);
+      window.removeEventListener('resize', onResize);
     };
   }, [inkRgb, accentRgb, density]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className={className ?? "cinematic-canvas"}
-      aria-hidden="true"
-    />
-  );
+  return <canvas ref={canvasRef} className={className ?? 'cinematic-canvas'} aria-hidden="true" />;
 }

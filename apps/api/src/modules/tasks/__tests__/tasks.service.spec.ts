@@ -1,8 +1,5 @@
-import {
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
-import { Test,TestingModule  } from '@nestjs/testing';
+import { BadRequestException, ConflictException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { EventBusService } from '../../../common/event-bus/event-bus.service';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -97,8 +94,7 @@ describe('TasksService', () => {
       //   DFS starting from A, looking for B
       //   find deps where blockedTaskId=A → [{blockingTaskId: B}]
       //   found B! → cycle detected
-      mockPrisma.taskDependency.findMany
-        .mockResolvedValueOnce([{ blockingTaskId: taskB }]);
+      mockPrisma.taskDependency.findMany.mockResolvedValueOnce([{ blockingTaskId: taskB }]);
 
       await expect(
         service.addDependency(taskB, { blockingTaskId: taskA }, 'user-1'),
@@ -149,22 +145,14 @@ describe('TasksService', () => {
       });
       mockPrisma.activity.create.mockResolvedValue({});
 
-      const result = await service.addDependency(
-        'task-B',
-        { blockingTaskId: 'task-A' },
-        'user-1',
-      );
+      const result = await service.addDependency('task-B', { blockingTaskId: 'task-A' }, 'user-1');
 
       expect(result.id).toBe('dep-1');
     });
 
     it('should reject self-dependency', async () => {
       await expect(
-        service.addDependency(
-          'task-A',
-          { blockingTaskId: 'task-A' },
-          'user-1',
-        ),
+        service.addDependency('task-A', { blockingTaskId: 'task-A' }, 'user-1'),
       ).rejects.toThrow(/cannot depend on itself/);
     });
 
@@ -179,11 +167,7 @@ describe('TasksService', () => {
       });
 
       await expect(
-        service.addDependency(
-          'task-B',
-          { blockingTaskId: 'task-A' },
-          'user-1',
-        ),
+        service.addDependency('task-B', { blockingTaskId: 'task-A' }, 'user-1'),
       ).rejects.toThrow(ConflictException);
     });
   });
@@ -366,11 +350,7 @@ describe('TasksService', () => {
       mockPrisma.teamMember.findUnique.mockResolvedValue(null); // not a member
 
       await expect(
-        service.create(
-          'proj-1',
-          { title: 'Test', assigneeId: 'outsider' } as any,
-          'user-1',
-        ),
+        service.create('proj-1', { title: 'Test', assigneeId: 'outsider' } as any, 'user-1'),
       ).rejects.toThrow(/member of the project team/);
     });
   });
@@ -393,11 +373,7 @@ describe('TasksService', () => {
       });
       mockPrisma.activity.create.mockResolvedValue({});
 
-      await service.move(
-        'task-1',
-        { status: 'IN_PROGRESS' as any, position: 2048 },
-        'user-1',
-      );
+      await service.move('task-1', { status: 'IN_PROGRESS' as any, position: 2048 }, 'user-1');
 
       expect(mockPrisma.task.update).toHaveBeenCalledWith(
         expect.objectContaining({

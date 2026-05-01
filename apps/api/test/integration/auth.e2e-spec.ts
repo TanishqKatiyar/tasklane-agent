@@ -90,8 +90,7 @@ describe('Auth (e2e)', () => {
     // Capture refresh cookie
     const cookies = res.headers['set-cookie'];
     if (Array.isArray(cookies)) {
-      refreshCookie = cookies
-        .find((c: string) => c.startsWith('tasklane_refresh='))!;
+      refreshCookie = cookies.find((c: string) => c.startsWith('tasklane_refresh='))!;
     } else if (typeof cookies === 'string') {
       refreshCookie = cookies;
     }
@@ -127,9 +126,7 @@ describe('Auth (e2e)', () => {
     accessToken = res.body.accessToken;
     const cookies = res.headers['set-cookie'];
     if (Array.isArray(cookies)) {
-      const newCookie = cookies.find((c: string) =>
-        c.startsWith('tasklane_refresh='),
-      );
+      const newCookie = cookies.find((c: string) => c.startsWith('tasklane_refresh='));
       if (newCookie) refreshCookie = newCookie;
     }
 

@@ -10,14 +10,7 @@ import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
 
 @Module({
-  imports: [
-    ConfigModule,
-    PrismaModule,
-    ProjectsModule,
-    TasksModule,
-    UsersModule,
-    TeamsModule,
-  ],
+  imports: [ConfigModule, PrismaModule, ProjectsModule, TasksModule, UsersModule, TeamsModule],
   controllers: [AiController],
   providers: [AiService],
   exports: [AiService],

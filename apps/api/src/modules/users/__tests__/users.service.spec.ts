@@ -1,4 +1,4 @@
-import { Test,TestingModule  } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import { PrismaService } from '../../../prisma/prisma.service';
 import { UsersService } from '../users.service';
@@ -20,10 +20,7 @@ describe('UsersService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [UsersService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<UsersService>(UsersService);

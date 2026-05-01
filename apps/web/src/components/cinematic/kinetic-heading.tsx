@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
 type KineticHeadingProps = {
   /**
@@ -21,7 +21,7 @@ function splitToLetters(text: string, lineDelay: number, letterStep: number) {
   const letters: React.ReactNode[] = [];
   Array.from(text).forEach((ch, i) => {
     const delay = lineDelay + i * letterStep;
-    if (ch === " ") {
+    if (ch === ' ') {
       letters.push(
         <span
           key={`s-${i}`}
@@ -29,19 +29,15 @@ function splitToLetters(text: string, lineDelay: number, letterStep: number) {
           style={{
             animationDelay: `${delay}s`,
             // Preserve the space as a real, non-collapsing whitespace
-            whiteSpace: "pre",
+            whiteSpace: 'pre',
           }}
         >
-          {" "}
+          {' '}
         </span>,
       );
     } else {
       letters.push(
-        <span
-          key={`l-${i}`}
-          className="kinetic-letter"
-          style={{ animationDelay: `${delay}s` }}
-        >
+        <span key={`l-${i}`} className="kinetic-letter" style={{ animationDelay: `${delay}s` }}>
           {ch}
         </span>,
       );
@@ -59,7 +55,7 @@ export function KineticHeading({
   letterStep = 0.022,
   lineStep = 0.18,
   className,
-  as: Tag = "h1",
+  as: Tag = 'h1',
 }: KineticHeadingProps) {
   let runningDelay = 0;
 
@@ -69,16 +65,13 @@ export function KineticHeading({
         const lineDelay = runningDelay;
         let content: React.ReactNode;
 
-        if (typeof line === "string") {
+        if (typeof line === 'string') {
           content = splitToLetters(line, lineDelay, letterStep);
           runningDelay = lineDelay + line.length * letterStep + lineStep;
         } else {
           // For ReactNode lines, animate as a single block.
           content = (
-            <span
-              className="kinetic-letter"
-              style={{ animationDelay: `${lineDelay}s` }}
-            >
+            <span className="kinetic-letter" style={{ animationDelay: `${lineDelay}s` }}>
               {line}
             </span>
           );

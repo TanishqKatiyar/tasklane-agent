@@ -15,7 +15,7 @@ export class WsJwtGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client: Socket = context.switchToWs().getClient<Socket>();
-    
+
     // Allow tokens attached to auth payload or fallback to cookies (if parsed)
     const token = client.handshake.auth?.token || this.extractTokenFromCookies(client);
 

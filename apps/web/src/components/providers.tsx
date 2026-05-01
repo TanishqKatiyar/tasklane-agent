@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
-import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { Toaster } from 'sonner';
 
-import { A11yProvider } from "@/components/a11y-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAuthStore } from "@/lib/auth";
+import { A11yProvider } from '@/components/a11y-provider';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { useAuthStore } from '@/lib/auth';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -23,7 +23,7 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient() {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return makeQueryClient();
   }
   if (!browserQueryClient) {
@@ -52,26 +52,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
         <A11yProvider>
           <TooltipProvider>
-            <AuthHydrator>
-              {children}
-            </AuthHydrator>
+            <AuthHydrator>{children}</AuthHydrator>
           </TooltipProvider>
         </A11yProvider>
         <Toaster
           position="top-right"
           toastOptions={{
             style: {
-              background: "rgb(var(--surface))",
-              border: "1px solid rgb(var(--border))",
-              color: "rgb(var(--text))",
+              background: 'rgb(var(--surface))',
+              border: '1px solid rgb(var(--border))',
+              color: 'rgb(var(--text))',
             },
           }}
           theme="dark"

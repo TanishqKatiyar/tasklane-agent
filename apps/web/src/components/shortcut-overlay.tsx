@@ -1,16 +1,12 @@
-"use client";
+'use client';
 
-import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
-import {
-  SHORTCUT_SECTIONS,
-  useShortcutOverlayState,
-} from "@/hooks/use-global-shortcuts";
+import { SHORTCUT_SECTIONS, useShortcutOverlayState } from '@/hooks/use-global-shortcuts';
 
-const isMac =
-  typeof navigator !== "undefined" && /Mac/i.test(navigator.userAgent);
+const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
 
 export function ShortcutOverlay() {
   const { open, setOpen } = useShortcutOverlayState();
@@ -20,13 +16,13 @@ export function ShortcutOverlay() {
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
         setOpen(false);
       }
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [open, setOpen]);
 
   return (
@@ -79,10 +75,7 @@ export function ShortcutOverlay() {
                   </h3>
                   <div className="space-y-2">
                     {section.shortcuts.map((shortcut, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between py-1"
-                      >
+                      <div key={idx} className="flex items-center justify-between py-1">
                         <span className="text-sm text-muted-foreground">
                           {shortcut.description}
                         </span>
@@ -106,9 +99,8 @@ export function ShortcutOverlay() {
             {/* Footer */}
             <div className="mt-6 border-t border-border pt-4">
               <p className="text-center text-xs text-muted-foreground">
-                Some shortcuts are platform-aware.{" "}
-                {isMac ? "⌘" : "Ctrl"} on{" "}
-                {isMac ? "Mac" : "Windows/Linux"}.
+                Some shortcuts are platform-aware. {isMac ? '⌘' : 'Ctrl'} on{' '}
+                {isMac ? 'Mac' : 'Windows/Linux'}.
               </p>
             </div>
           </motion.div>

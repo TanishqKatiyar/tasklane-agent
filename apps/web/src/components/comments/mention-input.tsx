@@ -42,13 +42,16 @@ export function MentionInput({
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Filtered members
-  const filtered = mentionSearch !== null
-    ? members.filter(
-        (m) =>
-          m.name.toLowerCase().includes(mentionSearch.toLowerCase()) ||
-          m.email.toLowerCase().includes(mentionSearch.toLowerCase()),
-      ).slice(0, 6)
-    : [];
+  const filtered =
+    mentionSearch !== null
+      ? members
+          .filter(
+            (m) =>
+              m.name.toLowerCase().includes(mentionSearch.toLowerCase()) ||
+              m.email.toLowerCase().includes(mentionSearch.toLowerCase()),
+          )
+          .slice(0, 6)
+      : [];
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (mentionSearch !== null && filtered.length > 0) {
@@ -145,7 +148,9 @@ export function MentionInput({
         )}
       />
       {/* Hint */}
-      <p className="absolute bottom-2 right-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">⌘↵ send</p>
+      <p className="absolute bottom-2 right-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        ⌘↵ send
+      </p>
 
       {/* Mention dropdown */}
       {mentionSearch !== null && filtered.length > 0 && (

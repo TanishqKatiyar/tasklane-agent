@@ -1,4 +1,4 @@
-import type { RealtimeClientEvents,RealtimeServerEvents } from '@tasklane/shared';
+import type { RealtimeClientEvents, RealtimeServerEvents } from '@tasklane/shared';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 

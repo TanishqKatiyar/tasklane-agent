@@ -10,13 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { TeamRoles } from './decorators/team-roles.decorator';
@@ -41,10 +35,7 @@ export class TeamsController {
   @Post()
   @ApiOperation({ summary: 'Create a new team (caller becomes ADMIN)' })
   @ApiResponse({ status: 201, description: 'Team created' })
-  async create(
-    @CurrentUser('id') userId: string,
-    @Body() dto: CreateTeamDto,
-  ) {
+  async create(@CurrentUser('id') userId: string, @Body() dto: CreateTeamDto) {
     return this.teams.create(userId, dto);
   }
 
@@ -77,10 +68,7 @@ export class TeamsController {
   @ApiOperation({ summary: 'Update team name/description (ADMIN only)' })
   @ApiParam({ name: 'teamId' })
   @ApiResponse({ status: 200, description: 'Team updated' })
-  async update(
-    @Param('teamId') teamId: string,
-    @Body() dto: UpdateTeamDto,
-  ) {
+  async update(@Param('teamId') teamId: string, @Body() dto: UpdateTeamDto) {
     return this.teams.update(teamId, dto);
   }
 
@@ -93,10 +81,7 @@ export class TeamsController {
   @ApiOperation({ summary: 'Delete team (OWNER only)' })
   @ApiParam({ name: 'teamId' })
   @ApiResponse({ status: 200, description: 'Team deleted' })
-  async delete(
-    @Param('teamId') teamId: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async delete(@Param('teamId') teamId: string, @CurrentUser('id') userId: string) {
     return this.teams.delete(teamId, userId);
   }
 

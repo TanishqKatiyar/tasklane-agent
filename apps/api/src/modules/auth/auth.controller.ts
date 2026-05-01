@@ -1,19 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 
@@ -51,10 +37,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User registered' })
   @ApiResponse({ status: 409, description: 'Email already exists' })
-  async register(
-    @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.auth.register(dto);
     this.setRefreshCookie(res, result.refreshToken);
     return { user: result.user, accessToken: result.accessToken };
@@ -69,10 +52,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Log in with email and password' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(
-    @Body() dto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.auth.login(dto);
 
     if ('requires2fa' in result && result.requires2fa) {
@@ -92,10 +72,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh access token using cookie' })
   @ApiResponse({ status: 200, description: 'Tokens refreshed' })
   @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
-  async refresh(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const rawToken = req.cookies?.[REFRESH_COOKIE];
     if (!rawToken) {
       res.status(401).json({ message: 'No refresh token provided' });
@@ -114,10 +91,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Log out and revoke refresh token' })
   @ApiResponse({ status: 200, description: 'Logged out' })
-  async logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const rawToken = req.cookies?.[REFRESH_COOKIE];
     await this.auth.logout(rawToken);
     res.clearCookie(REFRESH_COOKIE, { path: '/api/v1/auth' });

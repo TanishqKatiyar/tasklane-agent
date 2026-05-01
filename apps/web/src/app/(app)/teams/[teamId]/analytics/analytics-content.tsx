@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -14,8 +14,8 @@ import {
   ShieldAlert,
   Timer,
   TrendingUp,
-} from "lucide-react";
-import React, { memo, useRef, useState } from "react";
+} from 'lucide-react';
+import React, { memo, useRef, useState } from 'react';
 import {
   Area,
   Bar,
@@ -30,40 +30,40 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
-import { toast } from "sonner";
+} from 'recharts';
+import { toast } from 'sonner';
 
-import { AnalyticsSkeleton } from "@/components/ui/skeletons";
-import { StatCard } from "@/components/ui/stat-card";
-import { analyticsApi, type TeamAnalyticsResponse } from "@/lib/analytics";
+import { AnalyticsSkeleton } from '@/components/ui/skeletons';
+import { StatCard } from '@/components/ui/stat-card';
+import { analyticsApi, type TeamAnalyticsResponse } from '@/lib/analytics';
 
 // ── Design tokens for charts ──
 
 const CHART_COLORS = {
-  primary: "#6366f1",
-  emerald: "#10b981",
-  amber: "#f59e0b",
-  red: "#ef4444",
-  violet: "#8b5cf6",
-  cyan: "#06b6d4",
-  muted: "hsl(var(--muted-foreground))",
-  border: "hsl(var(--border))",
+  primary: '#6366f1',
+  emerald: '#10b981',
+  amber: '#f59e0b',
+  red: '#ef4444',
+  violet: '#8b5cf6',
+  cyan: '#06b6d4',
+  muted: 'hsl(var(--muted-foreground))',
+  border: 'hsl(var(--border))',
 };
 
 const STATUS_COLOR_MAP: Record<string, string> = {
-  BACKLOG: "#6B7280",
-  TODO: "#6366F1",
-  IN_PROGRESS: "#F59E0B",
-  IN_REVIEW: "#8B5CF6",
-  DONE: "#22C55E",
-  CANCELLED: "#EF4444",
+  BACKLOG: '#6B7280',
+  TODO: '#6366F1',
+  IN_PROGRESS: '#F59E0B',
+  IN_REVIEW: '#8B5CF6',
+  DONE: '#22C55E',
+  CANCELLED: '#EF4444',
 };
 
 const PRIORITY_COLOR_MAP: Record<string, string> = {
-  URGENT: "#EF4444",
-  HIGH: "#F97316",
-  MEDIUM: "#F59E0B",
-  LOW: "#94A3B8",
+  URGENT: '#EF4444',
+  HIGH: '#F97316',
+  MEDIUM: '#F59E0B',
+  LOW: '#94A3B8',
 };
 
 // ── Chart Card wrapper ──
@@ -71,16 +71,14 @@ const PRIORITY_COLOR_MAP: Record<string, string> = {
 function ChartCard({
   title,
   children,
-  className = "",
+  className = '',
 }: {
   title: string;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
-    <div
-      className={`rounded-xl border border-border bg-card p-5 shadow-sm ${className}`}
-    >
+    <div className={`rounded-xl border border-border bg-card p-5 shadow-sm ${className}`}>
       <h3 className="mb-4 text-sm font-semibold">{title}</h3>
       {children}
     </div>
@@ -96,7 +94,7 @@ function ChartTooltip({ active, payload, label }: any) {
       <p className="mb-1 text-xs font-medium text-muted-foreground">{label}</p>
       {payload.map((p: any) => (
         <p key={p.dataKey} className="text-sm font-medium" style={{ color: p.color }}>
-          {p.name ?? p.dataKey}: {typeof p.value === "number" ? p.value.toLocaleString() : p.value}
+          {p.name ?? p.dataKey}: {typeof p.value === 'number' ? p.value.toLocaleString() : p.value}
         </p>
       ))}
     </div>
@@ -108,7 +106,7 @@ function ChartTooltip({ active, payload, label }: any) {
 const WorkloadHeatmap = memo(function WorkloadHeatmap({
   members,
 }: {
-  members: TeamAnalyticsResponse["workload"]["members"];
+  members: TeamAnalyticsResponse['workload']['members'];
 }) {
   if (members.length === 0) {
     return (
@@ -120,28 +118,22 @@ const WorkloadHeatmap = memo(function WorkloadHeatmap({
 
   // Calculate team average for red-threshold
   const allDays = members.flatMap((m) => m.days);
-  const teamAvg =
-    allDays.length > 0
-      ? allDays.reduce((a, b) => a + b, 0) / allDays.length
-      : 1;
+  const teamAvg = allDays.length > 0 ? allDays.reduce((a, b) => a + b, 0) / allDays.length : 1;
 
   return (
     <div className="space-y-2 overflow-x-auto">
       {members.map((member) => (
         <div key={member.userId} className="flex items-center gap-3">
-          <div
-            className="w-24 shrink-0 truncate text-xs font-medium"
-            title={member.name}
-          >
+          <div className="w-24 shrink-0 truncate text-xs font-medium" title={member.name}>
             {member.name}
           </div>
           <div className="flex flex-1 gap-0.5">
             {member.days.map((val, i) => {
-              let bg = "bg-muted/50";
+              let bg = 'bg-muted/50';
               if (val > 0) {
-                if (val > teamAvg * 1.5) bg = "bg-red-500";
-                else if (val > teamAvg) bg = "bg-amber-400";
-                else bg = "bg-emerald-400";
+                if (val > teamAvg * 1.5) bg = 'bg-red-500';
+                else if (val > teamAvg) bg = 'bg-amber-400';
+                else bg = 'bg-emerald-400';
               }
               return (
                 <div
@@ -172,11 +164,11 @@ const WorkloadHeatmap = memo(function WorkloadHeatmap({
 // ── Main Component ──
 
 export default function AnalyticsContent({ teamId }: { teamId: string }) {
-  const [period, setPeriod] = useState("30d");
+  const [period, setPeriod] = useState('30d');
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["teamAnalytics", teamId, period],
+    queryKey: ['teamAnalytics', teamId, period],
     queryFn: () => analyticsApi.getTeamAnalytics(teamId, period),
     staleTime: 30_000,
     retry: false,
@@ -186,21 +178,21 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
 
   const exportPDF = async () => {
     if (!containerRef.current) return;
-    const id = toast.loading("Generating PDF…");
+    const id = toast.loading('Generating PDF…');
     try {
       const canvas = await html2canvas(containerRef.current, {
         scale: 2,
         useCORS: true,
       });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfW = pdf.internal.pageSize.getWidth();
       const pdfH = (canvas.height * pdfW) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
       pdf.save(`analytics-${teamId}-${period}.pdf`);
-      toast.success("PDF exported!", { id });
+      toast.success('PDF exported!', { id });
     } catch {
-      toast.error("PDF export failed", { id });
+      toast.error('PDF export failed', { id });
     }
   };
 
@@ -209,18 +201,18 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
   const exportCSV = () => {
     if (!data) return;
     const rows = [
-      "Metric,Value",
+      'Metric,Value',
       `Total Tasks,${data.kpis.totalTasks}`,
       `Done,${data.kpis.done}`,
       `In Progress,${data.kpis.inProgress}`,
       `Overdue,${data.kpis.overdue}`,
-      `Avg Cycle Time (hrs),${data.kpis.avgCycleTimeHours?.toFixed(1) ?? "N/A"}`,
+      `Avg Cycle Time (hrs),${data.kpis.avgCycleTimeHours?.toFixed(1) ?? 'N/A'}`,
       `Throughput This Week,${data.kpis.throughputThisWeek}`,
-    ].join("\n");
+    ].join('\n');
 
-    const blob = new Blob([rows], { type: "text/csv" });
+    const blob = new Blob([rows], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `analytics-${teamId}.csv`;
     a.click();
@@ -235,9 +227,7 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
       return (
         <div className="flex h-full flex-col items-center justify-center p-12 text-center">
           <ShieldAlert className="mb-4 h-16 w-16 text-red-400" />
-          <h2 className="mb-2 text-2xl font-bold">
-            You don't have permission
-          </h2>
+          <h2 className="mb-2 text-2xl font-bold">You don't have permission</h2>
           <p className="mb-6 max-w-md text-muted-foreground">
             Team analytics are only available to team administrators.
           </p>
@@ -263,28 +253,23 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
   // ── Chart data ──
 
   const burndownData = data.burndown.dates.map((d, i) => ({
-    date: format(new Date(d + "T00:00:00"), "MMM d"),
+    date: format(new Date(d + 'T00:00:00'), 'MMM d'),
     remaining: data.burndown.remaining[i],
     ideal: data.burndown.ideal[i],
   }));
 
   const throughputData = data.throughput.weeks.map((w, i) => ({
-    week: format(new Date(w + "T00:00:00"), "MMM d"),
+    week: format(new Date(w + 'T00:00:00'), 'MMM d'),
     completed: data.throughput.completed[i],
   }));
 
   return (
-    <div
-      ref={containerRef}
-      className="mx-auto h-full w-full max-w-7xl overflow-y-auto p-6 pb-24"
-    >
+    <div ref={containerRef} className="mx-auto h-full w-full max-w-7xl overflow-y-auto p-6 pb-24">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Team Analytics</h1>
-          <p className="text-sm text-muted-foreground">
-            Performance insights and metrics
-          </p>
+          <p className="text-sm text-muted-foreground">Performance insights and metrics</p>
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -382,17 +367,8 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
                     stroke={CHART_COLORS.border}
                     opacity={0.4}
                   />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
+                  <XAxis dataKey="date" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltip />} />
                   <defs>
                     <linearGradient id="burndownGrad" x1="0" y1="0" x2="0" y2="1">
@@ -441,17 +417,8 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
                     stroke={CHART_COLORS.border}
                     opacity={0.4}
                   />
-                  <XAxis
-                    dataKey="week"
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
+                  <XAxis dataKey="week" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltip />} />
                   <Bar
                     dataKey="completed"
@@ -492,11 +459,7 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
                     axisLine={false}
                     tickLine={false}
                   />
-                  <YAxis
-                    tick={{ fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
+                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltip />} />
                   <Bar
                     dataKey="count"
@@ -540,10 +503,7 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
                         {data.byPriority.map((entry, i) => (
                           <Cell
                             key={i}
-                            fill={
-                              PRIORITY_COLOR_MAP[entry.priority] ??
-                              CHART_COLORS.muted
-                            }
+                            fill={PRIORITY_COLOR_MAP[entry.priority] ?? CHART_COLORS.muted}
                           />
                         ))}
                       </Pie>
@@ -578,10 +538,7 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
                         {data.byStatus.map((entry, i) => (
                           <Cell
                             key={i}
-                            fill={
-                              STATUS_COLOR_MAP[entry.status] ??
-                              CHART_COLORS.muted
-                            }
+                            fill={STATUS_COLOR_MAP[entry.status] ?? CHART_COLORS.muted}
                           />
                         ))}
                       </Pie>
@@ -600,7 +557,7 @@ export default function AnalyticsContent({ teamId }: { teamId: string }) {
   );
 }
 
-function EmptyChart({ message = "No data available" }: { message?: string }) {
+function EmptyChart({ message = 'No data available' }: { message?: string }) {
   return (
     <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
       {message}

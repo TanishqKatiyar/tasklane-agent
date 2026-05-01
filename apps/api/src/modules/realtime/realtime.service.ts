@@ -26,7 +26,7 @@ export class RealtimeService {
    */
   async offline(userId: string, socketId: string): Promise<void> {
     await this.redis.del(`presence:user:${userId}:${socketId}`);
-    
+
     // Check if user has any other active sockets
     const keys = await this.redis.keys(`presence:user:${userId}:*`);
     if (keys.length === 0) {
@@ -47,10 +47,10 @@ export class RealtimeService {
    */
   async getOnlineTeamMembers(teamMemberIds: string[]): Promise<string[]> {
     if (!teamMemberIds.length) return [];
-    
+
     const pipeline = this.redis.pipeline();
-    teamMemberIds.forEach(id => pipeline.sismember('presence:online', id));
-    
+    teamMemberIds.forEach((id) => pipeline.sismember('presence:online', id));
+
     const results = await pipeline.exec();
     if (!results) return [];
 

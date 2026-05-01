@@ -76,8 +76,7 @@ function isYesterday(d: Date) {
 
 function ActivityRow({ item, index }: { item: ActivityItem; index: number }) {
   const Icon = TYPE_ICONS[item.type] ?? Activity;
-  const label =
-    TYPE_LABELS[item.type] ?? item.type.replace(/_/g, ' ').toLowerCase();
+  const label = TYPE_LABELS[item.type] ?? item.type.replace(/_/g, ' ').toLowerCase();
   const meta = item.metadata as any;
 
   return (
@@ -94,9 +93,7 @@ function ActivityRow({ item, index }: { item: ActivityItem; index: number }) {
         <p className="text-[13px] leading-snug text-[var(--p-ink)]">
           <span className="font-medium">{item.user?.name ?? 'Someone'}</span>{' '}
           <span className="text-[var(--p-ink-soft)]">{label}</span>
-          {meta?.taskTitle && (
-            <span className="font-medium"> &ldquo;{meta.taskTitle}&rdquo;</span>
-          )}
+          {meta?.taskTitle && <span className="font-medium"> &ldquo;{meta.taskTitle}&rdquo;</span>}
         </p>
         <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-ink-softer)]">
           {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
@@ -126,19 +123,18 @@ export default function TeamActivityPage({ params }: Props) {
 
   const queryKey = ['team-activity', teamId, entityType];
 
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey,
-      queryFn: async ({ pageParam }) => {
-        return getTeamActivity(teamId, {
-          cursor: pageParam as string | undefined,
-          limit: 30,
-          entityType: entityType || undefined,
-        });
-      },
-      initialPageParam: undefined as string | undefined,
-      getNextPageParam: (last) => last.nextCursor ?? undefined,
-    });
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey,
+    queryFn: async ({ pageParam }) => {
+      return getTeamActivity(teamId, {
+        cursor: pageParam as string | undefined,
+        limit: 30,
+        entityType: entityType || undefined,
+      });
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+  });
 
   // Real-time: prepend new activity items
   useEffect(() => {
@@ -187,8 +183,8 @@ export default function TeamActivityPage({ params }: Props) {
           .
         </h1>
         <p className="mt-3 max-w-md text-[14px] leading-relaxed text-[var(--p-ink-muted)]">
-          Live, chronological feed of every task, comment, and member event in
-          this team. Updates as they land.
+          Live, chronological feed of every task, comment, and member event in this team. Updates as
+          they land.
         </p>
 
         {/* Filters */}
@@ -215,10 +211,7 @@ export default function TeamActivityPage({ params }: Props) {
             <ActivityFeedSkeleton count={6} />
           ) : grouped.length === 0 ? (
             <div className="flex flex-col items-center rounded-2xl border border-dashed border-[var(--p-rule)] bg-[var(--p-paper-deep)] px-6 py-16 text-center">
-              <Activity
-                className="mb-3 h-7 w-7 text-[var(--p-ink-softer)]"
-                strokeWidth={1.5}
-              />
+              <Activity className="mb-3 h-7 w-7 text-[var(--p-ink-softer)]" strokeWidth={1.5} />
               <p className="font-display p-display text-[22px] tracking-tight">
                 Quiet{' '}
                 <span className="italic" style={{ color: 'var(--p-accent)' }}>
@@ -259,9 +252,7 @@ export default function TeamActivityPage({ params }: Props) {
                     disabled={isFetchingNextPage}
                     className="flex items-center gap-2 rounded-lg border border-[var(--p-rule)] bg-[var(--p-paper-deep)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-ink-soft)] transition-all hover:-translate-y-px hover:text-[var(--p-ink)] disabled:opacity-60"
                   >
-                    {isFetchingNextPage && (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    )}
+                    {isFetchingNextPage && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                     Load more
                   </button>
                 </div>

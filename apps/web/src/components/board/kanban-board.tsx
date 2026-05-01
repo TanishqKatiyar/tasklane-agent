@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   closestCorners,
@@ -13,17 +13,17 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
+} from '@dnd-kit/core';
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
-import type { Task, TaskFilters, TaskStatus } from "@/lib/types";
-import { BOARD_COLUMNS, CANCELLED_COLUMN } from "@/lib/types";
+import type { Task, TaskFilters, TaskStatus } from '@/lib/types';
+import { BOARD_COLUMNS, CANCELLED_COLUMN } from '@/lib/types';
 
-import { BoardColumn } from "./board-column";
-import { PresenceLayer } from "./presence-layer";
-import { TaskCard } from "./task-card";
+import { BoardColumn } from './board-column';
+import { PresenceLayer } from './presence-layer';
+import { TaskCard } from './task-card';
 
 // Stable measuring configuration — defined outside the component to avoid
 // re-creating on every render, which would cause dnd-kit's measureRect to
@@ -80,13 +80,11 @@ export function KanbanBoard({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // ── Group tasks by column ──
-  const columns = showCancelled
-    ? [...BOARD_COLUMNS, CANCELLED_COLUMN]
-    : BOARD_COLUMNS;
+  const columns = showCancelled ? [...BOARD_COLUMNS, CANCELLED_COLUMN] : BOARD_COLUMNS;
 
   const tasksByColumn = useMemo(() => {
     const map: Record<TaskStatus, Task[]> = {
@@ -103,9 +101,7 @@ export function KanbanBoard({
       }
     });
     // Sort by position within each column
-    Object.values(map).forEach((col) =>
-      col.sort((a, b) => a.position - b.position)
-    );
+    Object.values(map).forEach((col) => col.sort((a, b) => a.position - b.position));
     return map;
   }, [localTasks]);
 
@@ -115,7 +111,7 @@ export function KanbanBoard({
       const task = localTasks.find((t) => t.id === taskId);
       return task?.status ?? null;
     },
-    [localTasks]
+    [localTasks],
   );
 
   // ── Drag handlers ──
@@ -124,7 +120,7 @@ export function KanbanBoard({
       const task = localTasks.find((t) => t.id === event.active.id);
       if (task) setActiveTask(task);
     },
-    [localTasks]
+    [localTasks],
   );
 
   const handleDragOver = useCallback(
@@ -147,12 +143,10 @@ export function KanbanBoard({
 
       // Move task to new column
       setLocalTasks((prev) =>
-        prev.map((task) =>
-          task.id === activeId ? { ...task, status: destCol } : task
-        )
+        prev.map((task) => (task.id === activeId ? { ...task, status: destCol } : task)),
       );
     },
-    [findColumn, columns]
+    [findColumn, columns],
   );
 
   const handleDragEnd = useCallback(
@@ -189,9 +183,7 @@ export function KanbanBoard({
             });
 
             return prev.map((t) =>
-              updatedIds.has(t.id)
-                ? { ...t, position: updatedIds.get(t.id)! }
-                : t
+              updatedIds.has(t.id) ? { ...t, position: updatedIds.get(t.id)! } : t,
             );
           });
         }
@@ -202,12 +194,12 @@ export function KanbanBoard({
       if (finalTask) {
         onTaskUpdate?.(activeId, { status: finalTask.status, position: finalTask.position });
         toast.success(
-          `Moved "${finalTask.title.slice(0, 30)}…" to ${finalTask.status.replace(/_/g, " ")}`,
-          { duration: 2000 }
+          `Moved "${finalTask.title.slice(0, 30)}…" to ${finalTask.status.replace(/_/g, ' ')}`,
+          { duration: 2000 },
         );
       }
     },
-    [findColumn, localTasks, onTaskUpdate]
+    [findColumn, localTasks, onTaskUpdate],
   );
 
   return (
@@ -235,9 +227,7 @@ export function KanbanBoard({
 
         {/* Drag overlay: floating card that follows the cursor */}
         <DragOverlay dropAnimation={null}>
-          {activeTask && (
-            <TaskCard task={activeTask} projectKey={projectKey} overlay />
-          )}
+          {activeTask && <TaskCard task={activeTask} projectKey={projectKey} overlay />}
         </DragOverlay>
       </DndContext>
     </PresenceLayer>

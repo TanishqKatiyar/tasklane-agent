@@ -1,7 +1,7 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Test,TestingModule  } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 
@@ -164,7 +164,7 @@ describe('AuthService', () => {
       mockPrisma.refreshToken.create.mockResolvedValue({ id: 'rt-1' });
       mockPrisma.activity.create.mockResolvedValue({});
 
-      const result = await service.login(dto) as {
+      const result = (await service.login(dto)) as {
         accessToken: string;
         refreshToken: string;
         user: any;
@@ -433,7 +433,9 @@ describe('AuthService', () => {
 
     it('should throw on invalid token', async () => {
       mockPrisma.passwordResetToken.findUnique.mockResolvedValue(null);
-      await expect(service.resetPassword('bad', 'NewPass123')).rejects.toThrow(/Invalid reset token/);
+      await expect(service.resetPassword('bad', 'NewPass123')).rejects.toThrow(
+        /Invalid reset token/,
+      );
     });
 
     it('should reject already-used tokens', async () => {
@@ -447,4 +449,3 @@ describe('AuthService', () => {
     });
   });
 });
-

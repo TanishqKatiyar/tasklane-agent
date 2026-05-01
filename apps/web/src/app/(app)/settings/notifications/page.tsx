@@ -191,9 +191,7 @@ export default function NotificationSettingsPage() {
           <div className="flex items-end justify-between gap-4">
             <h1 className="font-display text-[44px] leading-[1.0] tracking-tight text-foreground">
               How we{' '}
-              <span className="font-display-italic text-[rgb(var(--signature))]">
-                interrupt
-              </span>{' '}
+              <span className="font-display-italic text-[rgb(var(--signature))]">interrupt</span>{' '}
               you.
             </h1>
 
@@ -213,8 +211,8 @@ export default function NotificationSettingsPage() {
             )}
           </div>
           <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-foreground">
-            Tasklane will only ping you for the things you tell it to. Toggle
-            in-app and email separately for every signal.
+            Tasklane will only ping you for the things you tell it to. Toggle in-app and email
+            separately for every signal.
           </p>
         </header>
 
@@ -234,10 +232,7 @@ export default function NotificationSettingsPage() {
                     {section.title}
                   </h2>
                 </div>
-                <section.Icon
-                  className="h-4 w-4 text-muted-foreground"
-                  strokeWidth={1.7}
-                />
+                <section.Icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.7} />
               </div>
 
               {/* Column labels */}
@@ -253,14 +248,9 @@ export default function NotificationSettingsPage() {
               {/* Rows */}
               <div className="divide-y divide-border/40">
                 {section.rows.map((row) => (
-                  <div
-                    key={row.label}
-                    className="flex items-center justify-between gap-3 py-3.5"
-                  >
+                  <div key={row.label} className="flex items-center justify-between gap-3 py-3.5">
                     <div className="flex-1">
-                      <p className="text-[14px] font-medium text-foreground">
-                        {row.label}
-                      </p>
+                      <p className="text-[14px] font-medium text-foreground">{row.label}</p>
                       {row.desc && (
                         <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">
                           {row.desc}
@@ -294,9 +284,7 @@ export default function NotificationSettingsPage() {
                 </span>
                 <h2 className="font-display text-[24px] leading-none tracking-tight">
                   Daily{' '}
-                  <span className="font-display-italic text-[rgb(var(--signature))]">
-                    digest
-                  </span>
+                  <span className="font-display-italic text-[rgb(var(--signature))]">digest</span>
                 </h2>
               </div>
               <Mail className="h-4 w-4 text-muted-foreground" strokeWidth={1.7} />
@@ -304,9 +292,7 @@ export default function NotificationSettingsPage() {
 
             <div className="flex items-center justify-between gap-3 py-1">
               <div className="flex-1">
-                <p className="text-[14px] font-medium text-foreground">
-                  Daily summary email
-                </p>
+                <p className="text-[14px] font-medium text-foreground">Daily summary email</p>
                 <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">
                   A daily overview of your tasks, mentions, and overdue items.
                 </p>
@@ -325,9 +311,7 @@ export default function NotificationSettingsPage() {
                 </label>
                 <select
                   value={(draft as any).digestHourUTC ?? 8}
-                  onChange={(e) =>
-                    set('digestHourUTC', parseInt(e.target.value, 10))
-                  }
+                  onChange={(e) => set('digestHourUTC', parseInt(e.target.value, 10))}
                   className="w-full appearance-none rounded-lg border border-border bg-background px-3 py-2.5 text-[14px] text-foreground ring-inner-hl focus:border-[rgb(var(--signature))]/60 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--signature))]/30"
                 >
                   {UTC_HOURS.map((h) => (

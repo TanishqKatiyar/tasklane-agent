@@ -1,24 +1,13 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import {
-  AtSign,
-  Calendar,
-  Check,
-  ClipboardList,
-  MessageSquare,
-  Trash2,
-  Users,
-} from 'lucide-react';
+import { AtSign, Calendar, Check, ClipboardList, MessageSquare, Trash2, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import type { AppNotification } from '@/lib/notifications';
 import { cn } from '@/lib/utils';
 
-const TYPE_CONFIG: Record<
-  string,
-  { Icon: React.ElementType; tag: string }
-> = {
+const TYPE_CONFIG: Record<string, { Icon: React.ElementType; tag: string }> = {
   TASK_ASSIGNED: { Icon: ClipboardList, tag: 'Assigned' },
   MENTION: { Icon: AtSign, tag: 'Mention' },
   TASK_COMMENTED: { Icon: MessageSquare, tag: 'Comment' },
@@ -40,8 +29,7 @@ export function NotificationItem({
   compact = false,
 }: NotificationItemProps) {
   const router = useRouter();
-  const cfg =
-    TYPE_CONFIG[notification.type] ?? { Icon: ClipboardList, tag: 'Update' };
+  const cfg = TYPE_CONFIG[notification.type] ?? { Icon: ClipboardList, tag: 'Update' };
   const isUnread = !notification.readAt;
 
   const handleClick = () => {
@@ -97,9 +85,7 @@ export function NotificationItem({
         <p
           className={cn(
             'text-[14px] leading-snug',
-            isUnread
-              ? 'font-medium text-foreground'
-              : 'font-normal text-foreground/85',
+            isUnread ? 'font-medium text-foreground' : 'font-normal text-foreground/85',
           )}
         >
           {notification.title}

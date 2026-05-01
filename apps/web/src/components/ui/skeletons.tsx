@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Skeleton, SkeletonCircle, SkeletonText } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonCircle, SkeletonText } from '@/components/ui/skeleton';
 
 /* ══════════════════════════════════════════════════════════════
    SKELETON LOADERS — Shape-matched to actual content
@@ -39,7 +39,10 @@ export function DashboardSkeleton() {
           </div>
           <div className="space-y-2">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"
+              >
                 <Skeleton className="h-4 w-4" />
                 <Skeleton className="h-2 w-2 rounded-full" />
                 <Skeleton className="h-4 w-14 rounded" />
@@ -199,7 +202,7 @@ export function TaskDetailSkeleton() {
       </div>
       {/* Sidebar fields */}
       <div className="w-full lg:w-[240px] space-y-4">
-        {["Status", "Priority", "Assignee", "Due Date", "Labels"].map((label) => (
+        {['Status', 'Priority', 'Assignee', 'Due Date', 'Labels'].map((label) => (
           <div key={label}>
             <Skeleton className="h-3 w-16 mb-2" />
             <Skeleton className="h-8 w-full rounded-lg" />

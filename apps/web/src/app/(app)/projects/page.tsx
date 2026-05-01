@@ -50,8 +50,8 @@ function ProjectCard({ project }: { project: Project }) {
     project.status === 'ACTIVE'
       ? { bg: 'rgb(27 107 61 / 0.12)', fg: '#1b6b3d' }
       : project.status === 'ARCHIVED'
-      ? { bg: 'rgb(232 184 64 / 0.18)', fg: '#8a6d20' }
-      : { bg: 'rgb(107 155 201 / 0.18)', fg: '#3a6f9c' };
+        ? { bg: 'rgb(232 184 64 / 0.18)', fg: '#8a6d20' }
+        : { bg: 'rgb(107 155 201 / 0.18)', fg: '#3a6f9c' };
 
   return (
     <Link
@@ -115,10 +115,15 @@ function TeamProjectGroup({ team }: { team: Team }) {
   return (
     <section>
       <div className="mb-3 flex items-center gap-3">
-        <div className="flex h-7 w-7 items-center justify-center rounded font-mono text-[10px] font-bold text-[var(--p-paper)]" style={{ background: 'var(--p-ink)' }}>
+        <div
+          className="flex h-7 w-7 items-center justify-center rounded font-mono text-[10px] font-bold text-[var(--p-paper)]"
+          style={{ background: 'var(--p-ink)' }}
+        >
           {(team.slug ?? team.name).slice(0, 2).toUpperCase()}
         </div>
-        <h2 className="font-display p-display text-[22px] leading-none tracking-tight">{team.name}</h2>
+        <h2 className="font-display p-display text-[22px] leading-none tracking-tight">
+          {team.name}
+        </h2>
         <span className="h-px flex-1 bg-[var(--p-rule)]" />
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-ink-soft)] tabular-nums">
           {String(projects.length).padStart(2, '0')} projects
@@ -165,8 +170,7 @@ export default function ProjectsPage() {
           .
         </h1>
         <p className="mt-3 max-w-md text-[14px] leading-relaxed text-[var(--p-ink-muted)]">
-          Grouped by team. Click into one to see its board, list, calendar, or
-          timeline.
+          Grouped by team. Click into one to see its board, list, calendar, or timeline.
         </p>
 
         <div className="mt-10">
@@ -176,10 +180,7 @@ export default function ProjectsPage() {
             </div>
           ) : !teams || teams.length === 0 ? (
             <div className="flex flex-col items-center rounded-2xl border border-dashed border-[var(--p-rule)] bg-[var(--p-paper-deep)] px-6 py-16 text-center">
-              <FolderKanban
-                className="mb-3 h-7 w-7 text-[var(--p-ink-softer)]"
-                strokeWidth={1.5}
-              />
+              <FolderKanban className="mb-3 h-7 w-7 text-[var(--p-ink-softer)]" strokeWidth={1.5} />
               <p className="font-display p-display text-[22px] tracking-tight">
                 No projects{' '}
                 <span className="italic" style={{ color: 'var(--p-accent)' }}>

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * Lightweight hook that tracks the visitor's pointer and writes
@@ -16,13 +16,13 @@ export function useCursorPosition() {
     const onPointerMove = (e: PointerEvent) => {
       const xPct = (e.clientX / window.innerWidth) * 100;
       const yPct = (e.clientY / window.innerHeight) * 100;
-      document.documentElement.style.setProperty("--cursor-x", `${xPct}%`);
-      document.documentElement.style.setProperty("--cursor-y", `${yPct}%`);
+      document.documentElement.style.setProperty('--cursor-x', `${xPct}%`);
+      document.documentElement.style.setProperty('--cursor-y', `${yPct}%`);
     };
 
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
     return () => {
-      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener('pointermove', onPointerMove);
     };
   }, []);
 }

@@ -11,5 +11,4 @@ export const TEAM_ROLES_KEY = 'teamRoles';
  * Usage: @TeamRoles('ADMIN')  — only team admins
  * Usage: @TeamRoles()          — any team member (guard still loads membership)
  */
-export const TeamRoles = (...roles: string[]) =>
-  SetMetadata(TEAM_ROLES_KEY, roles);
+export const TeamRoles = (...roles: string[]) => SetMetadata(TEAM_ROLES_KEY, roles);

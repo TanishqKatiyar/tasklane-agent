@@ -1,43 +1,32 @@
-"use client";
+'use client';
 
-import {
-  CheckSquare,
-  ChevronRight,
-  FolderKanban,
-  Menu,
-  Plus,
-  Search,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { CheckSquare, ChevronRight, FolderKanban, Menu, Plus, Search } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
-import { AiChatPanel } from "@/components/ai-chat-panel";
-import { MobileSidebar } from "@/components/app-shell/sidebar";
-import { NotificationBell } from "@/components/notifications/notification-bell";
-import { AiSparkleButton } from "@/components/ui/ai-sparkle-button";
-import { useUIStore } from "@/stores/ui-store";
+import { AiChatPanel } from '@/components/ai-chat-panel';
+import { MobileSidebar } from '@/components/app-shell/sidebar';
+import { NotificationBell } from '@/components/notifications/notification-bell';
+import { AiSparkleButton } from '@/components/ui/ai-sparkle-button';
+import { useUIStore } from '@/stores/ui-store';
 
 // ── Breadcrumb ──
 function Breadcrumb() {
   const pathname = usePathname();
   const segments = pathname
-    .split("/")
+    .split('/')
     .filter(Boolean)
     .map((seg) => ({
-      label: seg
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
-      href: "/" + seg,
+      label: seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      href: '/' + seg,
     }));
 
   return (
     <nav className="flex items-center gap-1 text-sm">
       {segments.map((seg, i) => (
         <span key={seg.href} className="flex items-center gap-1">
-          {i > 0 && (
-            <ChevronRight className="h-3 w-3 text-muted-foreground/50" />
-          )}
+          {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/50" />}
           {i < segments.length - 1 ? (
             <Link
               href={seg.href}
@@ -129,11 +118,11 @@ export function TopBar() {
           onClick={() => {
             // Dispatch ⌘K to open command palette
             document.dispatchEvent(
-              new KeyboardEvent("keydown", {
-                key: "k",
+              new KeyboardEvent('keydown', {
+                key: 'k',
                 metaKey: true,
                 bubbles: true,
-              })
+              }),
             );
           }}
           className="flex h-8 items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 text-sm text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
@@ -150,14 +139,14 @@ export function TopBar() {
 
         {/* New */}
         <NewButton />
-        
+
         {/* AI Chat Toggle */}
-        <AiSparkleButton 
-          className="ml-2 px-3 py-1.5 h-8 text-xs font-bold" 
+        <AiSparkleButton
+          className="ml-2 px-3 py-1.5 h-8 text-xs font-bold"
           onClick={() => setIsChatOpen(true)}
           pulse={!isChatOpen}
         />
-        
+
         <AiChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       </div>
 

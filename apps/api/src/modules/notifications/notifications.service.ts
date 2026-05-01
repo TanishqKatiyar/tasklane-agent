@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import Redis from 'ioredis';
@@ -108,11 +103,7 @@ export class NotificationsService {
 
   // ── Dedupe: Redis counter, collapse if >5 in 60s ────────────────────
 
-  private async shouldCollapse(
-    userId: string,
-    taskId: string,
-    type: string,
-  ): Promise<boolean> {
+  private async shouldCollapse(userId: string, taskId: string, type: string): Promise<boolean> {
     const key = `notif:dedupe:${userId}:${taskId}:${type}`;
     const count = await this.redis.incr(key);
     if (count === 1) {
@@ -172,10 +163,7 @@ export class NotificationsService {
       this.config.get<string>('NOTIFICATION_SECRET') ||
       this.config.get<string>('JWT_SECRET') ||
       'dev-secret';
-    return crypto
-      .createHmac('sha256', secret)
-      .update(`${userId}:${type}`)
-      .digest('hex');
+    return crypto.createHmac('sha256', secret).update(`${userId}:${type}`).digest('hex');
   }
 
   verifyUnsubToken(token: string, userId: string, type: string): boolean {

@@ -1,5 +1,16 @@
-import { Body, Controller, Get, HttpException, HttpStatus,MessageEvent, Post, Req, Sse, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation,ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  MessageEvent,
+  Post,
+  Req,
+  Sse,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -11,7 +22,10 @@ import { AutoPriorityRequestDto, AutoPriorityResponseSchema } from './dto/auto-p
 import { BreakdownRequestDto, BreakdownResponseSchema } from './dto/breakdown.schema';
 import { ChatRequestDto } from './dto/chat.schema';
 import { StandupRequestDto, StandupResponseSchema } from './dto/standup.schema';
-import { SuggestAssigneeRequestDto, SuggestAssigneeResponseSchema } from './dto/suggest-assignee.schema';
+import {
+  SuggestAssigneeRequestDto,
+  SuggestAssigneeResponseSchema,
+} from './dto/suggest-assignee.schema';
 import { AiThrottlerGuard } from './guards/ai-throttler.guard';
 import { buildAutoPriorityPrompt } from './prompts/auto-priority.prompt';
 import { buildBreakdownPrompt } from './prompts/breakdown.prompt';
@@ -46,10 +60,14 @@ export class AiController {
 
     const recentTasksData = await this.tasksService.list(body.projectId, { limit: 5 } as any);
     const recentTasks = recentTasksData.data || [];
-    const sampleTasks = recentTasks.map((t: any) => ({ title: t.title, description: t.description }));
+    const sampleTasks = recentTasks.map((t: any) => ({
+      title: t.title,
+      description: t.description,
+    }));
 
-    const taskTitle = body.taskId ? 
-      (await this.tasksService.getById(body.taskId))?.title : body.taskTitle;
+    const taskTitle = body.taskId
+      ? (await this.tasksService.getById(body.taskId))?.title
+      : body.taskTitle;
 
     const systemPrompt = buildBreakdownPrompt(project.name, sampleTasks);
     const userPrompt = `Task to breakdown:\nTitle: ${taskTitle}\nDescription: ${body.taskDescription || 'N/A'}`;
@@ -75,11 +93,19 @@ export class AiController {
 
     const project = await this.projectsService.getById(task.projectId);
     const teamMemberships = await this.teamsService.listMembers(project.teamId);
-    
-    // In a real app we would fetch active task counts per member here.
-    const membersData = teamMemberships.map((m: any) => ({ id: m.user.id, name: m.user.name, role: m.role }));
 
-    const systemPrompt = buildSuggestAssigneePrompt(task.title, task.description || '', membersData);
+    // In a real app we would fetch active task counts per member here.
+    const membersData = teamMemberships.map((m: any) => ({
+      id: m.user.id,
+      name: m.user.name,
+      role: m.role,
+    }));
+
+    const systemPrompt = buildSuggestAssigneePrompt(
+      task.title,
+      task.description || '',
+      membersData,
+    );
     const userPrompt = `Suggest assignees for task: ${task.title}`;
 
     return this.aiService.complete({
@@ -119,7 +145,7 @@ export class AiController {
     // We would fetch activity logs for the team here. Mocking for now as requested by the prompt.
     const activityLogs = [
       { user: 'Alice', action: 'completed task', task: 'Setup DB' },
-      { user: 'Bob', action: 'created task', task: 'Implement Auth' }
+      { user: 'Bob', action: 'created task', task: 'Implement Auth' },
     ];
 
     const systemPrompt = buildStandupPrompt(activityLogs);
@@ -146,19 +172,22 @@ export class AiController {
       // and yield MessageEvent objects `{ data: chunk }`
       this.projectsService.getById(body.projectId).then((project: any) => {
         const systemPrompt = buildChatSystemPrompt(`Project: ${project?.name}`);
-        this.aiService.complete({
-          feature: 'chat',
-          userId: req.user.id,
-          teamId: project?.teamId,
-          systemPrompt,
-          userPrompt: body.question,
-          // No schema, return raw text for chat
-        }).then(response => {
-          subscriber.next({ data: JSON.stringify({ content: response }) });
-          subscriber.complete();
-        }).catch(err => {
-          subscriber.error(err);
-        });
+        this.aiService
+          .complete({
+            feature: 'chat',
+            userId: req.user.id,
+            teamId: project?.teamId,
+            systemPrompt,
+            userPrompt: body.question,
+            // No schema, return raw text for chat
+          })
+          .then((response) => {
+            subscriber.next({ data: JSON.stringify({ content: response }) });
+            subscriber.complete();
+          })
+          .catch((err) => {
+            subscriber.error(err);
+          });
       });
     });
   }
