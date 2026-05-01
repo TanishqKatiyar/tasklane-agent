@@ -1,8 +1,3 @@
-import { ConfigService } from '@nestjs/config';
-
-import { EventBusService } from '../../common/event-bus/event-bus.service';
-import { EmailService } from '../../email/email.service';
-import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationsService } from './notifications.service';
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
@@ -70,13 +65,10 @@ describe('NotificationsService – dedupe logic', () => {
 
     // Directly construct the service to avoid NestJS DI module resolution issues
     // (the service uses forwardRef and Redis in constructor)
-    service = new (NotificationsService as any)(
-      mockPrisma,
-      mockEventBus,
-      mockEmail,
-      mockConfig,
-    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    service = new (NotificationsService as any)(mockPrisma, mockEventBus, mockEmail, mockConfig);
     // Inject mocked redis manually
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (service as any).redis = mockRedis;
   });
 

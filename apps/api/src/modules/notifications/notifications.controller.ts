@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Query,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -47,10 +46,7 @@ export class NotificationsController {
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'filter', required: false, enum: ['all', 'unread'] })
   @ApiResponse({ status: 200 })
-  async list(
-    @CurrentUser('id') userId: string,
-    @Query() query: ListNotificationsDto,
-  ) {
+  async list(@CurrentUser('id') userId: string, @Query() query: ListNotificationsDto) {
     return this.notifications.list(userId, query);
   }
 
@@ -60,10 +56,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Mark a notification as read' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
-  async markRead(
-    @Param('id') id: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async markRead(@Param('id') id: string, @CurrentUser('id') userId: string) {
     return this.notifications.markRead(id, userId);
   }
 
@@ -84,10 +77,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Delete a notification' })
   @ApiParam({ name: 'id' })
   @ApiResponse({ status: 200 })
-  async delete(
-    @Param('id') id: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async delete(@Param('id') id: string, @CurrentUser('id') userId: string) {
     return this.notifications.delete(id, userId);
   }
 
@@ -103,10 +93,7 @@ export class NotificationsController {
   @Patch('preferences')
   @ApiOperation({ summary: 'Update notification preferences' })
   @ApiResponse({ status: 200 })
-  async updatePreferences(
-    @CurrentUser('id') userId: string,
-    @Body() dto: UpdatePreferencesDto,
-  ) {
+  async updatePreferences(@CurrentUser('id') userId: string, @Body() dto: UpdatePreferencesDto) {
     return this.notifications.updatePreferences(userId, dto);
   }
 

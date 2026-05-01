@@ -40,11 +40,17 @@ export class AiService {
     this.redis = new Redis(redisUrl);
 
     this.groq = new Groq({ apiKey: this.configService.get<string>('GROQ_API_KEY') || 'missing' });
-    this.genAI = new GoogleGenerativeAI(this.configService.get<string>('GEMINI_API_KEY') || 'missing');
+    this.genAI = new GoogleGenerativeAI(
+      this.configService.get<string>('GEMINI_API_KEY') || 'missing',
+    );
 
-    this.primaryModel = this.configService.get<string>('AI_MODEL_PRIMARY') || 'llama-3.3-70b-versatile';
+    this.primaryModel =
+      this.configService.get<string>('AI_MODEL_PRIMARY') || 'llama-3.3-70b-versatile';
     this.fallbackModel = this.configService.get<string>('AI_MODEL_FALLBACK') || 'gemini-2.0-flash';
-    this.cacheTtlSeconds = parseInt(this.configService.get<string>('AI_CACHE_TTL_SECONDS') || '86400', 10);
+    this.cacheTtlSeconds = parseInt(
+      this.configService.get<string>('AI_CACHE_TTL_SECONDS') || '86400',
+      10,
+    );
     this.logCalls = this.configService.get<string>('LOG_AI_CALLS') === 'true';
   }
 
@@ -64,9 +70,9 @@ export class AiService {
       teamId,
       systemPrompt,
       userPrompt,
-      schema,
-      temperature = 0.7,
-      maxTokens = 1000,
+      schema: _schema,
+      temperature: _temperature = 0.7,
+      maxTokens: _maxTokens = 1000,
       cacheKey,
     } = opts;
 
@@ -78,9 +84,16 @@ export class AiService {
       const cached = await this.redis.get(finalCacheKey);
       if (cached) {
         this.logCall({
-          feature, userId, teamId, model: 'cache',
-          inputTokens: 0, outputTokens: 0, latencyMs: Date.now() - start,
-          success: true, promptHash, cached: true
+          feature,
+          userId,
+          teamId,
+          model: 'cache',
+          inputTokens: 0,
+          outputTokens: 0,
+          latencyMs: Date.now() - start,
+          success: true,
+          promptHash,
+          cached: true,
         });
         return JSON.parse(cached) as T;
       }
@@ -96,7 +109,7 @@ export class AiService {
     } catch (groqError) {
       const gErr = groqError as Error;
       this.logger.warn(`Groq failed for ${feature}, falling back to Gemini: ${gErr.message}`);
-      
+
       try {
         // 2. Try Gemini Fallback
         const result = await this.callGemini(opts);
@@ -108,9 +121,17 @@ export class AiService {
         const gemErr = geminiError as Error;
         this.logger.error(`Gemini fallback failed for ${feature}: ${gemErr.message}`);
         this.logCall({
-          feature, userId, teamId, model: 'fallback-failed',
-          inputTokens: 0, outputTokens: 0, latencyMs: Date.now() - start,
-          success: false, errorMsg: gemErr.message, promptHash, cached: false
+          feature,
+          userId,
+          teamId,
+          model: 'fallback-failed',
+          inputTokens: 0,
+          outputTokens: 0,
+          latencyMs: Date.now() - start,
+          success: false,
+          errorMsg: gemErr.message,
+          promptHash,
+          cached: false,
         });
         throw gemErr;
       }
@@ -123,13 +144,16 @@ export class AiService {
     let inputTokens = 0;
     let outputTokens = 0;
 
-    const messages: any[] = [
+    const messages: Array<{ role: string; content: string }> = [
       { role: 'system', content: opts.systemPrompt },
       { role: 'user', content: opts.userPrompt },
     ];
 
     if (isRetry) {
-      messages.push({ role: 'user', content: 'Your previous response was not valid JSON. Return ONLY the JSON object.' });
+      messages.push({
+        role: 'user',
+        content: 'Your previous response was not valid JSON. Return ONLY the JSON object.',
+      });
     }
 
     try {
@@ -147,9 +171,16 @@ export class AiService {
 
       if (!opts.schema) {
         this.logCall({
-          feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-          model: this.primaryModel, inputTokens, outputTokens, latencyMs: Date.now() - start,
-          success: true, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+          feature: opts.feature,
+          userId: opts.userId,
+          teamId: opts.teamId,
+          model: this.primaryModel,
+          inputTokens,
+          outputTokens,
+          latencyMs: Date.now() - start,
+          success: true,
+          promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+          cached: false,
         });
         return responseText as unknown as T;
       }
@@ -158,9 +189,16 @@ export class AiService {
       const validated = opts.schema.parse(parsed);
 
       this.logCall({
-        feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-        model: this.primaryModel, inputTokens, outputTokens, latencyMs: Date.now() - start,
-        success: true, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+        feature: opts.feature,
+        userId: opts.userId,
+        teamId: opts.teamId,
+        model: this.primaryModel,
+        inputTokens,
+        outputTokens,
+        latencyMs: Date.now() - start,
+        success: true,
+        promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+        cached: false,
       });
 
       return validated;
@@ -170,9 +208,17 @@ export class AiService {
         return this.callGroq(opts, true);
       }
       this.logCall({
-        feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-        model: this.primaryModel, inputTokens, outputTokens, latencyMs: Date.now() - start,
-        success: false, errorMsg: err.message, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+        feature: opts.feature,
+        userId: opts.userId,
+        teamId: opts.teamId,
+        model: this.primaryModel,
+        inputTokens,
+        outputTokens,
+        latencyMs: Date.now() - start,
+        success: false,
+        errorMsg: err.message,
+        promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+        cached: false,
       });
       throw err;
     }
@@ -181,7 +227,7 @@ export class AiService {
   private async callGemini<T>(opts: AiCompleteOptions<T>, isRetry = false): Promise<T> {
     const start = Date.now();
     let responseText = '';
-    
+
     try {
       const model = this.genAI.getGenerativeModel({
         model: this.fallbackModel,
@@ -190,7 +236,7 @@ export class AiService {
           temperature: opts.temperature,
           maxOutputTokens: opts.maxTokens,
           responseMimeType: opts.schema ? 'application/json' : 'text/plain',
-        }
+        },
       });
 
       let prompt = opts.userPrompt;
@@ -208,9 +254,16 @@ export class AiService {
 
       if (!opts.schema) {
         this.logCall({
-          feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-          model: this.fallbackModel, inputTokens: inputCount, outputTokens: outputCount, latencyMs: Date.now() - start,
-          success: true, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+          feature: opts.feature,
+          userId: opts.userId,
+          teamId: opts.teamId,
+          model: this.fallbackModel,
+          inputTokens: inputCount,
+          outputTokens: outputCount,
+          latencyMs: Date.now() - start,
+          success: true,
+          promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+          cached: false,
         });
         return responseText as unknown as T;
       }
@@ -219,9 +272,16 @@ export class AiService {
       const validated = opts.schema.parse(parsed);
 
       this.logCall({
-        feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-        model: this.fallbackModel, inputTokens: inputCount, outputTokens: outputCount, latencyMs: Date.now() - start,
-        success: true, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+        feature: opts.feature,
+        userId: opts.userId,
+        teamId: opts.teamId,
+        model: this.fallbackModel,
+        inputTokens: inputCount,
+        outputTokens: outputCount,
+        latencyMs: Date.now() - start,
+        success: true,
+        promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+        cached: false,
       });
 
       return validated;
@@ -231,9 +291,17 @@ export class AiService {
         return this.callGemini(opts, true);
       }
       this.logCall({
-        feature: opts.feature, userId: opts.userId, teamId: opts.teamId,
-        model: this.fallbackModel, inputTokens: 0, outputTokens: 0, latencyMs: Date.now() - start,
-        success: false, errorMsg: err.message, promptHash: this.hash(opts.systemPrompt + opts.userPrompt), cached: false
+        feature: opts.feature,
+        userId: opts.userId,
+        teamId: opts.teamId,
+        model: this.fallbackModel,
+        inputTokens: 0,
+        outputTokens: 0,
+        latencyMs: Date.now() - start,
+        success: false,
+        errorMsg: err.message,
+        promptHash: this.hash(opts.systemPrompt + opts.userPrompt),
+        cached: false,
       });
       throw err;
     }
@@ -253,20 +321,22 @@ export class AiService {
     cached: boolean;
   }) {
     if (!this.logCalls) return;
-    this.prisma.aiCall.create({
-      data: {
-        feature: data.feature,
-        userId: data.userId,
-        teamId: data.teamId,
-        model: data.model,
-        inputTokens: data.inputTokens,
-        outputTokens: data.outputTokens,
-        latencyMs: data.latencyMs,
-        success: data.success,
-        errorMsg: data.errorMsg,
-        promptHash: data.promptHash,
-        cached: data.cached,
-      }
-    }).catch(err => this.logger.error(`Failed to log AI call: ${err.message}`));
+    this.prisma.aiCall
+      .create({
+        data: {
+          feature: data.feature,
+          userId: data.userId,
+          teamId: data.teamId,
+          model: data.model,
+          inputTokens: data.inputTokens,
+          outputTokens: data.outputTokens,
+          latencyMs: data.latencyMs,
+          success: data.success,
+          errorMsg: data.errorMsg,
+          promptHash: data.promptHash,
+          cached: data.cached,
+        },
+      })
+      .catch((err) => this.logger.error(`Failed to log AI call: ${err.message}`));
   }
 }
