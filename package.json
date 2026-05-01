@@ -21,7 +21,7 @@
     "test:api": "pnpm --filter @tasklane/api test",
     "test:web": "pnpm --filter @tasklane/web test",
     "test:cov": "pnpm --filter @tasklane/api test:cov && pnpm --filter @tasklane/web test:cov",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.18.0",

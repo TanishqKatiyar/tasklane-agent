@@ -158,7 +158,7 @@ export class AiService {
 
     try {
       const completion = await this.groq.chat.completions.create({
-        messages,
+        messages: messages as any,
         model: this.primaryModel,
         temperature: opts.temperature,
         max_tokens: opts.maxTokens,

@@ -7,3 +7,8 @@ coverage
 docker-compose.yml
 .claude
 .editorconfig
+.next
+dist
+apps/*/.next
+apps/*/dist
+packages/*/dist

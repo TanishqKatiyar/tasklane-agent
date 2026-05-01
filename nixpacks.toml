@@ -1,0 +1,6 @@
+[variables]
+NPM_CONFIG_PRODUCTION = "false"
+NODE_ENV = "development"
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
