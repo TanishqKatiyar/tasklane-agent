@@ -34,7 +34,7 @@ export class EmailService {
           subject,
           html,
         }),
-      });
+      }) as any;
 
       if (!response.ok) {
         const err = await response.text();
