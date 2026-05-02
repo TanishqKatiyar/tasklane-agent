@@ -113,7 +113,7 @@ async function main() {
       description: 'Create Figma mockups for the campaign landing page',
       priority: TaskPriority.HIGH,
       status: TaskStatus.DONE,
-      assigneeId: alice.id,
+      assigneeId: admin.id,
       position: 1000,
     },
     {
@@ -122,7 +122,7 @@ async function main() {
       description: 'Draft a 1500-word blog post announcing the new product',
       priority: TaskPriority.MEDIUM,
       status: TaskStatus.IN_PROGRESS,
-      assigneeId: bob.id,
+      assigneeId: admin.id,
       position: 1000,
     },
     {
@@ -131,7 +131,7 @@ async function main() {
       description: 'Configure drip campaign with 3-email sequence',
       priority: TaskPriority.HIGH,
       status: TaskStatus.TODO,
-      assigneeId: alice.id,
+      assigneeId: admin.id,
       position: 1000,
     },
     {
@@ -140,7 +140,7 @@ async function main() {
       description: 'Plan 2 weeks of social media posts across platforms',
       priority: TaskPriority.LOW,
       status: TaskStatus.BACKLOG,
-      assigneeId: null as string | null,
+      assigneeId: alice.id,
       position: 1000,
     },
     {
@@ -159,7 +159,10 @@ async function main() {
       where: {
         projectId_number: { projectId: project.id, number: task.number },
       },
-      update: {},
+      update: {
+        ...task,
+        ...(task.status === TaskStatus.DONE ? { completedAt: new Date() } : {}),
+      },
       create: {
         ...task,
         projectId: project.id,
