@@ -23,6 +23,7 @@ services:
 
   - type: redis
     name: tasklane-redis
+    ipAllowList: []
 
 databases:
   - name: tasklane-db
