@@ -11,6 +11,10 @@
   "scripts": {
     "dev": "concurrently -n api,web -c blue,green \"pnpm --filter @tasklane/api dev\" \"pnpm --filter @tasklane/web dev\"",
     "build": "pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build && pnpm --filter @tasklane/web build",
+    "build:api": "pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build",
+    "build:web": "pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/web build",
+    "start:api": "node apps/api/dist/main",
+    "start:web": "node apps/web/.next/standalone/apps/web/server.js",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:strict": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
@@ -21,7 +25,6 @@
     "test:api": "pnpm --filter @tasklane/api test",
     "test:web": "pnpm --filter @tasklane/web test",
     "test:cov": "pnpm --filter @tasklane/api test:cov && pnpm --filter @tasklane/web test:cov",
-    "start": "concurrently -n api,web,proxy -c blue,green,yellow \"PORT=4000 pnpm --filter @tasklane/api start:prod\" \"PORT=3000 pnpm --filter @tasklane/web start\" \"node proxy.js\"",
     "prepare": "husky || true"
   },
   "devDependencies": {

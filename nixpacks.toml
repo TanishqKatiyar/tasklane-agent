@@ -4,9 +4,3 @@ NODE_ENV = "development"
 
 [phases.install]
 cmds = ["pnpm install --frozen-lockfile"]
-
-[phases.build]
-cmds = ["pnpm --filter @tasklane/shared build", "pnpm --filter @tasklane/api build", "pnpm --filter @tasklane/web build", "pnpm --filter @tasklane/api prisma:generate"]
-
-[start]
-cmd = "pnpm start"
