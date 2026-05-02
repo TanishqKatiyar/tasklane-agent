@@ -1,270 +1,92 @@
-<div align="center">
+# Tasklane: A High-Fidelity Task Management Platform
 
-<img src="./.github/assets/header.svg" width="100%" alt="Tasklane"/>
+![Tasklane Banner](https://via.placeholder.com/1200x400/1a1a1a/ffffff?text=Tasklane+Studio-Grade+Architecture)
 
-<br/>
+> A production-ready, enterprise-grade task management platform engineered with a focus on deep architectural scalability and uncompromising typographic elegance.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/TanishqKatiyar/tasklane/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI&color=818cf8)](https://github.com/TanishqKatiyar/tasklane/actions)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-f0ece2?style=flat-square)](./LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-fbbf6d?style=flat-square)](./CONTRIBUTING.md)
+Tasklane is not just another productivity tool—it is a demonstration of how high-end editorial aesthetics (inspired by the likes of Stripe Press and Shelby.xyz) can be seamlessly merged with rigorous, modern full-stack engineering. It features a completely custom kinetic UI, real-time data synchronization, and a deeply decoupled monorepo architecture.
 
-**A high-performance, real-time collaborative workspace for teams that treat shipping as a craft.**
+---
 
-<sub>Next.js 14 &middot; NestJS 10 &middot; PostgreSQL 16 &middot; Redis 7 &middot; WebSockets &middot; Prisma &middot; Zod</sub>
+## 🧠 Architectural Overview
 
-</div>
+Built to scale, Tasklane utilizes a **Turborepo Monorepo** structure, strictly separating concerns while sharing critical type definitions and validation schemas across the stack.
 
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
+### 1. The Frontend (`apps/web`)
 
-## The Philosophy
+- **Framework**: Next.js 14 (App Router) + React 18
+- **State Management**: Zustand (Global UI state) + TanStack React Query (Server state & caching)
+- **Styling & UI**: TailwindCSS + Framer Motion + Radix UI Primitives
+- **Aesthetics**: A custom dual-tone palette (Crimson Red & Warm Stone), glassmorphism, SVG grain textures, and editorial typography (Fraunces & Space Grotesk).
+- **Interactivity**: Fully accessible drag-and-drop capabilities via `@dnd-kit`, paired with 60fps hardware-accelerated micro-animations.
 
-Most task managers are bloated databases wearing a productivity mask. They demand your attention instead of serving your workflow.
+### 2. The Backend (`apps/api`)
 
-**Tasklane is different.** It is an opinionated, keyboard-first environment built on the principle of _editorial calm_ &#8212; stripping away noise to focus exclusively on the work itself. Engineered for sub-50ms interactions and zero-config real-time collaboration, it feels less like software and more like a precision instrument.
+- **Framework**: NestJS (Node.js)
+- **Database & ORM**: PostgreSQL managed via Prisma ORM
+- **Caching & Real-time**: Redis (Upstash) for sub-millisecond dashboard analytics caching.
+- **Security**: Robust JWT-based authentication using secure HTTP-only cookies, strict CORS policies, and Bcrypt password hashing.
+- **Design Pattern**: Domain-Driven Design (DDD) with strictly decoupled modules, controllers, and injectable services.
 
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
+### 3. The Shared Layer (`packages/shared`)
 
-## Architecture
+- A single-source-of-truth package utilizing **Zod** schemas and TypeScript interfaces. This ensures that any API contract changes immediately throw compile-time errors across both the frontend and backend, guaranteeing 100% End-to-End Type Safety.
 
-Tasklane is engineered as a **strictly-typed monorepo** with a clean separation of concerns. The frontend remains lightweight while the backend handles heavy computation and real-time synchronization.
+---
 
-```
-tasklane/
-├── apps/
-│   ├── web/          # Next.js 14 — App Router, RSC, Zustand
-│   └── api/          # NestJS 10 — REST + WebSocket Gateway
-├── packages/
-│   └── shared/       # Shared types, DTOs, Zod schemas
-├── docker-compose.yml
-└── package.json      # pnpm workspaces
-```
+## ✨ Key Engineering Highlights
 
-### Tech Stack
+### 1. "Self-Healing" Deployment Infrastructure
 
-<table>
-<tr>
-<td width="50%">
+Engineered for zero-maintenance CI/CD. The backend (hosted on Render) is configured with a custom startup execution lifecycle that automatically applies Prisma migrations and intelligently seeds complex, professional demo data before accepting traffic. If the database is ever wiped, the system self-heals and repopulates instantly on the next boot.
 
-**Frontend** &mdash; `apps/web`
+### 2. "Vital Signs" Algorithmic Analytics
 
-- Next.js 14 (App Router + Server Components)
-- React 18 with Suspense boundaries
-- Zustand for client state
-- React Hook Form + Zod validation
-- Custom "Paper & Ink" design system
-- Framer Motion micro-animations
+The backend doesn't just store tasks; it processes them. The analytics engine queries the PostgreSQL database and Redis cache to generate real-time metrics (Overdue, Due This Week, Open, Completed), calculating complex delta-comparisons against previous weeks to provide users with actionable performance trends.
 
-</td>
-<td width="50%">
+### 3. Uncompromising Studio-Grade UI/UX
 
-**Backend** &mdash; `apps/api`
+I engineered the interface to feel expensive and premium:
 
-- NestJS 10 (modular architecture)
-- PostgreSQL 16 via Prisma ORM
-- Redis 7 (caching, pub/sub, sessions)
-- Socket.io real-time gateway
-- Passport.js (JWT + OAuth2)
-- Nodemailer + Mailhog (dev email)
+- **Editorial Typography**: Replacing standard sans-serifs with high-contrast, kinetic typography (Fraunces).
+- **Textural Depth**: Implemented algorithmic SVG noise grain overlays and dynamic background grids.
+- **Liquid Animations**: Replaced static transitions with physics-based spring animations using Framer Motion.
 
-</td>
-</tr>
-</table>
+---
 
-### Backend Modules
+## 🚀 Quick Start (Local Development)
 
-| Module          | Purpose                                                 |
-| :-------------- | :------------------------------------------------------ |
-| `auth`          | JWT authentication, token rotation, OAuth2 social login |
-| `users`         | Profile management, avatar uploads, preferences         |
-| `teams`         | Team CRUD, member invitations, role assignment          |
-| `projects`      | Project lifecycle, archival, board configuration        |
-| `tasks`         | Task CRUD, assignments, priority, status workflow       |
-| `realtime`      | WebSocket gateway, presence tracking, live updates      |
-| `notifications` | In-app + email notifications, digest scheduling         |
-| `analytics`     | Team velocity, burn-down charts, productivity metrics   |
-| `ai`            | AI-powered task suggestions and prioritization          |
-
-### Frontend Pages
-
-| Route        | Feature                                                   |
-| :----------- | :-------------------------------------------------------- |
-| `/dashboard` | Command center with stats, recent activity, quick actions |
-| `/my-tasks`  | Personal task queue with filters and sorting              |
-| `/projects`  | Project board with drag-and-drop columns                  |
-| `/teams`     | Team management, member roles, invitations                |
-| `/inbox`     | Notification center with read/unread states               |
-| `/activity`  | Team-wide activity feed with real-time updates            |
-| `/standup`   | Async standup notes and blockers                          |
-| `/changelog` | Product changelog and release notes                       |
-| `/settings`  | User preferences, theme, integrations                     |
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## Quick Start
-
-### Prerequisites
-
-| Tool        | Version  | Purpose                    |
-| :---------- | :------- | :------------------------- |
-| **Node.js** | `>=20.x` | Runtime                    |
-| **pnpm**    | `>=9.x`  | Package manager            |
-| **Docker**  | Latest   | PostgreSQL, Redis, Mailhog |
-
-### Setup
+The repository uses `pnpm` workspaces.
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/TanishqKatiyar/tasklane.git
-cd tasklane
-
-# 2. Install dependencies
+# 1. Install dependencies across the entire monorepo
 pnpm install
 
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your secrets (JWT, OAuth, DB credentials)
+# 2. Setup your environmental variables
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
 
-# 4. Boot infrastructure (PostgreSQL, Redis, Mailhog)
-docker compose up -d
+# 3. Start the local PostgreSQL & Redis instances (Docker)
+docker-compose up -d
 
-# 5. Run database migrations
-pnpm --filter @tasklane/api prisma:migrate
+# 4. Migrate the database and generate Prisma types
+pnpm --filter @tasklane/api run prisma:generate
+pnpm --filter @tasklane/api run prisma:migrate
 
-# 6. Start development servers
-pnpm dev
+# 5. Start the development servers concurrently (Turbo)
+pnpm run dev
 ```
 
-The frontend will be available at `http://localhost:3000` and the API at `http://localhost:4000`.
+---
 
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
+## 🌍 Production Environments
 
-## Engineering Workflows
+- **Frontend**: Deployed globally to the Vercel Edge Network for optimal TTFB (Time to First Byte).
+- **Backend**: Hosted on Render with secure origins restricting access strictly to the Vercel production URL.
+- **Database**: Fully managed PostgreSQL cluster on Render.
 
-Our development lifecycle emphasizes code quality, strict typing, and zero-regression deployments.
+## 🧑‍💻 Author & Engineering Philosophy
 
-```bash
-pnpm dev           # Start all services concurrently (hot-reload)
-pnpm build         # Production build (shared → api → web)
-pnpm lint          # ESLint across all workspaces
-pnpm lint:strict   # Zero-warning enforcement
-pnpm typecheck     # tsc --noEmit (end-to-end type safety)
-pnpm format        # Prettier formatting
-pnpm format:check  # CI format validation
-pnpm test          # Run test suites
-pnpm test:cov      # Tests with coverage reports
-```
+This project was built to demonstrate that "business software" does not have to be visually sterile. By treating code as a craft, Tasklane bridges the gap between a high-performing distributed backend and an emotionally engaging, award-winning frontend experience.
 
-### CI Pipeline
-
-Every pull request triggers an automated quality gate:
-
-```
-Checkout → Install → Build Shared → Lint → Format Check → Typecheck
-```
-
-PostgreSQL and Redis service containers spin up automatically in CI. See [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) for the full pipeline.
-
-### Git Conventions
-
-We enforce **Conventional Commits** for automated changelog generation:
-
-```
-feat(api): implement distributed rate limiting for auth endpoints
-fix(web): resolve hydration mismatch on dashboard stats
-chore(shared): update Zod schemas for task priority enum
-```
-
-Pre-commit hooks via Husky + lint-staged ensure every commit passes lint and format checks.
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## Security
-
-Security is a foundational feature, not an afterthought.
-
-| Layer                | Implementation                                                     |
-| :------------------- | :----------------------------------------------------------------- |
-| **Authentication**   | Stateless JWT with sliding sessions, HTTP-only secure cookies      |
-| **Authorization**    | Granular RBAC enforced at NestJS Guard level                       |
-| **Input Validation** | All payloads validated via Zod schemas at the application boundary |
-| **Database**         | Parameterized queries via Prisma, SSL connections                  |
-| **Dependencies**     | Automated scanning via Dependabot and Snyk                         |
-| **Secrets**          | Environment-based, never committed to source                       |
-
-Found a vulnerability? Please read our [Security Policy](./SECURITY.md) for responsible disclosure.
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## Design System
-
-Tasklane ships with a custom **"Paper & Ink"** design system, inspired by editorial print and premium software aesthetics:
-
-- **Dual Theme**: Warm near-black dark mode + cream ivory light mode
-- **Typography**: Instrument Serif (display), Geist Sans (body), JetBrains Mono (code)
-- **Motion**: Cinematic rise-in animations, aurora gradients, film-grain textures
-- **Components**: Status pills, diamond dividers, edge tags, stat cards, skeleton loaders
-- **Accessibility**: Focus-visible rings, skip-to-main links, reduced-motion support, semantic HTML
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## Project Structure
-
-```
-tasklane/
-├── .github/
-│   ├── assets/              # SVG art for README
-│   ├── workflows/ci.yml     # GitHub Actions pipeline
-│   ├── ISSUE_TEMPLATE/      # Bug report + feature request forms
-│   └── PULL_REQUEST_TEMPLATE.md
-├── apps/
-│   ├── api/
-│   │   └── src/
-│   │       ├── modules/     # auth, users, teams, projects, tasks,
-│   │       │                # realtime, notifications, analytics, ai
-│   │       ├── common/      # Guards, decorators, pipes, filters
-│   │       ├── config/      # Environment validation
-│   │       ├── prisma/      # Database client + migrations
-│   │       └── email/       # Template engine + transporter
-│   └── web/
-│       └── src/
-│           └── app/
-│               ├── (auth)/  # Login, register, forgot password
-│               └── (app)/   # Dashboard, projects, teams, inbox,
-│                            # my-tasks, settings, activity, standup
-├── packages/
-│   └── shared/              # Types, DTOs, Zod schemas, constants
-├── docker-compose.yml       # PostgreSQL 16 + Redis 7 + Mailhog
-├── .editorconfig
-├── .eslintrc.cjs
-├── .prettierrc
-├── tsconfig.base.json
-├── CONTRIBUTING.md
-├── SECURITY.md
-└── LICENSE
-```
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## Contributing
-
-We welcome contributions from engineers who align with our philosophy of quality. Review our [Contributing Guide](./CONTRIBUTING.md) for detailed guidelines on:
-
-- Engineering standards and type safety requirements
-- Branching strategy and naming conventions
-- Commit message format (Conventional Commits)
-- Pull request process and review expectations
-
-<img src="./.github/assets/divider.svg" width="100%" alt=""/>
-
-## License
-
-This project is licensed under the **MIT License** &#8212; see the [LICENSE](./LICENSE) file for details.
-
-<div align="center">
-
-<br/>
-
-<img src="./.github/assets/footer.svg" width="100%" alt=""/>
-
-</div>
+It proves that complex state management, relational databases, and secure APIs can coexist with the meticulous polish usually reserved for high-budget creative agencies.
