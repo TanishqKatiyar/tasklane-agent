@@ -3,7 +3,7 @@ services:
     name: tasklane-api
     plan: free
     env: node
-    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build
+    buildCommand: pnpm install --prod=false --frozen-lockfile && pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build
     startCommand: pnpm run start:api
     envVars:
       - key: NODE_VERSION
