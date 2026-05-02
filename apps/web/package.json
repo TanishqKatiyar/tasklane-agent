@@ -5,6 +5,7 @@
   "description": "Tasklane Web — Next.js 14 App Router frontend",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "pnpm --filter @tasklane/shared build",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
