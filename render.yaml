@@ -21,10 +21,10 @@ services:
       - key: PORT
         value: 3000
 
+  - type: redis
+    name: tasklane-redis
+
 databases:
   - name: tasklane-db
     databaseName: tasklane
     user: tasklane
-
-redis:
-  - name: tasklane-redis
