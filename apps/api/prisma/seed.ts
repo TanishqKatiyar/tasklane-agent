@@ -153,12 +153,12 @@ async function main() {
   for (const group of allTaskDefs) {
     if (!group.proj) continue;
     for (const t of group.tasks) {
-      const dueDate = new Date(now);
+      const dueDate = new Date(now.getTime());
       dueDate.setDate(dueDate.getDate() + t.daysOffset);
       
       let completedAt = null;
       if (t.status === TaskStatus.DONE && t.doneOffset) {
-        completedAt = new Date(now);
+        completedAt = new Date(now.getTime());
         completedAt.setDate(completedAt.getDate() + t.doneOffset);
       } else if (t.status === TaskStatus.DONE) {
         completedAt = new Date();
