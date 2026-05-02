@@ -1,6 +1,7 @@
 services:
   - type: web
     name: tasklane-api
+    plan: free
     env: node
     buildCommand: pnpm install --frozen-lockfile && pnpm --filter @tasklane/shared build && pnpm --filter @tasklane/api build
     startCommand: pnpm run start:api
@@ -23,9 +24,11 @@ services:
 
   - type: redis
     name: tasklane-redis
+    plan: free
     ipAllowList: []
 
 databases:
   - name: tasklane-db
+    plan: free
     databaseName: tasklane
     user: tasklane
