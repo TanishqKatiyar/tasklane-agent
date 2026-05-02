@@ -5,7 +5,7 @@
   "description": "Tasklane Web — Next.js 14 App Router frontend",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && mkdir -p .next/standalone/apps/web/public && cp -r public .next/standalone/apps/web/public || true && mkdir -p .next/standalone/apps/web/.next/static && cp -r .next/static .next/standalone/apps/web/.next/static || true",
+    "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
